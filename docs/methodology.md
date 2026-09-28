@@ -46,9 +46,10 @@ Every system goes through the same context builder, token budget (1024) and answ
 - **Excluded:** temporal-reasoning, because this pipeline does no date arithmetic.
 - **Deviation: partial run.**
   - The pre-registered run stopped when the OpenRouter key reached its monthly spend limit.
-  - Reported so far are the first 82 of the 148 instances in file order (`lme-partial-82`). These are the ones fully cached at the cutoff; they were not chosen by looking at results.
-  - They cover single-session-user in full (70/70) and knowledge-update for 12 of 78.
-  - To limit spend, the run was **stopped there**. The other 66 knowledge-update instances were not run.
+  - Reported are the first 96 of the 148 instances in file order (`lme-partial-96`). The cutoffs were set by the key's spend limit and a Qwen time budget, not by looking at results.
+  - They cover single-session-user in full (70/70) and knowledge-update for 26 of 78.
+  - Jev had judged only the first 88 before the key was blocked. The last 8 knowledge-update instances therefore count as judge failures for the Jev systems and are excluded from them, as the pre-registered failure rule requires. Every other system, including Qwen-as-judge, has all 96.
+  - To limit spend, the run was **stopped there**. The other 52 knowledge-update instances were not run.
   - They can be added later with the same frozen configuration: re-running on the full case file replays everything already cached at no cost.
 
 ## Metrics

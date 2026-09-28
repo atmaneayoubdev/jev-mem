@@ -161,29 +161,42 @@ The pinned snapshot `typesafe/jev-1.13-20260917` plus the response cache is what
 - **Write-time cost** is separate: one profile call per memory plus one call per compared neighbour, which is at most 5 active and 2 superseded neighbours.
 - **Total Jev spend for all M1 runs so far:** $2.55 over about 101k calls.
 
-### LongMemEval_S (partial: 82 of 148 pre-registered instances)
+### LongMemEval_S (partial: 96 of 148 pre-registered instances)
 
 **Status: partial, stopped to limit spend.**
 - The run stopped when the OpenRouter key reached its monthly spend limit, and it was not resumed.
-- The 82 instances reported are the **first 82 in file order**: exactly those whose Jev and Qwen-judge calls had been cached by then. The key set the cutoff, not the results.
-- They cover the whole **single-session-user control** (70 of 70, including 6 abstention questions) and **12 of 78 knowledge-update** instances.
+- Reported are the **first 96 instances in file order**:
+  - the whole **single-session-user control**: 70 of 70, including 6 abstention questions;
+  - **26 of 78 knowledge-update** instances.
+- **The Jev systems have 88 of them.** The last 8 knowledge-update instances were run after the key was blocked, so Jev could not judge them. Under the pre-registered failure rule they are excluded from the Jev systems and counted as failed. Every other system has all 96.
+- The key set these cutoffs, not the results.
 - Answers were graded with LongMemEval's official prompts on Qwen, so these numbers are not comparable to published GPT-4o-judged results.
 
-| System | Answer acc. [95% CI] | single-session-user | abstention | knowledge-update | Context tokens |
-|---|---|---|---|---|---|
-| **hybrid-jev** | **93.9%** [87.8, 98.8] | 60/64 | 6/6 | 11/12 | 149 |
-| hybrid-qwen | 89.0% [81.7, 95.1] | 56/64 | 6/6 | 11/12 | 114 |
-| dense top-10 | 91.5% [84.1, 97.6] | 60/64 | 4/6 | 11/12 | 344 |
-| cross-encoder rerank top-10 | 91.5% [85.4, 97.6] | 61/64 | 3/6 | 11/12 | 420 |
-| dense + heuristic lifecycle | 89.0% [81.7, 95.1] | 59/64 | 4/6 | 10/12 | 343 |
-| BM25 top-3 | 84.1% [76.8, 91.5] | 56/64 | 3/6 | 10/12 | 335 |
+| System | Cases | Answer acc. [95% CI] | single-session-user | abstention | knowledge-update | Context tokens |
+|---|---|---|---|---|---|---|
+| **hybrid-jev** | 88 | **93.2%** [87.5, 97.7] | 60/64 | 6/6 | 16/18 | 159 |
+| hybrid-qwen | 96 | 87.5% [80.2, 93.8] | 56/64 | 6/6 | 22/26 | 125 |
+| dense top-10 | 96 | 89.6% [82.3, 94.8] | 60/64 | 4/6 | 22/26 | 351 |
+| cross-encoder rerank top-10 | 96 | 90.6% [84.4, 95.8] | 61/64 | 3/6 | 23/26 | 421 |
+| dense + heuristic lifecycle | 96 | 86.5% [79.2, 92.7] | 59/64 | 4/6 | 20/26 | 350 |
+| BM25 top-3 | 96 | 85.4% [78.1, 91.7] | 56/64 | 3/6 | 23/26 | 343 |
 
-- **Primary comparison:** hybrid-jev minus dense top-10 is **+2.4 pp [−2.4, +7.3]**. That is **no detectable difference**; each instance is its own bootstrap cluster.
-- **Same accuracy, less than half the context:** 149 vs 344 tokens. Two instances separate the systems, and both are abstention questions. On the plain single-fact control, real conversations are easy for dense retrieval, and the systems tie at 60/64.
-- **Updates on real data are still untested.** With 12 knowledge-update instances (11/12 vs 11/12), nothing can be concluded. That subset was the pre-registered test of the main idea on real data, and 66 of its instances were not run.
+The accuracy column covers different case sets (88 vs 96), so compare systems with the paired numbers below.
+
+- **Primary comparison**, paired over the 88 instances Jev judged: hybrid-jev minus dense top-10 is **+2.3 pp [−3.4, +8.0]**. That is **no detectable difference**; each instance is its own bootstrap cluster.
+- **Updates on real conversations tie**, as they did in the synthetic test. On the same instances:
+
+  | Comparison | Knowledge-update instances | Score |
+  |---|---|---|
+  | hybrid-jev vs dense top-10 | 18 | 16 vs 16 (each wins one the other misses) |
+  | hybrid-qwen vs dense top-10 | 26 | 22 vs 22 |
+  | hybrid-jev vs hybrid-qwen | 18 | the same answer on every instance |
+
+  When both dated versions are in context, the answer model resolves the update itself.
+- **The same accuracy with less than half the context:** 159 vs 351 tokens. The only questions that separate hybrid-jev from dense retrieval are the abstention questions (6/6 vs 4/6).
 - **"Forbidden in ctx" is high by design here.** In annotate mode a superseded turn stays in context with a "possibly updated" note, rather than being withheld. Answer accuracy is the metric that matters.
 
-Full report: [`lme-partial-82/report.md`](lme-partial-82/report.md).
+Full report: [`lme-partial-96/report.md`](lme-partial-96/report.md). `lme-partial-82` is the earlier, fully Jev-judged subset of the same run.
 
 ## Limitations
 

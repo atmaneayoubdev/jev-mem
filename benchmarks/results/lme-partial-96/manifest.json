@@ -1,0 +1,164 @@
+{
+  "timestamp": "2026-09-28T22:08:10.749326+00:00",
+  "git_commit": "a893badcd3bee5c6eae693dff6204c0bee2cb072",
+  "git_dirty": true,
+  "python": "3.12.11",
+  "platform": "Windows-11-10.0.26200-SP0",
+  "packages": {
+    "jevmem": "0.1.0",
+    "httpx": "0.28.1",
+    "pydantic": "2.13.5",
+    "numpy": "2.5.3",
+    "sentence-transformers": "6.1.0",
+    "torch": "2.11.0+cu128",
+    "transformers": "5.17.0"
+  },
+  "run": {
+    "run_id": "lme-partial-96",
+    "cases_paths": [
+      "data\\external\\longmemeval\\cases-preregistered-first96.jsonl"
+    ],
+    "systems": [
+      "recency",
+      "bm25",
+      "embedding",
+      "embedding-threshold",
+      "embedding-decay",
+      "embedding-lifecycle",
+      "rerank",
+      "rerank-threshold",
+      "bm25-jev",
+      "embedding-jev",
+      "hybrid-jev",
+      "hybrid-qwen"
+    ],
+    "judges": [
+      "jev",
+      "qwen"
+    ],
+    "n_background": 0,
+    "pool_max": 20,
+    "budget": 1024,
+    "embeddings": true,
+    "answer": true,
+    "case_concurrency": 10,
+    "limit": null,
+    "families_per_category": null,
+    "instances_per_family": null,
+    "params_path": null,
+    "cache_mode": "readwrite",
+    "background_path": "benchmarks\\datasets\\background-v1.jsonl",
+    "results_dir": "benchmarks\\results",
+    "supersede_mode": "annotate",
+    "budgets": [],
+    "pools": [],
+    "ablations": false,
+    "e2e": false
+  },
+  "models": {
+    "jev_requested": "typesafe/jev-1.13-20260917",
+    "qwen": "qwen3.8-27b",
+    "embedding": "Qwen/Qwen3-Embedding-0.6B",
+    "reranker": "BAAI/bge-reranker-v2-m3"
+  },
+  "models_observed": {
+    "jev": [
+      "typesafe/jev-1.13-20260917"
+    ],
+    "qwen": [
+      "qwen3.8-27b"
+    ]
+  },
+  "question_schema_version": "q1.2",
+  "policy_version": "p1.2",
+  "answer_prompt_version": "a1.1",
+  "grader_version": "lme-official-v1",
+  "params": {
+    "k": {
+      "recency": 5,
+      "bm25": 5,
+      "embedding": 5,
+      "rerank": 5,
+      "embedding-decay": 5,
+      "embedding-lifecycle": 5
+    },
+    "threshold": {
+      "embedding-threshold": 0.5,
+      "rerank-threshold": 0.5
+    },
+    "half_life_days": 180.0,
+    "duplicate_similarity": 0.8,
+    "pool_size": 20,
+    "judge_workers": 16,
+    "policy": {
+      "jev": {
+        "version": "p1.2",
+        "read": {
+          "relevance": 0.6,
+          "utility": 0.6,
+          "band": 0.15,
+          "intent_confidence": 0.5
+        },
+        "write": {
+          "relation": 0.6,
+          "confidence": 0.5,
+          "instruction": 0.5,
+          "ttl_days": {
+            "days": 7.0,
+            "weeks": 42.0,
+            "months": 180.0,
+            "year": 365.0
+          }
+        },
+        "ablation": {
+          "utility": true,
+          "supersession": true,
+          "contradiction": true,
+          "temporal": true,
+          "intent": true
+        },
+        "inject_uncertain": false,
+        "supersede_mode": "annotate"
+      },
+      "qwen": {
+        "version": "p1.2",
+        "read": {
+          "relevance": 0.6,
+          "utility": 0.6,
+          "band": 0.15,
+          "intent_confidence": 0.5
+        },
+        "write": {
+          "relation": 0.6,
+          "confidence": 0.5,
+          "instruction": 0.5,
+          "ttl_days": {
+            "days": 7.0,
+            "weeks": 42.0,
+            "months": 180.0,
+            "year": 365.0
+          }
+        },
+        "ablation": {
+          "utility": true,
+          "supersession": true,
+          "contradiction": true,
+          "temporal": true,
+          "intent": true
+        },
+        "inject_uncertain": false,
+        "supersede_mode": "annotate"
+      }
+    }
+  },
+  "datasets": {
+    "data\\external\\longmemeval\\cases-preregistered-first96.jsonl": "a393c4362c63ad9ba6d7fd2aa9e5490d63f4807bc1bd17573a8649ce9911ef34"
+  },
+  "background_sha256": "e995cdaa2e4fbdf913271cf47acc142444faeb51b72d91a25cbcb509a8202bcf",
+  "cases": 96,
+  "extraction": null,
+  "judge_failures": {
+    "jev": 8,
+    "qwen": 0
+  }
+}
