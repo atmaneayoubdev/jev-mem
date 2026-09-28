@@ -5,7 +5,13 @@
   "qwen_configured": true,
   "embeddings": true,
   "circuit": {
-    "jev": "closed",
-    "qwen": "closed"
+    "jev": {
+      "state": "closed",
+      "last_error": null
+    },
+    "qwen": {
+      "state": "closed",
+      "last_error": null
+    }
   }
 }

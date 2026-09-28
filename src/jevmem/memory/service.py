@@ -46,7 +46,7 @@ from jevmem.memory.recall import JudgedRecall, RecallResult
 from jevmem.observability.logging import get_logger
 from jevmem.observability.metrics import Metrics
 from jevmem.policy.thresholds import PolicyConfig
-from jevmem.providers.errors import ProviderError, ProviderUnavailableError
+from jevmem.providers.errors import ProviderError, ProviderUnavailableError, public_message
 from jevmem.providers.qwen import ChatMessage, GenerationProvider
 from jevmem.retrieval.base import CandidateRetriever, MemoryIndex
 from jevmem.retrieval.embedding import Embedder
@@ -145,7 +145,11 @@ class RecallOutcome(BaseModel):
     retrieval_ms: float
     judge_ms: float = 0.0
     judge_calls: int = 0
+    judge_cached_calls: int = 0
     judge_cost: float | None = None
+    # Measured wall-clock of this recall. With cached judgments, judge_ms reports the
+    # originally recorded (modelled) latency while wall_ms is what this request took.
+    wall_ms: float = 0.0
 
 
 class WrittenMemory(BaseModel):
@@ -163,6 +167,7 @@ class ChatOutcome(BaseModel):
     answer: str
     recall: RecallOutcome
     generation_ms: float
+    generation_cached: bool = False
     prompt_tokens: int | None = None
     completion_tokens: int | None = None
     extracted: list[WrittenMemory] = Field(default_factory=list)
@@ -446,7 +451,9 @@ class MemoryService:
             retrieval_ms=r.retrieval_ms,
             judge_ms=r.judge_ms,
             judge_calls=r.judge_calls,
+            judge_cached_calls=r.judge_cached_calls,
             judge_cost=r.judge_cost,
+            wall_ms=r.wall_ms,
         )
 
     async def compare(
@@ -486,24 +493,17 @@ class MemoryService:
             result = await self.generator.complete(messages, max_tokens=700, temperature=0.3)
         except ProviderError as exc:
             self.metrics.inc("qwen_errors")
-            raise ServiceError(f"answer generation failed: {exc}") from exc
+            raise ServiceError(f"answer generation failed: {public_message(exc)}") from exc
         self.metrics.observe("generation_ms", result.latency_ms)
         self.metrics.inc("qwen_requests")
 
         user_turn = self.turns.add(conversation_id, user_id, "user", message)
-        self.turns.add(
-            conversation_id,
-            user_id,
-            "assistant",
-            result.text,
-            retrieval_mode=recall.mode,
-            debug=recall.model_dump(mode="json"),
-        )
         outcome = ChatOutcome(
             conversation_id=conversation_id,
             answer=result.text,
             recall=recall,
             generation_ms=result.latency_ms,
+            generation_cached=result.cached,
             prompt_tokens=result.prompt_tokens,
             completion_tokens=result.completion_tokens,
         )
@@ -533,7 +533,22 @@ class MemoryService:
                 self.metrics.inc("memories_extracted", len(proposals))
             except (ProviderError, OutOfOrderWriteError) as exc:
                 log.warning("memory extraction failed", extra={"error": type(exc).__name__})
-                outcome.extraction_error = str(exc)
+                outcome.extraction_error = public_message(exc)
+        debug = {
+            **recall.model_dump(mode="json"),
+            "generation_ms": outcome.generation_ms,
+            "generation_cached": outcome.generation_cached,
+            "extracted": [w.model_dump(mode="json") for w in outcome.extracted],
+            "extraction_error": outcome.extraction_error,
+        }
+        self.turns.add(
+            conversation_id,
+            user_id,
+            "assistant",
+            result.text,
+            retrieval_mode=recall.mode,
+            debug=debug,
+        )
         return outcome
 
     # --- inspection ----------------------------------------

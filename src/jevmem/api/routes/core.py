@@ -50,7 +50,7 @@ def _debug(outcome: RecallOutcome, s: Settings) -> dict[str, Any] | None:
 @router.get("/health")
 def health(svc: MemoryService = Depends(service)) -> dict[str, Any]:
     breakers = {
-        name: client.breaker.state
+        name: {"state": client.breaker.state, "last_error": client.breaker.last_error}
         for name, client in svc.clients.items()
         if getattr(client, "breaker", None) is not None
     }
@@ -153,16 +153,19 @@ async def create_memory(
 def list_memories(
     user_id: str = Query(min_length=1, max_length=200),
     status: MemoryStatus | None = None,
+    now: datetime | None = None,
     svc: MemoryService = Depends(service),
 ) -> list[dict[str, Any]]:
-    now = datetime.now(UTC)
+    now = now or datetime.now(UTC)
     memories = svc.list_memories(user_id, [status] if status else None)
     return [{**m.model_dump(mode="json"), "validity": svc.validity(m, now).value} for m in memories]
 
 
 @router.get("/memories/{memory_id}")
-def get_memory(memory_id: str, svc: MemoryService = Depends(service)) -> dict[str, Any]:
-    return svc.lineage(memory_id).model_dump(mode="json")
+def get_memory(
+    memory_id: str, now: datetime | None = None, svc: MemoryService = Depends(service)
+) -> dict[str, Any]:
+    return svc.lineage(memory_id, now).model_dump(mode="json")
 
 
 @router.delete("/memories/{memory_id}")

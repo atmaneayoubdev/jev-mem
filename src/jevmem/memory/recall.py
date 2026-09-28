@@ -28,7 +28,7 @@ from jevmem.memory.models import LinkType, Memory
 from jevmem.memory.store import MemoryStore
 from jevmem.policy.engine import CandidateFacts, Decision, ReadDecision, ReadPolicy, ResolvedIntent
 from jevmem.policy.thresholds import PolicyConfig
-from jevmem.providers.errors import ProviderError
+from jevmem.providers.errors import ProviderError, public_message
 from jevmem.retrieval.base import CandidateRetriever, MemoryCandidate
 from jevmem.retrieval.expansion import expand_candidates
 from jevmem.timing import makespan
@@ -52,6 +52,7 @@ class RecallResult(BaseModel):
     judge_ms: float = 0.0
     wall_ms: float = 0.0  # measured wall-clock of this recall (not reproducible under replay)
     judge_calls: int = 0
+    judge_cached_calls: int = 0  # served from the response cache (latency is the original)
     judge_input_tokens: int = 0
     judge_cost: float | None = None
 
@@ -166,7 +167,11 @@ class JudgedRecall:
             intent_judgment = await intent_task
         except ProviderError as exc:
             return self._fallback(
-                query, candidates, now, retrieval_ms, f"intent judgment failed: {exc}"
+                query,
+                candidates,
+                now,
+                retrieval_ms,
+                f"intent judgment failed: {public_message(exc)}",
             )
         intent = self.policy.resolve_intent(intent_judgment)
         if self.expand:
@@ -184,7 +189,11 @@ class JudgedRecall:
             )
         except ProviderError as exc:
             return self._fallback(
-                query, candidates, now, retrieval_ms, f"candidate judgment failed: {exc}"
+                query,
+                candidates,
+                now,
+                retrieval_ms,
+                f"candidate judgment failed: {public_message(exc)}",
             )
         judge_ms = max(0.0, intent_judgment.meta.latency_ms - retrieval_ms) + makespan(
             [j.meta.latency_ms for j in judged], self.judge_workers
@@ -210,6 +219,7 @@ class JudgedRecall:
             judge_ms=judge_ms,
             wall_ms=(time.perf_counter() - t0) * 1000,
             judge_calls=len(metas),
+            judge_cached_calls=sum(1 for m in metas if m.cached),
             judge_input_tokens=sum(m.input_tokens or 0 for m in metas),
             judge_cost=sum(costs) if costs else None,
         )

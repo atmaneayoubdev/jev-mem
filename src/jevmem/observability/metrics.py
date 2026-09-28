@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import statistics
 import threading
 from collections import defaultdict
 from typing import Any
@@ -34,7 +35,7 @@ class Metrics:
                 latencies[name] = {
                     "count": len(ordered),
                     "mean": round(sum(ordered) / len(ordered), 1),
-                    "p50": round(ordered[len(ordered) // 2], 1),
+                    "p50": round(statistics.median(ordered), 1),
                     "p95": round(ordered[min(len(ordered) - 1, int(len(ordered) * 0.95))], 1),
                 }
             return {"counters": dict(self._counters), "latency_ms": latencies}

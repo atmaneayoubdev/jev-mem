@@ -42,3 +42,15 @@ class ResponseFormatError(ProviderError):
 
 class CacheMissError(ProviderError):
     """Raised in cache-only (replay) mode when a request has no cached response."""
+
+
+def public_message(exc: BaseException) -> str:
+    """A short description safe to return to clients or publish in results.
+
+    Provider error bodies can contain account details (e.g. OpenRouter includes the key's
+    workspace URL and id), so they are logged server-side but never exposed.
+    """
+    if isinstance(exc, ProviderError):
+        status = f" (HTTP {exc.status})" if exc.status else ""
+        return f"{exc.provider} {type(exc).__name__}{status}"
+    return type(exc).__name__

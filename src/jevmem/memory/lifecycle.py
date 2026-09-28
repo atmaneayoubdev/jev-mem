@@ -27,7 +27,7 @@ from jevmem.memory.store import MemoryStore
 from jevmem.observability.logging import get_logger
 from jevmem.policy.engine import WriteAction, WritePolicy
 from jevmem.policy.thresholds import PolicyConfig
-from jevmem.providers.errors import ProviderError
+from jevmem.providers.errors import ProviderError, public_message
 from jevmem.retrieval.base import MemoryIndex
 
 log = get_logger("lifecycle")
@@ -168,7 +168,7 @@ class LifecyclePipeline:
                 extra={"memory_id": memory.id, "error": type(exc).__name__},
             )
             report.pending = True
-            report.error = str(exc)
+            report.error = public_message(exc)
             return report
         report.judge_calls = 1 + len(neighbors)
         report.judge_latency_ms = (time.perf_counter() - start) * 1000

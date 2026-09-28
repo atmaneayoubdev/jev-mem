@@ -257,3 +257,36 @@ def test_empty_memories_and_provider_failures(tmp_path: Path) -> None:
         down = c.post("/api/v1/chat", json={"user_id": "u3", "message": "hi", "extract": False})
         assert down.status_code == 503
         assert down.json()["error"] == "service_unavailable"
+
+
+def test_error_shapes_time_travel_and_turn_records(client: TestClient) -> None:
+    bad = client.post("/api/v1/judge", json={"user_id": "u", "query": "q", "mode": "bm25"})
+    assert bad.status_code == 422
+    assert bad.json()["error"] == "http_error"
+    invalid = client.post("/api/v1/memories", json={"user_id": "u"})
+    assert invalid.status_code == 422
+    body = invalid.json()
+    assert body["error"] == "validation_error"
+    assert body["details"]
+    assert body["request_id"]
+
+    client.post(
+        "/api/v1/memories",
+        json={
+            "user_id": "tt",
+            "content": "I'm in Paris this week.",
+            "observed_at": "2026-01-01T09:00:00Z",
+        },
+    )
+    later = client.get(
+        "/api/v1/memories", params={"user_id": "tt", "now": "2026-01-02T00:00:00Z"}
+    ).json()
+    assert later[0]["validity"] in ("current", "expired")  # fake judge: lasting -> current
+    chat = client.post(
+        "/api/v1/chat", json={"user_id": "tt", "message": "I like tea.", "mode": "jev"}
+    ).json()
+    turns = client.get(f"/api/v1/conversations/{chat['conversation_id']}").json()
+    assistant = turns[-1]
+    assert assistant["role"] == "assistant"
+    assert "generation_ms" in assistant["debug"]
+    assert assistant["debug"]["extracted"][0]["memory"]["content"] == "I like tea."

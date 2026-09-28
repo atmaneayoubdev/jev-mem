@@ -1,0 +1,26 @@
+.skip-link {
+  position: absolute;
+  left: var(--s3);
+  top: -60px;
+  z-index: 10;
+  padding: var(--s2) var(--s3);
+  border-radius: var(--r-control);
+  background: var(--accent);
+  color: var(--accent-ink);
+  font-weight: 650;
+  text-decoration: none;
+}
+
+.skip-link:focus {
+  top: var(--s3);
+}
+
+.main {
+  padding-top: var(--s4);
+  padding-bottom: var(--s7);
+  outline: none;
+}
+
+.app-error {
+  margin-bottom: var(--s4);
+}

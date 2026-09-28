@@ -1,0 +1,111 @@
+/*
+ * JevMem design tokens.
+ * Two voices: stored memories are the user's words (serif); the system's judgments,
+ * numbers and controls speak in a legibility-first sans. Colour is reserved for data:
+ * injected (green), stale (ochre) and conflict (raspberry). Everything else is ink.
+ */
+
+:root {
+  color-scheme: light;
+
+  /* surfaces */
+  --paper: #edf0ee;
+  --surface: #f7f9f8;
+  --surface-2: #e3e8e6;
+  --surface-sunk: #e8ecea;
+  --rule: #cfd7d4;
+  --rule-strong: #aab6b3;
+
+  /* ink */
+  --ink: #1a2629;
+  --ink-2: #475659;
+  --ink-3: #5f6e71;
+  --ink-faint: #8e9b9d;
+
+  /* interaction */
+  --accent: #2d4fb8;
+  --accent-ink: #ffffff;
+  --accent-soft: #dde4f6;
+
+  /* data (validated: dataviz validate_palette, light surface #f7f9f8). Marks only;
+     text beside them stays in ink tokens. */
+  --use: #0d7a52;
+  --use-soft: #d9ede3;
+  --stale: #9c5c00;
+  --stale-soft: #f4e7cf;
+  --conflict: #b02a66;
+  --conflict-soft: #f6dfe8;
+  --danger: #a3302a;
+  --danger-soft: #f4dcd9;
+
+  /* type */
+  --font-sans: 'Atkinson Hyperlegible Next Variable', 'Atkinson Hyperlegible Next', system-ui, -apple-system,
+    'Segoe UI', Roboto, sans-serif;
+  --font-serif: 'Source Serif 4 Variable', 'Source Serif 4', Georgia, 'Times New Roman', serif;
+  --font-mono: ui-monospace, 'Cascadia Mono', 'SFMono-Regular', Consolas, 'Liberation Mono', monospace;
+
+  /* scale: 12 / 13.5 / 15 / 17 / 20 / 26 / 34 */
+  --fs-xs: 0.75rem;
+  --fs-sm: 0.84375rem;
+  --fs-base: 0.9375rem;
+  --fs-md: 1.0625rem;
+  --fs-lg: 1.25rem;
+  --fs-xl: 1.625rem;
+  --fs-xxl: 2.125rem;
+
+  /* space */
+  --s1: 4px;
+  --s2: 8px;
+  --s3: 12px;
+  --s4: 16px;
+  --s5: 24px;
+  --s6: 32px;
+  --s7: 48px;
+
+  /* shape: radius follows hierarchy */
+  --r-panel: 14px;
+  --r-row: 9px;
+  --r-control: 7px;
+  --r-pill: 999px;
+
+  --gutter: 16px;
+  --max: 1480px;
+}
+
+@media (min-width: 720px) {
+  :root {
+    --gutter: 28px;
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    color-scheme: dark;
+
+    --paper: #131a1c;
+    --surface: #1a2326;
+    --surface-2: #26323a;
+    --surface-sunk: #10161a;
+    --rule: #2e3b40;
+    --rule-strong: #475a60;
+
+    --ink: #e3eae8;
+    --ink-2: #b0bdbf;
+    --ink-3: #95a4a7;
+    --ink-faint: #6b7b7f;
+
+    --accent: #97acf6;
+    --accent-ink: #0e1633;
+    --accent-soft: #263257;
+
+    /* validated against the dark surface #1a2326 */
+    --use: #31a176;
+    --use-soft: #1b3a2f;
+    --stale: #c7851f;
+    --stale-soft: #3a2e19;
+    --conflict: #d56a93;
+    --conflict-soft: #42222f;
+    --danger: #f19a91;
+    --danger-soft: #45231f;
+  }
+}

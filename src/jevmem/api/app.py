@@ -7,9 +7,11 @@ from contextlib import asynccontextmanager
 from pathlib import Path
 
 from fastapi import FastAPI, Request
+from fastapi.exceptions import RequestValidationError
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from fastapi.staticfiles import StaticFiles
+from starlette.exceptions import HTTPException as StarletteHTTPException
 
 from jevmem import __version__
 from jevmem.api.middleware import (
@@ -81,6 +83,29 @@ def create_app(settings: Settings | None = None, *, bundle: App | None = None) -
     @app.exception_handler(ServiceError)
     async def _service(_: Request, exc: ServiceError) -> JSONResponse:
         return error(503, "service_unavailable", str(exc))
+
+    @app.exception_handler(StarletteHTTPException)
+    async def _http(_: Request, exc: StarletteHTTPException) -> JSONResponse:
+        code = {403: "forbidden", 404: "not_found", 405: "method_not_allowed"}.get(
+            exc.status_code, "http_error"
+        )
+        return error(exc.status_code, code, str(exc.detail))
+
+    @app.exception_handler(RequestValidationError)
+    async def _validation(_: Request, exc: RequestValidationError) -> JSONResponse:
+        details = [
+            {"loc": list(e.get("loc", [])), "msg": e.get("msg", ""), "type": e.get("type", "")}
+            for e in exc.errors()
+        ]
+        return JSONResponse(
+            {
+                "error": "validation_error",
+                "message": "request validation failed",
+                "details": details,
+                "request_id": request_id_var.get(),
+            },
+            status_code=422,
+        )
 
     @app.exception_handler(Exception)
     async def _unhandled(_: Request, exc: Exception) -> JSONResponse:

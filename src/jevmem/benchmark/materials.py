@@ -26,7 +26,7 @@ from jevmem.memory.models import Durability, Memory
 from jevmem.memory.recall import candidate_facts
 from jevmem.memory.store import InMemoryStore
 from jevmem.policy.thresholds import PolicyConfig
-from jevmem.providers.errors import ProviderError
+from jevmem.providers.errors import ProviderError, public_message
 from jevmem.retrieval.base import MemoryCandidate, MemoryIndex
 from jevmem.retrieval.bm25 import ScoredId
 from jevmem.retrieval.embedding import Embedder
@@ -188,7 +188,7 @@ async def _read_judgments(
         )
         judged.candidates = {c.memory.id: j for c, j in zip(expanded, results, strict=True)}
     except ProviderError as exc:
-        judged.failure = f"read-time judgment failed: {exc}"
+        judged.failure = f"read-time judgment failed: {public_message(exc)}"
 
 
 async def materialize(

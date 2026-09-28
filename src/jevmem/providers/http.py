@@ -127,6 +127,7 @@ class CircuitBreaker:
         self.consecutive_failures = 0
         self.opened_at: float | None = None
         self.opens = 0
+        self.last_error: str | None = None
 
     @property
     def state(self) -> str:
@@ -136,17 +137,25 @@ class CircuitBreaker:
 
     def check(self) -> None:
         if self.state == "open":
-            raise ProviderUnavailableError(self.provider, "circuit open (recent repeated failures)")
+            reason = f"; last error {self.last_error}" if self.last_error else ""
+            raise ProviderUnavailableError(self.provider, f"circuit open{reason}")
 
     def record_success(self) -> None:
         self.consecutive_failures = 0
         self.opened_at = None
+        self.last_error = None
 
     def record_failure(self, error: ProviderError) -> None:
-        if not error.retryable:
+        # Auth and quota failures (401/402/403, e.g. an exhausted key) are persistent: open at
+        # once. Transient failures open after `failure_threshold` consecutive exhausted retries.
+        persistent = isinstance(error, (AuthenticationError, PaymentRequiredError))
+        if not (error.retryable or persistent):
             return
+        self.last_error = f"{type(error).__name__}" + (
+            f" (HTTP {error.status})" if error.status else ""
+        )
         self.consecutive_failures += 1
-        if self.consecutive_failures >= self.failure_threshold:
+        if persistent or self.consecutive_failures >= self.failure_threshold:
             if self.opened_at is None:
                 self.opens += 1
             self.opened_at = time.monotonic()

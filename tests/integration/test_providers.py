@@ -353,3 +353,33 @@ async def test_qwen_timeout_is_a_clean_provider_error() -> None:
         with pytest.raises(ProviderUnavailableError):
             await provider.complete([{"role": "user", "content": "hi"}])
     assert len(seen) == 2
+
+
+async def test_breaker_opens_immediately_on_quota_or_auth_errors() -> None:
+    from jevmem.providers.errors import public_message
+    from jevmem.providers.http import CircuitBreaker
+
+    breaker = CircuitBreaker("jev", failure_threshold=5, cooldown_s=60)
+    body = '{"error":{"message":"Key limit exceeded. Manage it using https://example.test/keys/abc123"}}'
+    handler, seen = sequence(httpx.Response(403, text=body))
+    client = SystemOneClient(
+        api_key="k",
+        base_url="https://x.test",
+        model="m",
+        transport=httpx.MockTransport(handler),
+        breaker=breaker,
+        sleep=Sleeps(),
+    )
+    async with client:
+        with pytest.raises(AuthenticationError) as info:
+            await client.evaluate("s", QUESTIONS)
+        assert breaker.state == "open"
+        assert breaker.last_error == "AuthenticationError (HTTP 403)"
+        with pytest.raises(
+            ProviderUnavailableError, match="circuit open; last error AuthenticationError"
+        ):
+            await client.evaluate("s2", QUESTIONS)
+    assert len(seen) == 1
+    public = public_message(info.value)
+    assert public == "jev AuthenticationError (HTTP 403)"
+    assert "example.test" not in public

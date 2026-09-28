@@ -37,3 +37,6 @@ Thumbs.db
 
 # Smoke runs are not published
 benchmarks/results/smoke-*/
+
+# Browser-tool scratch output
+.playwright-mcp/
