@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import asyncio
 import tempfile
+from pathlib import Path
 
 import typer
 from rich.console import Console
@@ -103,3 +104,78 @@ def doctor() -> None:
     console.print(table)
     if not all(ok for _, ok, _ in rows):
         raise typer.Exit(code=1)
+
+
+# --- benchmark ---------------------------------------------------------------------
+
+benchmark_app = typer.Typer(help="Benchmark datasets, runs, and reports.", no_args_is_help=True)
+app.add_typer(benchmark_app, name="benchmark")
+
+DATASETS_DIR = Path("benchmarks/datasets")
+SYNTHETIC_DIR = DATASETS_DIR / "synthetic-v1"
+BACKGROUND_PATH = DATASETS_DIR / "background-v1.jsonl"
+
+
+@benchmark_app.command("generate")
+def benchmark_generate(
+    splits: str = typer.Option("dev,calib,test", help="Comma-separated splits to build."),
+) -> None:
+    """Build the synthetic dataset from template families (deterministic)."""
+    from jevmem.benchmark.datasets.synthetic.generate import build_all
+
+    wanted = tuple(s.strip() for s in splits.split(",") if s.strip())
+    manifest = build_all(SYNTHETIC_DIR, wanted)  # type: ignore[arg-type]
+    for split, info in manifest.items():
+        digest = info["sha256"][:12]
+        console.print(
+            f"{split}: {info['cases']} cases, {info['families']} families, sha256={digest}"
+        )
+
+
+@benchmark_app.command("generate-background")
+def benchmark_generate_background(per_topic: int = typer.Option(30)) -> None:
+    """Generate the shared background-distractor pool with Qwen (run once; output is committed)."""
+    from jevmem.benchmark.datasets.background import generate_pool, save_pool
+
+    async def run() -> int:
+        async with build_qwen_provider(get_settings()) as provider:
+            pool = await generate_pool(provider, per_topic=per_topic)
+        save_pool(pool, BACKGROUND_PATH)
+        return len(pool)
+
+    console.print(f"wrote {asyncio.run(run())} background memories to {BACKGROUND_PATH}")
+
+
+@benchmark_app.command("export-review")
+def benchmark_export_review(
+    split: str = typer.Option("dev"), per_family: int = typer.Option(1)
+) -> None:
+    """Write a readable markdown sample of cases for human review."""
+    from jevmem.benchmark.datasets.synthetic.generate import load_split
+
+    cases = load_split(SYNTHETIC_DIR / f"{split}.jsonl")
+    shown: dict[str, int] = {}
+    lines = [f"# Review sample: {split}", ""]
+    for case in cases:
+        if shown.get(case.family, 0) >= per_family:
+            continue
+        shown[case.family] = shown.get(case.family, 0) + 1
+        lines += [
+            f"## {case.case_id}  ·  {case.category}",
+            "",
+            "| label | date | memory |",
+            "|---|---|---|",
+        ]
+        lines += [f"| {m.label} | {m.observed_at.date()} | {m.content} |" for m in case.memories]
+        exp = case.expected
+        lines += [
+            "",
+            f"**Query ({case.now.date()}, intent={case.intent}):** {case.query}",
+            "",
+            f"**Expected:** mode={exp.mode} aliases={exp.aliases} forbidden={exp.forbidden}",
+            "",
+        ]
+    out = Path("benchmarks/review") / f"{split}.md"
+    out.parent.mkdir(parents=True, exist_ok=True)
+    out.write_text("\n".join(lines), encoding="utf-8")
+    console.print(f"wrote {out}")

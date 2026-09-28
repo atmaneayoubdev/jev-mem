@@ -91,6 +91,31 @@ def _error_for(provider: str, status: int, body: str) -> ProviderError:
     return RequestValidationError(provider, message, status)
 
 
+class SingleFlight:
+    """Collapse concurrent identical requests (same cache key) into one in-flight call."""
+
+    def __init__(self) -> None:
+        self._inflight: dict[str, asyncio.Future[HttpOutcome]] = {}
+
+    async def run(self, key: str, call: Callable[[], Awaitable[HttpOutcome]]) -> HttpOutcome:
+        existing = self._inflight.get(key)
+        if existing is not None:
+            return await asyncio.shield(existing)
+        future: asyncio.Future[HttpOutcome] = asyncio.get_running_loop().create_future()
+        self._inflight[key] = future
+        try:
+            outcome = await call()
+        except BaseException as exc:
+            future.set_exception(exc)
+            future.exception()  # mark retrieved so an unawaited failure is not logged
+            raise
+        else:
+            future.set_result(outcome)
+            return outcome
+        finally:
+            del self._inflight[key]
+
+
 @dataclass(frozen=True)
 class HttpOutcome:
     body: dict[str, Any]

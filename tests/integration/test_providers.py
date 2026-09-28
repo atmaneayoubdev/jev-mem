@@ -283,3 +283,21 @@ async def test_qwen_base_url_without_v1_and_cloudflare_block() -> None:
             await provider.complete([{"role": "user", "content": "hi"}])
     assert seen[0].url == "https://qwen.test/v1/chat/completions"
     assert "authorization" not in seen[0].headers
+
+
+async def test_concurrent_identical_requests_share_one_call() -> None:
+    calls = 0
+
+    async def handler(request: httpx.Request) -> httpx.Response:
+        nonlocal calls
+        calls += 1
+        await asyncio.sleep(0.02)
+        return httpx.Response(200, json=JEV_OK)
+
+    client = SystemOneClient(
+        api_key="k", base_url="https://x.test", model="m", transport=httpx.MockTransport(handler)
+    )
+    async with client:
+        results = await asyncio.gather(*(client.evaluate("same", QUESTIONS) for _ in range(5)))
+    assert calls == 1
+    assert all(r.response == results[0].response for r in results)

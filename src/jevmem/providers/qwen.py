@@ -24,7 +24,9 @@ from jevmem.providers.errors import CacheMissError, ResponseFormatError
 from jevmem.providers.http import (
     USER_AGENT,
     ClientStats,
+    HttpOutcome,
     RetryPolicy,
+    SingleFlight,
     Sleep,
     post_json_with_retries,
 )
@@ -100,6 +102,7 @@ class OpenAICompatibleProvider:
         self._sleep = sleep
         self._client = httpx.AsyncClient(timeout=timeout_s, transport=transport)
         self.stats = ClientStats()
+        self._flights = SingleFlight()
 
     async def complete(
         self,
@@ -138,17 +141,20 @@ class OpenAICompatibleProvider:
             if self._cache.mode == "replay":
                 raise CacheMissError(PROVIDER, f"no cached response for {key[:12]}")
 
-        async with self._semaphore:
-            outcome = await post_json_with_retries(
-                self._client,
-                self._url,
-                payload,
-                provider=PROVIDER,
-                headers=self._headers,
-                retry=self._retry,
-                stats=self.stats,
-                sleep=self._sleep,
-            )
+        async def call() -> HttpOutcome:
+            async with self._semaphore:
+                return await post_json_with_retries(
+                    self._client,
+                    self._url,
+                    payload,
+                    provider=PROVIDER,
+                    headers=self._headers,
+                    retry=self._retry,
+                    stats=self.stats,
+                    sleep=self._sleep,
+                )
+
+        outcome = await self._flights.run(key, call)
         result = _parse(outcome.body, outcome.latency_ms, attempts=outcome.attempts, cached=False)
         if self._cache is not None:
             self._cache.put(

@@ -1,0 +1,44 @@
+{
+  "dev": {
+    "dataset": "synthetic-v1",
+    "split": "dev",
+    "cases": 132,
+    "families": 22,
+    "categories": {
+      "abstention": 12,
+      "adversarial": 12,
+      "coexistence": 12,
+      "contradiction": 12,
+      "historical": 12,
+      "implicit_update": 12,
+      "lexically_distant": 12,
+      "plain_recall": 12,
+      "similar_useless": 12,
+      "supersession": 12,
+      "temporary_state": 12
+    },
+    "sha256": "6bceec23fb3f8c06e8b927fc04a47caf8949e715cc0d17e9c36aec144bca697b",
+    "seed": 20260928
+  },
+  "calib": {
+    "dataset": "synthetic-v1",
+    "split": "calib",
+    "cases": 132,
+    "families": 22,
+    "categories": {
+      "abstention": 12,
+      "adversarial": 12,
+      "coexistence": 12,
+      "contradiction": 12,
+      "historical": 12,
+      "implicit_update": 12,
+      "lexically_distant": 12,
+      "plain_recall": 12,
+      "similar_useless": 12,
+      "supersession": 12,
+      "temporary_state": 12
+    },
+    "sha256": "95b1427cedcd502c2e3e95d1dda9aca2582e1fa42096baaf423166e8256eb98d",
+    "seed": 20260928
+  }
+}

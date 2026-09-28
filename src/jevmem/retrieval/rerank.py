@@ -12,7 +12,7 @@ from jevmem.retrieval.embedding import EmbeddingCache
 
 
 class CrossEncoderScorer:
-    """Scores (query, memory) pairs in [0, 1] (sigmoid of the model logit). Cached on disk."""
+    """Scores (query, memory) pairs as probabilities in [0, 1]. Cached on disk."""
 
     def __init__(
         self, model_id: str, *, cache: EmbeddingCache | None = None, device: str | None = None
@@ -40,11 +40,13 @@ class CrossEncoderScorer:
         found = self._cache.get_many(keys) if self._cache else {}
         missing = [i for i, k in enumerate(keys) if k not in found]
         if missing:
-            logits = np.asarray(
-                self._load().predict([(query, texts[i]) for i in missing], activation_fn=None),
-                dtype=np.float32,
+            # Single-label cross-encoders apply their default sigmoid in `predict`, so the
+            # output is already a probability in [0, 1].
+            probs = np.asarray(
+                self._load().predict([(query, texts[i]) for i in missing]), dtype=np.float32
             ).reshape(-1)
-            probs = 1.0 / (1.0 + np.exp(-logits))
+            if probs.size and (probs.min() < 0.0 or probs.max() > 1.0):
+                raise RuntimeError(f"{self.model_id}: expected probabilities, got raw logits")
             new = {keys[i]: np.array([probs[j]], dtype=np.float32) for j, i in enumerate(missing)}
             found.update(new)
             if self._cache:
