@@ -22,7 +22,8 @@ class Settings(BaseSettings):
         validation_alias=AliasChoices("JEV_API_KEY", "OPENROUTER_API_KEY", "TYPESAFE_API_KEY"),
     )
     jev_base_url: str = "https://openrouter.ai/api"
-    jev_model: str = "jev-1.13"
+    # Pin the dated snapshot: aliases like `jev-latest` move without notice.
+    jev_model: str = "typesafe/jev-1.13-20260917"
     jev_max_concurrency: int = Field(default=16, ge=1, le=256)
     jev_timeout_s: float = Field(default=30.0, gt=0)
     jev_max_retries: int = Field(default=4, ge=0, le=10)
