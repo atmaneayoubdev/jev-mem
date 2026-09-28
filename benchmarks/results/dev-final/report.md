@@ -1,7 +1,7 @@
 # Benchmark report: `dev-final`
 
 - Cases: 132 (dev.jsonl); background distractors per case: 100; context budget: 1024 tokens
-- Git commit: `46fbe3a789ded4ce2fdea9a69340e3d5edebf43b` (dirty); question schema `q1.2`; policy `p1.2`; answer prompt `a1.1`
+- Git commit: `a76440d525385ef2d202a049a6bb0106549800d0` (dirty); question schema `q1.2`; policy `p1.2`; answer prompt `a1.1`
 - Models observed: {'jev': ['typesafe/jev-1.13-20260917'], 'qwen': ['qwen3.8-27b']}; embedding `Qwen/Qwen3-Embedding-0.6B`; reranker `BAAI/bge-reranker-v2-m3`
 - Judge failures (cases): {'jev': 0, 'qwen': 0}
 

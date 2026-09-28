@@ -1,7 +1,7 @@
 # Benchmark report: `test-saturation-1000`
 
 - Cases: 44 (test.jsonl); background distractors per case: 1000; context budget: 1024 tokens
-- Git commit: `947906ee92b149cb8fd96b9480aae7ded02b1030` (dirty); question schema `q1.2`; policy `p1.2`; answer prompt `a1.1`
+- Git commit: `4a78c8ce52a83382765b1068009c0a144635e505` (dirty); question schema `q1.2`; policy `p1.2`; answer prompt `a1.1`
 - Models observed: {'jev': ['typesafe/jev-1.13-20260917'], 'qwen': ['qwen3.8-27b']}; embedding `Qwen/Qwen3-Embedding-0.6B`; reranker `BAAI/bge-reranker-v2-m3`
 - Judge failures (cases): {'jev': 0, 'qwen': 0}
 

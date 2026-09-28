@@ -13,7 +13,7 @@ Full plan: `C:\Users\atman\.claude\plans\starry-squishing-crescent.md` (approved
 - [x] 8. Synthetic generator (dev + calib families only), distractor pool, review export
 - [x] 9. Runner, systems registry, metrics, family bootstrap, leakage probe, ablation replays
 - [x] 10. Dev question iteration (equal budget Jev/Qwen); calibrate all systems on calib; freeze + commit schemas; `docs/preregistration.md`
-- [x] 11. Author test families (f7c79f3); test run + ablations + budget + saturation/pool + nondeterminism (947906e, 97dfb3a)
+- [x] 11. Author test families (42afc4b); test run + ablations + budget + saturation/pool + nondeterminism (4a78c8c, 06fbaa0)
 - [x] 12. LongMemEval loader, throughput measurement (10 inst: 12.7 min, ~1.2k Jev calls/inst), pre-registered subsets (partial: 96/148, see M4)
 - [x] 13. Reports, charts, failure buckets, manifest; `benchmarks/results/M1-SUMMARY.md`
 - [x] 14. Check in with user (2026-09-29)
@@ -36,7 +36,7 @@ Gate after every step: `uv run pytest`, `uv run ruff check .`, `uv run ruff form
 - [x] CLI: serve, memory add/list, demo seed/reset; Alex demo seed
 - [x] Tests (fakes, sqlite tmp) + live smoke
 # M3 — React/Vite inspector, mode toggle, comparison view, lineage timeline
-- [x] Chat & Inspector, Compare, Memories & Timeline, Benchmark views; 22 vitest tests (265dba2)
+- [x] Chat & Inspector, Compare, Memories & Timeline, Benchmark views; 22 vitest tests (6cffd28)
 - [x] Served by FastAPI at `/`; verified live against the API with the Alex demo
 # M4
 - [x] README, docs (architecture, memory model, Jev design, benchmark), SECURITY, CONTRIBUTING, CHANGELOG
@@ -46,7 +46,7 @@ Gate after every step: `uv run pytest`, `uv run ruff check .`, `uv run ruff form
 - [x] e2e track implemented; extraction bug found and fixed (x1.1)
 - [x] Raw results gzipped
 - [x] LongMemEval partial: first 82/148 (all cached) graded -> `lme-partial-82`; +2.4 pp [-2.4, +7.3], 149 vs 344 ctx tokens
-- [x] Fix: JSONL readers split on U+2028 (report crashed on LME) (8227b95)
+- [x] Fix: JSONL readers split on U+2028 (report crashed on LME) (e6207ac)
 - [x] Decision (user, 2026-09-29: "i need less"): LongMemEval stopped; e2e Jev column not run. Both documented, both resumable from cache
 - [x] 12-min Qwen-only extension (user asked for a 15–20 min Qwen job): `lme-partial-96`. Jev on 88 (18 KU), everything else on 96 (26 KU). KU ties: 16/18 vs 16/18; 22/26 vs 22/26
 - [x] Published: https://github.com/atmaneayoubdev/jev-mem (public, 2026-09-29), after a full-history secret scan (0 hits) and a pre-publication history rewrite (see docs/methodology.md)

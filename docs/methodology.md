@@ -102,16 +102,15 @@ The pre-registration draft named `embedding-lifecycle`. The final rule is "the b
 
 ## Freeze and test authoring
 
-- **Freeze commit:** `cd70129`, which covers the question schema `q1.2`, prompts `qp1.0` and `a1.1`, policy `p1.2`, the calibrated parameters and the final pre-registration.
-- **Test families:** 66 families (396 cases), committed in `f7c79f3`, after the freeze.
+- **Freeze commit:** `d2f5c86`, which covers the question schema `q1.2`, prompts `qp1.0` and `a1.1`, policy `p1.2`, the calibrated parameters and the final pre-registration.
+- **Test families:** 66 families (396 cases), committed in `42afc4b`, after the freeze.
   - They were written by an independent agent that was not allowed to read the question schema, prompts, policy, judges, calibration or any results. It could read only the DSL, the scoring rules and the category definitions.
   - I reviewed a sample of one instance per family (`benchmarks/review/test.md`) before running.
-- **History rewrite before first publication.**
-  - Commits after `9ff86ef` were rewritten once, before the repository was first published. This removed a private endpoint address from a UI test fixture, an API key identifier from a test, and the never-valid `test-e2e-10` results.
-  - No source code changed.
-  - Every commit cited here as research provenance (the freeze, test authoring, the test runs) comes earlier and keeps its original id.
-  - The two LongMemEval manifests were updated to the rewritten ids.
-- **Commits between the freeze and the test run** (`fb1ec9c`, `46d5a94`) added analysis tooling only: variants, reliability, reports, charts, and recording of judge scores and pair probabilities.
+- **History rewrites around first publication.**
+  - *Before the first push*, commits after `050ba4f` were rewritten. This removed a private endpoint address from a UI test fixture, an API key identifier from a test, and the never-valid `test-e2e-10` results. No source code changed.
+  - *Right after publication*, every commit message was rewritten to drop a co-author trailer. Only the messages changed: every commit's tree (its exact content), date and order are identical. `git log --reverse --format='%T %ad %s'` therefore still shows the freeze preceding the test families and the test run.
+  - All commit ids cited in this repository, including those in run manifests and reports, are the current ones.
+- **Commits between the freeze and the test run** (`70f148d`, `f899bf8`) added analysis tooling only: variants, reliability, reports, charts, and recording of judge scores and pair probabilities.
   - To show system behaviour was unchanged, dev was replayed **fully offline from the response cache** (`dev-final-replay`). It hit zero cache misses and reproduced every accuracy, selection and token metric exactly (60/60).
   - Judge latency differed by ≤ 4 ms. The retrieval-time overlap term is measured live, not replayed.
 - **Leakage probe:** a TF-IDF (1–2-gram) logistic regression over query and memory text, predicting whether a memory is required.

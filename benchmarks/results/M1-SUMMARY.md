@@ -25,7 +25,7 @@ Jev's advantages over the Qwen judge are:
 
 ## Integrity controls
 
-- **Freeze.** The question schema `q1.2`, prompts `qp1.0`/`a1.1`, policy `p1.2`, calibrated parameters and the pre-registration were frozen in commit `cd70129`. That commit came **before** any test case existed. The test families were added in `f7c79f3`.
+- **Freeze.** The question schema `q1.2`, prompts `qp1.0`/`a1.1`, policy `p1.2`, calibrated parameters and the pre-registration were frozen in commit `d2f5c86`. That commit came **before** any test case existed. The test families were added in `42afc4b`.
 - **Independent authoring.** The test families (66 families, 396 cases) were written by an independent agent. It was not allowed to read the questions Jev is asked, the prompts, the policy, the judges or any results.
 - **Leakage probe.** A TF-IDF logistic regression trained on calib and scored on test reaches AUC **0.527**, which is chance. The test templates share no exploitable surface cues with calib.
 - **Where tuning happened.** Question wording was iterated only on dev (2 iterations, applied to both judges). The Qwen judge got its own iteration: a prompt revision and a thinking-mode trial, neither of which helped.

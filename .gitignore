@@ -40,3 +40,6 @@ benchmarks/results/smoke-*/
 
 # Browser-tool scratch output
 .playwright-mcp/
+
+# invalid run (Jev key hit its limit mid-run); kept locally, never published
+benchmarks/results/test-e2e-10/
