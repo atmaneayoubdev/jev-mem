@@ -27,13 +27,19 @@ Gate after every step: `uv run pytest`, `uv run ruff check .`, `uv run ruff form
 - Calib was also used for bug fixes (logged), so only test is held-out. LongMemEval running.
 
 # M2 — application (autonomous per user, 2026-09-29)
-- [ ] SQLAlchemy store (SQLite default, PostgreSQL-ready) behind MemoryStore; conversations/turns
-- [ ] MemoryService: add/recall (all 5 modes)/archive/lineage; per-user index rebuilt from DB
-- [ ] Qwen memory extraction (structured, propose-only) + chat pipeline
-- [ ] Circuit breaker + service metrics
-- [ ] FastAPI: chat, memories CRUD (archive not delete), retrieve, judge, compare, lineage, benchmark, health, config, metrics, demo
-- [ ] Security: CORS, size limits, rate-limit hook, safe errors, request ids
-- [ ] CLI: serve, memory add/list, demo seed/reset; Alex demo seed
-- [ ] Tests (fakes, sqlite tmp) + live smoke
-# M3 — React/Vite inspector, mode toggle, comparison view, lineage timeline
-# M4 — README, docs, SECURITY/CONTRIBUTING/CHANGELOG, Docker, fresh-clone test, e2e track, artifact compression
+- [x] SQLAlchemy store (SQLite default, PostgreSQL-ready) behind MemoryStore; conversations/turns
+- [x] MemoryService: add/recall (all 5 modes)/archive/lineage; per-user index rebuilt from DB
+- [x] Qwen memory extraction (structured, propose-only) + chat pipeline
+- [x] Circuit breaker + service metrics
+- [x] FastAPI: chat, memories CRUD (archive not delete), retrieve, judge, compare, lineage, benchmark, health, config, metrics, demo
+- [x] Security: CORS, size limits, rate-limit hook, safe errors, request ids
+- [x] CLI: serve, memory add/list, demo seed/reset; Alex demo seed
+- [x] Tests (fakes, sqlite tmp) + live smoke
+# M3 — React/Vite inspector, mode toggle, comparison view, lineage timeline (in progress, frontend agent)
+# M4
+- [x] README, docs (architecture, memory model, Jev design, benchmark), SECURITY, CONTRIBUTING, CHANGELOG
+- [x] Dockerfile + compose (build test pending frontend)
+- [x] Fresh-clone test: installs, 135+ offline tests pass, datasets regenerate byte-identical
+- [x] e2e track implemented; extraction bug found and fixed (x1.1)
+- [x] Raw results gzipped
+- [ ] BLOCKED (Jev key monthly limit $5 reached): finish LongMemEval (70/148 cached), re-run e2e Jev column
