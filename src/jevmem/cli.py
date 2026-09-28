@@ -179,3 +179,52 @@ def benchmark_export_review(
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text("\n".join(lines), encoding="utf-8")
     console.print(f"wrote {out}")
+
+
+@benchmark_app.command("run")
+def benchmark_run(
+    run_id: str = typer.Option(..., help="Name of the results directory."),
+    split: list[str] = typer.Option(["dev"], help="Synthetic split(s) to run."),
+    systems: str = typer.Option("all", help="Comma-separated system names, or 'all'."),
+    judges: str = typer.Option("jev,qwen"),
+    n_background: int = typer.Option(100),
+    pool_max: int = typer.Option(20),
+    budget: int = typer.Option(1024),
+    limit: int | None = typer.Option(None, help="Stratified subset size (smoke runs)."),
+    params: Path | None = typer.Option(None, help="Calibrated parameters JSON."),
+    no_answer: bool = typer.Option(False, help="Skip answer generation."),
+    no_embeddings: bool = typer.Option(False),
+    replay: bool = typer.Option(False, help="Cache-only: fail on any uncached model call."),
+    concurrency: int = typer.Option(8),
+) -> None:
+    """Run the benchmark and write results to benchmarks/results/<run-id>/."""
+    import json
+
+    from jevmem.benchmark.reports import category_table, summary_table
+    from jevmem.benchmark.runner import ALL_SYSTEMS, RunConfig, run
+
+    config = RunConfig(
+        run_id=run_id,
+        cases_paths=[SYNTHETIC_DIR / f"{s}.jsonl" for s in split],
+        systems=ALL_SYSTEMS if systems == "all" else [s.strip() for s in systems.split(",")],
+        judges=[j.strip() for j in judges.split(",") if j.strip()],
+        n_background=n_background,
+        pool_max=pool_max,
+        budget=budget,
+        embeddings=not no_embeddings,
+        answer=not no_answer,
+        case_concurrency=concurrency,
+        limit=limit,
+        params_path=params,
+        cache_mode="replay" if replay else "readwrite",
+    )
+
+    def progress(stage: str, done: int, total: int) -> None:
+        if done == total or done % max(1, total // 10) == 0:
+            console.print(f"[dim]{stage}: {done}/{total}[/]")
+
+    out = asyncio.run(run(config, get_settings(), progress=progress))
+    metrics = json.loads((out / "metrics.json").read_text(encoding="utf-8"))
+    console.print(summary_table(metrics))
+    console.print(category_table(metrics))
+    console.print(f"results: {out}")

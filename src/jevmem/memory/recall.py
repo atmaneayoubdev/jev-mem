@@ -10,6 +10,7 @@ from __future__ import annotations
 
 import asyncio
 import time
+from collections.abc import Mapping, Sequence
 from datetime import datetime
 
 from pydantic import BaseModel, Field
@@ -79,6 +80,53 @@ def candidate_facts(
     )
 
 
+def context_entries(
+    candidates: Sequence[MemoryCandidate], decisions: Sequence[ReadDecision], config: PolicyConfig
+) -> list[ContextEntry]:
+    """Injected decisions → context entries, prioritised by utility (then relevance)."""
+    memories = {c.memory.id: c.memory for c in candidates}
+    entries = []
+    for d in decisions:
+        if not d.injected_under(config):
+            continue
+        entries.append(
+            ContextEntry(
+                memory=memories[d.memory_id],
+                priority=(d.utility or 0.0) + 1e-3 * (d.relevance or 0.0),
+                label=d.decision.value,
+                annotations=d.annotations,
+                conflict=d.decision is Decision.CONFLICT,
+            )
+        )
+    return entries
+
+
+def decide_and_build(
+    candidates: Sequence[MemoryCandidate],
+    judgments: Mapping[str, CandidateJudgment],
+    intent: ResolvedIntent,
+    store: MemoryStore,
+    now: datetime,
+    config: PolicyConfig,
+    builder: ContextBuilder,
+) -> tuple[dict[str, CandidateFacts], list[ReadDecision], ContextResult]:
+    """The deterministic part of recall: facts → policy decisions → context. Pure given inputs,
+    so the benchmark can replay it over cached judgments with any policy configuration."""
+    policy = ReadPolicy(config)
+    facts = {c.memory.id: candidate_facts(store, c.memory, now, config) for c in candidates}
+    eligible = {
+        c.memory.id: judgments[c.memory.id].relevance
+        for c in candidates
+        if policy.eligible(facts[c.memory.id], intent)
+    }
+    decisions = [
+        policy.decide(judgments[c.memory.id], facts[c.memory.id], intent, eligible)
+        for c in candidates
+    ]
+    context = builder.build(context_entries(candidates, decisions, config), now)
+    return facts, decisions, context
+
+
 class JudgedRecall:
     def __init__(
         self,
@@ -122,10 +170,6 @@ class JudgedRecall:
         intent = self.policy.resolve_intent(intent_judgment)
         if self.expand:
             candidates = expand_candidates(candidates, self.store, intent.intent)
-        facts = {
-            c.memory.id: candidate_facts(self.store, c.memory, now, self.config) for c in candidates
-        }
-
         try:
             judged = await asyncio.gather(
                 *(self.judge.candidate(query, c.memory.content) for c in candidates)
@@ -138,16 +182,9 @@ class JudgedRecall:
             [j.meta.latency_ms for j in judged], self.judge_workers
         )
         judgments = {c.memory.id: j for c, j in zip(candidates, judged, strict=True)}
-
-        eligible = {
-            mid: judgments[mid].relevance
-            for mid in judgments
-            if self.policy.eligible(facts[mid], intent)
-        }
-        decisions = [
-            self.policy.decide(judgments[mid], facts[mid], intent, eligible) for mid in judgments
-        ]
-        context = self.builder.build(self._entries(candidates, decisions), now)
+        facts, decisions, context = decide_and_build(
+            candidates, judgments, intent, self.store, now, self.config, self.builder
+        )
 
         metas = [intent_judgment.meta, *(j.meta for j in judged)]
         costs = [m.cost for m in metas if m.cost is not None]
@@ -168,26 +205,6 @@ class JudgedRecall:
             judge_input_tokens=sum(m.input_tokens or 0 for m in metas),
             judge_cost=sum(costs) if costs else None,
         )
-
-    def _entries(
-        self, candidates: list[MemoryCandidate], decisions: list[ReadDecision]
-    ) -> list[ContextEntry]:
-        memories = {c.memory.id: c.memory for c in candidates}
-        entries = []
-        for d in decisions:
-            if not d.injected_under(self.config):
-                continue
-            priority = (d.utility or 0.0) + 1e-3 * (d.relevance or 0.0)
-            entries.append(
-                ContextEntry(
-                    memory=memories[d.memory_id],
-                    priority=priority,
-                    label=d.decision.value,
-                    annotations=d.annotations,
-                    conflict=d.decision is Decision.CONFLICT,
-                )
-            )
-        return entries
 
     def _fallback(
         self,

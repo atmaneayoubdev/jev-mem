@@ -82,8 +82,11 @@ class SentenceTransformerEmbedder:
         query_instruction: str = DEFAULT_QUERY_INSTRUCTION,
         device: str | None = None,
         batch_size: int = 64,
+        cache_queries: bool = True,
     ) -> None:
         self.model_id = model_id
+        # Benchmarks disable query caching so measured retrieval latency is real.
+        self._cache_queries = cache_queries
         self._cache = cache
         self._query_instruction = query_instruction
         self._device = device
@@ -106,11 +109,14 @@ class SentenceTransformerEmbedder:
             self._model = SentenceTransformer(self.model_id, **kwargs)
         return self._model
 
-    def _encode(self, texts: Sequence[str], kind: str, prefix: str) -> Vector:
+    def _encode(
+        self, texts: Sequence[str], kind: str, prefix: str, *, cached: bool = True
+    ) -> Vector:
         if not texts:
             return np.zeros((0, 0), dtype=np.float32)
+        cache = self._cache if cached else None
         keys = [EmbeddingCache.key(self.model_id, kind, t) for t in texts]
-        found = self._cache.get_many(keys) if self._cache else {}
+        found = cache.get_many(keys) if cache else {}
         missing = [i for i, k in enumerate(keys) if k not in found]
         if missing:
             model = self._load()
@@ -122,12 +128,12 @@ class SentenceTransformerEmbedder:
             ).astype(np.float32)
             new = {keys[i]: vectors[j] for j, i in enumerate(missing)}
             found.update(new)
-            if self._cache:
-                self._cache.put_many(new)
+            if cache:
+                cache.put_many(new)
         return np.stack([found[k] for k in keys])
 
     def encode_queries(self, texts: Sequence[str]) -> Vector:
-        return self._encode(texts, "query", self._query_instruction)
+        return self._encode(texts, "query", self._query_instruction, cached=self._cache_queries)
 
     def encode_documents(self, texts: Sequence[str]) -> Vector:
         return self._encode(texts, "document", "")
@@ -155,12 +161,19 @@ class EmbeddingIndex:
         self._matrix = None
 
     def search(self, query: str, limit: int | None = None) -> list[ScoredId]:
+        """Rank memories for a user request (query-side instruction applied)."""
+        return self._rank(self.embedder.encode_queries([query])[0], limit)
+
+    def search_similar(self, text: str, limit: int | None = None) -> list[ScoredId]:
+        """Rank memories by symmetric document-document similarity (memory-to-memory)."""
+        return self._rank(self.embedder.encode_documents([text])[0], limit)
+
+    def _rank(self, vector: Vector, limit: int | None) -> list[ScoredId]:
         if not self._ids:
             return []
         if self._matrix is None:
             self._matrix = np.stack(self._rows)
-        q = self.embedder.encode_queries([query])[0]
-        scores = self._matrix @ q
+        scores = self._matrix @ vector
         order = np.lexsort((np.array(self._ids), -scores))
         if limit is not None:
             order = order[:limit]

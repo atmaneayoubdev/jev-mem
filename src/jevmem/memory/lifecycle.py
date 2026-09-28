@@ -62,6 +62,7 @@ class LifecyclePipeline:
         *,
         active_neighbors: int = 5,
         superseded_neighbors: int = 2,
+        min_embedding_similarity: float = 0.45,
         rrf_k: int = 60,
     ) -> None:
         self.store = store
@@ -71,6 +72,10 @@ class LifecyclePipeline:
         self.policy = WritePolicy(config)
         self.active_neighbors = active_neighbors
         self.superseded_neighbors = superseded_neighbors
+        # Dense search always returns *something*; without a floor every memory would be
+        # paired with unrelated ones (wasted judge calls, and case-specific pairs that defeat
+        # caching). The floor's effect on real relations is measured as neighbour recall.
+        self.min_embedding_similarity = min_embedding_similarity
         self.rrf_k = rrf_k
         self._last_key: dict[str, tuple[object, ...]] = {}
 
@@ -105,7 +110,13 @@ class LifecyclePipeline:
         fused: dict[str, float] = {}
         rankings = [user.bm25.search(memory.content)]
         if user.embedding is not None:
-            rankings.append(user.embedding.search(memory.content))
+            rankings.append(
+                [
+                    r
+                    for r in user.embedding.search_similar(memory.content)
+                    if r.score >= self.min_embedding_similarity
+                ]
+            )
         for ranking in rankings:
             for rank, item in enumerate(
                 r for r in ranking if position.get(r.memory_id, limit_pos) < limit_pos
