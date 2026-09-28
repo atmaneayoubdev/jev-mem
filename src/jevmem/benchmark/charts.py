@@ -155,6 +155,7 @@ def line_chart(
     fig, ax = plt.subplots(figsize=(7.6, 4.4), dpi=160)
     _style(ax, grid_axis="y")
     scale = 100.0 if percent else 1.0
+    ends: list[tuple[str, float, float]] = []
     for name, points in series.items():
         color = ENTITY_COLORS.get(name, GRAY_MARK)
         xs = [p[0] for p in points]
@@ -179,15 +180,7 @@ def line_chart(
             markeredgewidth=2,
             zorder=3,
         )
-        ax.annotate(
-            f"{name}  {ys[-1]:.0f}{'%' if percent else ''}",
-            (xs[-1], ys[-1]),
-            xytext=(8, 0),
-            textcoords="offset points",
-            va="center",
-            fontsize=9,
-            color=TEXT,
-        )
+        ends.append((f"{name}  {ys[-1]:.0f}{'%' if percent else ''}", xs[-1], ys[-1]))
     if xscale == "symlog":
         ax.set_xscale("symlog", linthresh=10)
     elif xscale == "log2":
@@ -204,6 +197,21 @@ def line_chart(
     ax.set_title(subtitle, loc="left", fontsize=9, color=TEXT_2, pad=8)
     fig.tight_layout()
     fig.subplots_adjust(right=0.8)
+    placed: list[float] = []
+    for text, x, y in sorted(ends, key=lambda e: -e[2]):
+        py = ax.transData.transform((x, y))[1]
+        if any(abs(py - other) < 16 for other in placed):
+            continue  # converging lines: skip rather than stack; legend identifies the series
+        placed.append(py)
+        ax.annotate(
+            text,
+            (x, y),
+            xytext=(8, 0),
+            textcoords="offset points",
+            va="center",
+            fontsize=9,
+            color=TEXT,
+        )
     fig.savefig(out)
     plt.close(fig)
     return out
