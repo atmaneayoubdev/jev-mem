@@ -1,7 +1,7 @@
 # Benchmark report: `lme-partial-96`
 
 - Cases: 96 (cases-preregistered-first96.jsonl); background distractors per case: 0; context budget: 1024 tokens
-- Git commit: `a893badcd3bee5c6eae693dff6204c0bee2cb072` (dirty); question schema `q1.2`; policy `p1.2`; answer prompt `a1.1`
+- Git commit: `df0054573be6157a694910a798df9286351ca681` (dirty); question schema `q1.2`; policy `p1.2`; answer prompt `a1.1`
 - Models observed: {'jev': ['typesafe/jev-1.13-20260917'], 'qwen': ['qwen3.8-27b']}; embedding `Qwen/Qwen3-Embedding-0.6B`; reranker `BAAI/bge-reranker-v2-m3`
 - Judge failures (cases): {'jev': 8, 'qwen': 0}
 

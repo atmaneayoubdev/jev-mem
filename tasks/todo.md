@@ -36,7 +36,7 @@ Gate after every step: `uv run pytest`, `uv run ruff check .`, `uv run ruff form
 - [x] CLI: serve, memory add/list, demo seed/reset; Alex demo seed
 - [x] Tests (fakes, sqlite tmp) + live smoke
 # M3 — React/Vite inspector, mode toggle, comparison view, lineage timeline
-- [x] Chat & Inspector, Compare, Memories & Timeline, Benchmark views; 22 vitest tests (ec7afc7)
+- [x] Chat & Inspector, Compare, Memories & Timeline, Benchmark views; 22 vitest tests (265dba2)
 - [x] Served by FastAPI at `/`; verified live against the API with the Alex demo
 # M4
 - [x] README, docs (architecture, memory model, Jev design, benchmark), SECURITY, CONTRIBUTING, CHANGELOG
@@ -46,6 +46,6 @@ Gate after every step: `uv run pytest`, `uv run ruff check .`, `uv run ruff form
 - [x] e2e track implemented; extraction bug found and fixed (x1.1)
 - [x] Raw results gzipped
 - [x] LongMemEval partial: first 82/148 (all cached) graded -> `lme-partial-82`; +2.4 pp [-2.4, +7.3], 149 vs 344 ctx tokens
-- [x] Fix: JSONL readers split on U+2028 (report crashed on LME) (ba8a42a)
+- [x] Fix: JSONL readers split on U+2028 (report crashed on LME) (8227b95)
 - [x] Decision (user, 2026-09-29: "i need less"): LongMemEval stopped; e2e Jev column not run. Both documented, both resumable from cache
 - [x] 12-min Qwen-only extension (user asked for a 15–20 min Qwen job): `lme-partial-96`. Jev on 88 (18 KU), everything else on 96 (26 KU). KU ties: 16/18 vs 16/18; 22/26 vs 22/26

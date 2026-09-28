@@ -106,6 +106,11 @@ The pre-registration draft named `embedding-lifecycle`. The final rule is "the b
 - **Test families:** 66 families (396 cases), committed in `f7c79f3`, after the freeze.
   - They were written by an independent agent that was not allowed to read the question schema, prompts, policy, judges, calibration or any results. It could read only the DSL, the scoring rules and the category definitions.
   - I reviewed a sample of one instance per family (`benchmarks/review/test.md`) before running.
+- **History rewrite before first publication.**
+  - Commits after `9ff86ef` were rewritten once, before the repository was first published. This removed a private endpoint address from a UI test fixture, an API key identifier from a test, and the never-valid `test-e2e-10` results.
+  - No source code changed.
+  - Every commit cited here as research provenance (the freeze, test authoring, the test runs) comes earlier and keeps its original id.
+  - The two LongMemEval manifests were updated to the rewritten ids.
 - **Commits between the freeze and the test run** (`fb1ec9c`, `46d5a94`) added analysis tooling only: variants, reliability, reports, charts, and recording of judge scores and pair probabilities.
   - To show system behaviour was unchanged, dev was replayed **fully offline from the response cache** (`dev-final-replay`). It hit zero cache misses and reproduced every accuracy, selection and token metric exactly (60/60).
   - Judge latency differed by ≤ 4 ms. The retrieval-time overlap term is measured live, not replayed.
