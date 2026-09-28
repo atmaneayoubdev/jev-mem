@@ -5,6 +5,7 @@ run's raw files, so a report can be regenerated at any time with `jevmem benchma
 
 from __future__ import annotations
 
+import gzip
 import json
 from collections import defaultdict
 from collections.abc import Sequence
@@ -75,16 +76,22 @@ def category_table(
     return "\n".join(lines)
 
 
+def read_cases(run: Path) -> list[dict[str, Any]]:
+    """Per-case rows from `cases.jsonl.gz` (current format) or `cases.jsonl` (older runs)."""
+    gz = run / "cases.jsonl.gz"
+    if gz.exists():
+        with gzip.open(gz, "rt", encoding="utf-8") as fh:
+            return [json.loads(line) for line in fh if line.strip()]
+    text = (run / "cases.jsonl").read_text(encoding="utf-8")
+    return [json.loads(line) for line in text.splitlines() if line]
+
+
 def _load(
     run: Path,
 ) -> tuple[dict[str, Any], dict[str, Any], list[dict[str, Any]], list[dict[str, Any]]]:
     metrics = json.loads((run / "metrics.json").read_text(encoding="utf-8"))
     manifest = json.loads((run / "manifest.json").read_text(encoding="utf-8"))
-    rows = [
-        json.loads(line)
-        for line in (run / "cases.jsonl").read_text(encoding="utf-8").splitlines()
-        if line
-    ]
+    rows = read_cases(run)
     rel_path = run / "relations.jsonl"
     relations = (
         [json.loads(line) for line in rel_path.read_text(encoding="utf-8").splitlines() if line]

@@ -148,11 +148,3 @@ Answer accuracy, hybrid-jev minus embedding: **+11.6 pp** [95% CI +5.1, +19.2] o
 **similar_useless/t-guitar-handedness/i0** (similar_useless). Query: "I'm buying my first acoustic guitar; what should I take into account?". Expected: value ['left-hand*', 'left hand*', 'lefty']
 - hybrid-jev: selected ['m2:neutral'] (+1 background) -> "Cherry wood's reddish hue and Fender's manufacturing process"
 - embedding: selected ['m2:neutral'] (+9 background) -> "Fender"
-
-## Charts
-
-![answer_accuracy.png](charts/answer_accuracy.png)
-![forbidden_in_context.png](charts/forbidden_in_context.png)
-![context_tokens.png](charts/context_tokens.png)
-![quality_vs_latency.png](charts/quality_vs_latency.png)
-![reliability_utility.png](charts/reliability_utility.png)

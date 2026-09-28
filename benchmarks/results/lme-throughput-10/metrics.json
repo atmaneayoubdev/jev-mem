@@ -1,0 +1,1712 @@
+{
+  "overall": {
+    "bm25": {
+      "answer_correct": {
+        "mean": 0.8,
+        "lo": 0.5,
+        "hi": 1.0,
+        "n": 10
+      },
+      "selection_correct": {
+        "mean": 0.9,
+        "lo": 0.7,
+        "hi": 1.0,
+        "n": 10
+      },
+      "required_recall": {
+        "mean": 0.9,
+        "lo": 0.7,
+        "hi": 1.0,
+        "n": 10
+      },
+      "forbidden_selected": {
+        "mean": 0.0,
+        "lo": 0.0,
+        "hi": 0.0,
+        "n": 10
+      },
+      "forbidden_in_answer": {
+        "mean": 0.0,
+        "lo": 0.0,
+        "hi": 0.0,
+        "n": 10
+      },
+      "neutral_selected": {
+        "mean": 1.9,
+        "lo": 1.4,
+        "hi": 2.3,
+        "n": 10
+      },
+      "background_selected": {
+        "mean": 0.0,
+        "lo": 0.0,
+        "hi": 0.0,
+        "n": 10
+      },
+      "recall@1": {
+        "mean": 0.7,
+        "lo": 0.4,
+        "hi": 0.9,
+        "n": 10
+      },
+      "recall@5": {
+        "mean": 1.0,
+        "lo": 1.0,
+        "hi": 1.0,
+        "n": 10
+      },
+      "mrr": {
+        "mean": 0.8033333333333333,
+        "lo": 0.6099166666666668,
+        "hi": 0.95,
+        "n": 10
+      },
+      "ndcg10": {
+        "mean": 0.8517782560806,
+        "lo": 0.7047115076255013,
+        "hi": 0.9630929753571458,
+        "n": 10
+      },
+      "first_stage_recall": {
+        "mean": null,
+        "lo": null,
+        "hi": null,
+        "n": 0
+      },
+      "expanded_recall": {
+        "mean": null,
+        "lo": null,
+        "hi": null,
+        "n": 0
+      },
+      "intent_correct": {
+        "mean": null,
+        "lo": null,
+        "hi": null,
+        "n": 0
+      },
+      "context_tokens": {
+        "mean": 157.9,
+        "lo": 134.8975,
+        "hi": 179.7025,
+        "n": 10
+      },
+      "retrieval_ms": {
+        "mean": 0.05076999950688332,
+        "lo": 0.03187824971973896,
+        "hi": 0.08142025297274813,
+        "n": 10
+      },
+      "judge_ms": {
+        "mean": 0.0,
+        "lo": 0.0,
+        "hi": 0.0,
+        "n": 10
+      },
+      "end_to_end_ms": {
+        "mean": 1078.8030900002923,
+        "lo": 1014.3462019979415,
+        "hi": 1134.3967507478737,
+        "n": 10
+      },
+      "judge_cost": {
+        "mean": null,
+        "lo": null,
+        "hi": null,
+        "n": 0
+      },
+      "failed_cases": {
+        "mean": 0.0,
+        "lo": 0.0,
+        "hi": 0.0,
+        "n": 0
+      }
+    },
+    "bm25-jev": {
+      "answer_correct": {
+        "mean": 0.8,
+        "lo": 0.5,
+        "hi": 1.0,
+        "n": 10
+      },
+      "selection_correct": {
+        "mean": 1.0,
+        "lo": 1.0,
+        "hi": 1.0,
+        "n": 10
+      },
+      "required_recall": {
+        "mean": 1.0,
+        "lo": 1.0,
+        "hi": 1.0,
+        "n": 10
+      },
+      "forbidden_selected": {
+        "mean": 0.0,
+        "lo": 0.0,
+        "hi": 0.0,
+        "n": 10
+      },
+      "forbidden_in_answer": {
+        "mean": 0.0,
+        "lo": 0.0,
+        "hi": 0.0,
+        "n": 10
+      },
+      "neutral_selected": {
+        "mean": 0.6,
+        "lo": 0.1,
+        "hi": 1.2,
+        "n": 10
+      },
+      "background_selected": {
+        "mean": 0.0,
+        "lo": 0.0,
+        "hi": 0.0,
+        "n": 10
+      },
+      "recall@1": {
+        "mean": 0.9,
+        "lo": 0.7,
+        "hi": 1.0,
+        "n": 10
+      },
+      "recall@5": {
+        "mean": 1.0,
+        "lo": 1.0,
+        "hi": 1.0,
+        "n": 10
+      },
+      "mrr": {
+        "mean": 0.95,
+        "lo": 0.85,
+        "hi": 1.0,
+        "n": 10
+      },
+      "ndcg10": {
+        "mean": 0.9630929753571458,
+        "lo": 0.8892789260714373,
+        "hi": 1.0,
+        "n": 10
+      },
+      "first_stage_recall": {
+        "mean": 1.0,
+        "lo": 1.0,
+        "hi": 1.0,
+        "n": 10
+      },
+      "expanded_recall": {
+        "mean": 1.0,
+        "lo": 1.0,
+        "hi": 1.0,
+        "n": 10
+      },
+      "intent_correct": {
+        "mean": 0.3,
+        "lo": 0.1,
+        "hi": 0.6,
+        "n": 10
+      },
+      "context_tokens": {
+        "mean": 132.8,
+        "lo": 87.0975,
+        "hi": 186.91499999999994,
+        "n": 10
+      },
+      "retrieval_ms": {
+        "mean": 0.05076999950688332,
+        "lo": 0.03187824971973896,
+        "hi": 0.08142025297274813,
+        "n": 10
+      },
+      "judge_ms": {
+        "mean": 953.9230200040038,
+        "lo": 841.1351297419606,
+        "hi": 1062.0144807629185,
+        "n": 10
+      },
+      "end_to_end_ms": {
+        "mean": 2024.1860000023735,
+        "lo": 1934.8237897549188,
+        "hi": 2123.3275227457852,
+        "n": 10
+      },
+      "judge_cost": {
+        "mean": 0.0003326022,
+        "lo": 0.00022931454,
+        "hi": 0.00042877705500000003,
+        "n": 10
+      },
+      "failed_cases": {
+        "mean": 0.0,
+        "lo": 0.0,
+        "hi": 0.0,
+        "n": 0
+      }
+    },
+    "embedding": {
+      "answer_correct": {
+        "mean": 0.9,
+        "lo": 0.7,
+        "hi": 1.0,
+        "n": 10
+      },
+      "selection_correct": {
+        "mean": 1.0,
+        "lo": 1.0,
+        "hi": 1.0,
+        "n": 10
+      },
+      "required_recall": {
+        "mean": 1.0,
+        "lo": 1.0,
+        "hi": 1.0,
+        "n": 10
+      },
+      "forbidden_selected": {
+        "mean": 0.0,
+        "lo": 0.0,
+        "hi": 0.0,
+        "n": 10
+      },
+      "forbidden_in_answer": {
+        "mean": 0.0,
+        "lo": 0.0,
+        "hi": 0.0,
+        "n": 10
+      },
+      "neutral_selected": {
+        "mean": 9.0,
+        "lo": 9.0,
+        "hi": 9.0,
+        "n": 10
+      },
+      "background_selected": {
+        "mean": 0.0,
+        "lo": 0.0,
+        "hi": 0.0,
+        "n": 10
+      },
+      "recall@1": {
+        "mean": 0.7,
+        "lo": 0.4,
+        "hi": 0.9,
+        "n": 10
+      },
+      "recall@5": {
+        "mean": 1.0,
+        "lo": 1.0,
+        "hi": 1.0,
+        "n": 10
+      },
+      "mrr": {
+        "mean": 0.8,
+        "lo": 0.6,
+        "hi": 0.95,
+        "n": 10
+      },
+      "ndcg10": {
+        "mean": 0.8492282869718244,
+        "lo": 0.6984565739436487,
+        "hi": 0.9630929753571458,
+        "n": 10
+      },
+      "first_stage_recall": {
+        "mean": null,
+        "lo": null,
+        "hi": null,
+        "n": 0
+      },
+      "expanded_recall": {
+        "mean": null,
+        "lo": null,
+        "hi": null,
+        "n": 0
+      },
+      "intent_correct": {
+        "mean": null,
+        "lo": null,
+        "hi": null,
+        "n": 0
+      },
+      "context_tokens": {
+        "mean": 558.4,
+        "lo": 505.3975,
+        "hi": 616.1025,
+        "n": 10
+      },
+      "retrieval_ms": {
+        "mean": 42.604090002714656,
+        "lo": 37.535454000862956,
+        "hi": 48.269343503452546,
+        "n": 10
+      },
+      "judge_ms": {
+        "mean": 0.0,
+        "lo": 0.0,
+        "hi": 0.0,
+        "n": 10
+      },
+      "end_to_end_ms": {
+        "mean": 1120.1650200033328,
+        "lo": 1052.997582753851,
+        "hi": 1172.185886253792,
+        "n": 10
+      },
+      "judge_cost": {
+        "mean": null,
+        "lo": null,
+        "hi": null,
+        "n": 0
+      },
+      "failed_cases": {
+        "mean": 0.0,
+        "lo": 0.0,
+        "hi": 0.0,
+        "n": 0
+      }
+    },
+    "embedding-decay": {
+      "answer_correct": {
+        "mean": 0.9,
+        "lo": 0.7,
+        "hi": 1.0,
+        "n": 10
+      },
+      "selection_correct": {
+        "mean": 1.0,
+        "lo": 1.0,
+        "hi": 1.0,
+        "n": 10
+      },
+      "required_recall": {
+        "mean": 1.0,
+        "lo": 1.0,
+        "hi": 1.0,
+        "n": 10
+      },
+      "forbidden_selected": {
+        "mean": 0.0,
+        "lo": 0.0,
+        "hi": 0.0,
+        "n": 10
+      },
+      "forbidden_in_answer": {
+        "mean": 0.0,
+        "lo": 0.0,
+        "hi": 0.0,
+        "n": 10
+      },
+      "neutral_selected": {
+        "mean": 7.0,
+        "lo": 7.0,
+        "hi": 7.0,
+        "n": 10
+      },
+      "background_selected": {
+        "mean": 0.0,
+        "lo": 0.0,
+        "hi": 0.0,
+        "n": 10
+      },
+      "recall@1": {
+        "mean": 0.7,
+        "lo": 0.4,
+        "hi": 0.9,
+        "n": 10
+      },
+      "recall@5": {
+        "mean": 1.0,
+        "lo": 1.0,
+        "hi": 1.0,
+        "n": 10
+      },
+      "mrr": {
+        "mean": 0.8,
+        "lo": 0.6,
+        "hi": 0.95,
+        "n": 10
+      },
+      "ndcg10": {
+        "mean": 0.8492282869718244,
+        "lo": 0.6984565739436487,
+        "hi": 0.9630929753571458,
+        "n": 10
+      },
+      "first_stage_recall": {
+        "mean": null,
+        "lo": null,
+        "hi": null,
+        "n": 0
+      },
+      "expanded_recall": {
+        "mean": null,
+        "lo": null,
+        "hi": null,
+        "n": 0
+      },
+      "intent_correct": {
+        "mean": null,
+        "lo": null,
+        "hi": null,
+        "n": 0
+      },
+      "context_tokens": {
+        "mean": 453.1,
+        "lo": 409.485,
+        "hi": 500.7099999999999,
+        "n": 10
+      },
+      "retrieval_ms": {
+        "mean": 42.604090002714656,
+        "lo": 37.535454000862956,
+        "hi": 48.269343503452546,
+        "n": 10
+      },
+      "judge_ms": {
+        "mean": 0.0,
+        "lo": 0.0,
+        "hi": 0.0,
+        "n": 10
+      },
+      "end_to_end_ms": {
+        "mean": 1123.5547300020698,
+        "lo": 1055.9888877485355,
+        "hi": 1170.337913504336,
+        "n": 10
+      },
+      "judge_cost": {
+        "mean": null,
+        "lo": null,
+        "hi": null,
+        "n": 0
+      },
+      "failed_cases": {
+        "mean": 0.0,
+        "lo": 0.0,
+        "hi": 0.0,
+        "n": 0
+      }
+    },
+    "embedding-jev": {
+      "answer_correct": {
+        "mean": 0.9,
+        "lo": 0.7,
+        "hi": 1.0,
+        "n": 10
+      },
+      "selection_correct": {
+        "mean": 1.0,
+        "lo": 1.0,
+        "hi": 1.0,
+        "n": 10
+      },
+      "required_recall": {
+        "mean": 1.0,
+        "lo": 1.0,
+        "hi": 1.0,
+        "n": 10
+      },
+      "forbidden_selected": {
+        "mean": 0.0,
+        "lo": 0.0,
+        "hi": 0.0,
+        "n": 10
+      },
+      "forbidden_in_answer": {
+        "mean": 0.0,
+        "lo": 0.0,
+        "hi": 0.0,
+        "n": 10
+      },
+      "neutral_selected": {
+        "mean": 1.0,
+        "lo": 0.2,
+        "hi": 1.8,
+        "n": 10
+      },
+      "background_selected": {
+        "mean": 0.0,
+        "lo": 0.0,
+        "hi": 0.0,
+        "n": 10
+      },
+      "recall@1": {
+        "mean": 0.9,
+        "lo": 0.7,
+        "hi": 1.0,
+        "n": 10
+      },
+      "recall@5": {
+        "mean": 1.0,
+        "lo": 1.0,
+        "hi": 1.0,
+        "n": 10
+      },
+      "mrr": {
+        "mean": 0.95,
+        "lo": 0.85,
+        "hi": 1.0,
+        "n": 10
+      },
+      "ndcg10": {
+        "mean": 0.9630929753571458,
+        "lo": 0.8892789260714373,
+        "hi": 1.0,
+        "n": 10
+      },
+      "first_stage_recall": {
+        "mean": 1.0,
+        "lo": 1.0,
+        "hi": 1.0,
+        "n": 10
+      },
+      "expanded_recall": {
+        "mean": 1.0,
+        "lo": 1.0,
+        "hi": 1.0,
+        "n": 10
+      },
+      "intent_correct": {
+        "mean": 0.3,
+        "lo": 0.1,
+        "hi": 0.6,
+        "n": 10
+      },
+      "context_tokens": {
+        "mean": 153.5,
+        "lo": 95.0975,
+        "hi": 230.23249999999982,
+        "n": 10
+      },
+      "retrieval_ms": {
+        "mean": 42.604090002714656,
+        "lo": 37.535454000862956,
+        "hi": 48.269343503452546,
+        "n": 10
+      },
+      "judge_ms": {
+        "mean": 1083.1283199979225,
+        "lo": 1041.7695717401512,
+        "hi": 1132.1495667510317,
+        "n": 10
+      },
+      "end_to_end_ms": {
+        "mean": 2196.9213300035335,
+        "lo": 2121.410963255148,
+        "hi": 2269.9324775075,
+        "n": 10
+      },
+      "judge_cost": {
+        "mean": 0.0005085696,
+        "lo": 0.000496107465,
+        "hi": 0.0005253756900000001,
+        "n": 10
+      },
+      "failed_cases": {
+        "mean": 0.0,
+        "lo": 0.0,
+        "hi": 0.0,
+        "n": 0
+      }
+    },
+    "embedding-lifecycle": {
+      "answer_correct": {
+        "mean": 0.9,
+        "lo": 0.7,
+        "hi": 1.0,
+        "n": 10
+      },
+      "selection_correct": {
+        "mean": 1.0,
+        "lo": 1.0,
+        "hi": 1.0,
+        "n": 10
+      },
+      "required_recall": {
+        "mean": 1.0,
+        "lo": 1.0,
+        "hi": 1.0,
+        "n": 10
+      },
+      "forbidden_selected": {
+        "mean": 0.0,
+        "lo": 0.0,
+        "hi": 0.0,
+        "n": 10
+      },
+      "forbidden_in_answer": {
+        "mean": 0.0,
+        "lo": 0.0,
+        "hi": 0.0,
+        "n": 10
+      },
+      "neutral_selected": {
+        "mean": 9.0,
+        "lo": 9.0,
+        "hi": 9.0,
+        "n": 10
+      },
+      "background_selected": {
+        "mean": 0.0,
+        "lo": 0.0,
+        "hi": 0.0,
+        "n": 10
+      },
+      "recall@1": {
+        "mean": 0.7,
+        "lo": 0.4,
+        "hi": 0.9,
+        "n": 10
+      },
+      "recall@5": {
+        "mean": 1.0,
+        "lo": 1.0,
+        "hi": 1.0,
+        "n": 10
+      },
+      "mrr": {
+        "mean": 0.8,
+        "lo": 0.6,
+        "hi": 0.95,
+        "n": 10
+      },
+      "ndcg10": {
+        "mean": 0.8492282869718244,
+        "lo": 0.6984565739436487,
+        "hi": 0.9630929753571458,
+        "n": 10
+      },
+      "first_stage_recall": {
+        "mean": null,
+        "lo": null,
+        "hi": null,
+        "n": 0
+      },
+      "expanded_recall": {
+        "mean": null,
+        "lo": null,
+        "hi": null,
+        "n": 0
+      },
+      "intent_correct": {
+        "mean": null,
+        "lo": null,
+        "hi": null,
+        "n": 0
+      },
+      "context_tokens": {
+        "mean": 555.2,
+        "lo": 501.0,
+        "hi": 613.0,
+        "n": 10
+      },
+      "retrieval_ms": {
+        "mean": 42.604090002714656,
+        "lo": 37.535454000862956,
+        "hi": 48.269343503452546,
+        "n": 10
+      },
+      "judge_ms": {
+        "mean": 0.0,
+        "lo": 0.0,
+        "hi": 0.0,
+        "n": 10
+      },
+      "end_to_end_ms": {
+        "mean": 1113.1947900023079,
+        "lo": 1045.4867072535126,
+        "hi": 1165.2146907527276,
+        "n": 10
+      },
+      "judge_cost": {
+        "mean": null,
+        "lo": null,
+        "hi": null,
+        "n": 0
+      },
+      "failed_cases": {
+        "mean": 0.0,
+        "lo": 0.0,
+        "hi": 0.0,
+        "n": 0
+      }
+    },
+    "embedding-threshold": {
+      "answer_correct": {
+        "mean": 0.9,
+        "lo": 0.7,
+        "hi": 1.0,
+        "n": 10
+      },
+      "selection_correct": {
+        "mean": 1.0,
+        "lo": 1.0,
+        "hi": 1.0,
+        "n": 10
+      },
+      "required_recall": {
+        "mean": 1.0,
+        "lo": 1.0,
+        "hi": 1.0,
+        "n": 10
+      },
+      "forbidden_selected": {
+        "mean": 0.0,
+        "lo": 0.0,
+        "hi": 0.0,
+        "n": 10
+      },
+      "forbidden_in_answer": {
+        "mean": 0.0,
+        "lo": 0.0,
+        "hi": 0.0,
+        "n": 10
+      },
+      "neutral_selected": {
+        "mean": 10.8,
+        "lo": 6.3,
+        "hi": 14.7,
+        "n": 10
+      },
+      "background_selected": {
+        "mean": 0.0,
+        "lo": 0.0,
+        "hi": 0.0,
+        "n": 10
+      },
+      "recall@1": {
+        "mean": 0.7,
+        "lo": 0.4,
+        "hi": 0.9,
+        "n": 10
+      },
+      "recall@5": {
+        "mean": 1.0,
+        "lo": 1.0,
+        "hi": 1.0,
+        "n": 10
+      },
+      "mrr": {
+        "mean": 0.8,
+        "lo": 0.6,
+        "hi": 0.95,
+        "n": 10
+      },
+      "ndcg10": {
+        "mean": 0.8492282869718244,
+        "lo": 0.6984565739436487,
+        "hi": 0.9630929753571458,
+        "n": 10
+      },
+      "first_stage_recall": {
+        "mean": null,
+        "lo": null,
+        "hi": null,
+        "n": 0
+      },
+      "expanded_recall": {
+        "mean": null,
+        "lo": null,
+        "hi": null,
+        "n": 0
+      },
+      "intent_correct": {
+        "mean": null,
+        "lo": null,
+        "hi": null,
+        "n": 0
+      },
+      "context_tokens": {
+        "mean": 698.1,
+        "lo": 451.295,
+        "hi": 920.4124999999999,
+        "n": 10
+      },
+      "retrieval_ms": {
+        "mean": 42.604090002714656,
+        "lo": 37.535454000862956,
+        "hi": 48.269343503452546,
+        "n": 10
+      },
+      "judge_ms": {
+        "mean": 0.0,
+        "lo": 0.0,
+        "hi": 0.0,
+        "n": 10
+      },
+      "end_to_end_ms": {
+        "mean": 1128.2286700065015,
+        "lo": 1052.9278312573297,
+        "hi": 1200.9410267573548,
+        "n": 10
+      },
+      "judge_cost": {
+        "mean": null,
+        "lo": null,
+        "hi": null,
+        "n": 0
+      },
+      "failed_cases": {
+        "mean": 0.0,
+        "lo": 0.0,
+        "hi": 0.0,
+        "n": 0
+      }
+    },
+    "hybrid-jev": {
+      "answer_correct": {
+        "mean": 0.9,
+        "lo": 0.7,
+        "hi": 1.0,
+        "n": 10
+      },
+      "selection_correct": {
+        "mean": 1.0,
+        "lo": 1.0,
+        "hi": 1.0,
+        "n": 10
+      },
+      "required_recall": {
+        "mean": 1.0,
+        "lo": 1.0,
+        "hi": 1.0,
+        "n": 10
+      },
+      "forbidden_selected": {
+        "mean": 0.0,
+        "lo": 0.0,
+        "hi": 0.0,
+        "n": 10
+      },
+      "forbidden_in_answer": {
+        "mean": 0.0,
+        "lo": 0.0,
+        "hi": 0.0,
+        "n": 10
+      },
+      "neutral_selected": {
+        "mean": 1.2,
+        "lo": 0.4,
+        "hi": 2.1,
+        "n": 10
+      },
+      "background_selected": {
+        "mean": 0.0,
+        "lo": 0.0,
+        "hi": 0.0,
+        "n": 10
+      },
+      "recall@1": {
+        "mean": 0.9,
+        "lo": 0.7,
+        "hi": 1.0,
+        "n": 10
+      },
+      "recall@5": {
+        "mean": 1.0,
+        "lo": 1.0,
+        "hi": 1.0,
+        "n": 10
+      },
+      "mrr": {
+        "mean": 0.95,
+        "lo": 0.85,
+        "hi": 1.0,
+        "n": 10
+      },
+      "ndcg10": {
+        "mean": 0.9630929753571458,
+        "lo": 0.8892789260714373,
+        "hi": 1.0,
+        "n": 10
+      },
+      "first_stage_recall": {
+        "mean": 1.0,
+        "lo": 1.0,
+        "hi": 1.0,
+        "n": 10
+      },
+      "expanded_recall": {
+        "mean": 1.0,
+        "lo": 1.0,
+        "hi": 1.0,
+        "n": 10
+      },
+      "intent_correct": {
+        "mean": 0.3,
+        "lo": 0.1,
+        "hi": 0.6,
+        "n": 10
+      },
+      "context_tokens": {
+        "mean": 168.7,
+        "lo": 106.08250000000002,
+        "hi": 244.71999999999989,
+        "n": 10
+      },
+      "retrieval_ms": {
+        "mean": 42.604090002714656,
+        "lo": 37.535454000862956,
+        "hi": 48.269343503452546,
+        "n": 10
+      },
+      "judge_ms": {
+        "mean": 1291.6476999947918,
+        "lo": 1176.9105804988067,
+        "hi": 1414.393897240152,
+        "n": 10
+      },
+      "end_to_end_ms": {
+        "mean": 2400.2453299981426,
+        "lo": 2293.776510497446,
+        "hi": 2514.6986599909724,
+        "n": 10
+      },
+      "judge_cost": {
+        "mean": 0.0007823633999999999,
+        "lo": 0.0006920538450000001,
+        "hi": 0.000872101755,
+        "n": 10
+      },
+      "failed_cases": {
+        "mean": 0.0,
+        "lo": 0.0,
+        "hi": 0.0,
+        "n": 0
+      }
+    },
+    "hybrid-qwen": {
+      "answer_correct": {
+        "mean": 0.8,
+        "lo": 0.5,
+        "hi": 1.0,
+        "n": 10
+      },
+      "selection_correct": {
+        "mean": 1.0,
+        "lo": 1.0,
+        "hi": 1.0,
+        "n": 10
+      },
+      "required_recall": {
+        "mean": 1.0,
+        "lo": 1.0,
+        "hi": 1.0,
+        "n": 10
+      },
+      "forbidden_selected": {
+        "mean": 0.0,
+        "lo": 0.0,
+        "hi": 0.0,
+        "n": 10
+      },
+      "forbidden_in_answer": {
+        "mean": 0.0,
+        "lo": 0.0,
+        "hi": 0.0,
+        "n": 10
+      },
+      "neutral_selected": {
+        "mean": 0.2,
+        "lo": 0.0,
+        "hi": 0.5,
+        "n": 10
+      },
+      "background_selected": {
+        "mean": 0.0,
+        "lo": 0.0,
+        "hi": 0.0,
+        "n": 10
+      },
+      "recall@1": {
+        "mean": 0.9,
+        "lo": 0.7,
+        "hi": 1.0,
+        "n": 10
+      },
+      "recall@5": {
+        "mean": 1.0,
+        "lo": 1.0,
+        "hi": 1.0,
+        "n": 10
+      },
+      "mrr": {
+        "mean": 0.95,
+        "lo": 0.85,
+        "hi": 1.0,
+        "n": 10
+      },
+      "ndcg10": {
+        "mean": 0.9630929753571458,
+        "lo": 0.8892789260714373,
+        "hi": 1.0,
+        "n": 10
+      },
+      "first_stage_recall": {
+        "mean": 1.0,
+        "lo": 1.0,
+        "hi": 1.0,
+        "n": 10
+      },
+      "expanded_recall": {
+        "mean": 1.0,
+        "lo": 1.0,
+        "hi": 1.0,
+        "n": 10
+      },
+      "intent_correct": {
+        "mean": 0.3,
+        "lo": 0.1,
+        "hi": 0.6,
+        "n": 10
+      },
+      "context_tokens": {
+        "mean": 93.7,
+        "lo": 71.8,
+        "hi": 120.40249999999999,
+        "n": 10
+      },
+      "retrieval_ms": {
+        "mean": 42.604090002714656,
+        "lo": 37.535454000862956,
+        "hi": 48.269343503452546,
+        "n": 10
+      },
+      "judge_ms": {
+        "mean": 2677.323129992874,
+        "lo": 2438.393643995041,
+        "hi": 2919.334494241302,
+        "n": 10
+      },
+      "end_to_end_ms": {
+        "mean": 3797.00875999697,
+        "lo": 3585.924735494773,
+        "hi": 4017.4330114975965,
+        "n": 10
+      },
+      "judge_cost": {
+        "mean": null,
+        "lo": null,
+        "hi": null,
+        "n": 0
+      },
+      "failed_cases": {
+        "mean": 0.0,
+        "lo": 0.0,
+        "hi": 0.0,
+        "n": 0
+      }
+    },
+    "recency": {
+      "answer_correct": {
+        "mean": 0.1,
+        "lo": 0.0,
+        "hi": 0.3,
+        "n": 10
+      },
+      "selection_correct": {
+        "mean": 0.2,
+        "lo": 0.0,
+        "hi": 0.5,
+        "n": 10
+      },
+      "required_recall": {
+        "mean": 0.2,
+        "lo": 0.0,
+        "hi": 0.5,
+        "n": 10
+      },
+      "forbidden_selected": {
+        "mean": 0.0,
+        "lo": 0.0,
+        "hi": 0.0,
+        "n": 10
+      },
+      "forbidden_in_answer": {
+        "mean": 0.0,
+        "lo": 0.0,
+        "hi": 0.0,
+        "n": 10
+      },
+      "neutral_selected": {
+        "mean": 5.8,
+        "lo": 5.5,
+        "hi": 6.0,
+        "n": 10
+      },
+      "background_selected": {
+        "mean": 0.0,
+        "lo": 0.0,
+        "hi": 0.0,
+        "n": 10
+      },
+      "recall@1": {
+        "mean": 0.0,
+        "lo": 0.0,
+        "hi": 0.0,
+        "n": 10
+      },
+      "recall@5": {
+        "mean": 0.2,
+        "lo": 0.0,
+        "hi": 0.5,
+        "n": 10
+      },
+      "mrr": {
+        "mean": 0.09443363506878596,
+        "lo": 0.017420374868794584,
+        "hi": 0.20584695441647016,
+        "n": 10
+      },
+      "ndcg10": {
+        "mean": 0.13506711379627384,
+        "lo": 0.02890648263178879,
+        "hi": 0.28429540076809817,
+        "n": 10
+      },
+      "first_stage_recall": {
+        "mean": null,
+        "lo": null,
+        "hi": null,
+        "n": 0
+      },
+      "expanded_recall": {
+        "mean": null,
+        "lo": null,
+        "hi": null,
+        "n": 0
+      },
+      "intent_correct": {
+        "mean": null,
+        "lo": null,
+        "hi": null,
+        "n": 0
+      },
+      "context_tokens": {
+        "mean": 345.9,
+        "lo": 290.5975,
+        "hi": 403.9099999999999,
+        "n": 10
+      },
+      "retrieval_ms": {
+        "mean": 0.0,
+        "lo": 0.0,
+        "hi": 0.0,
+        "n": 10
+      },
+      "judge_ms": {
+        "mean": 0.0,
+        "lo": 0.0,
+        "hi": 0.0,
+        "n": 10
+      },
+      "end_to_end_ms": {
+        "mean": 1128.7602200027322,
+        "lo": 1061.0778502521498,
+        "hi": 1189.9977312518968,
+        "n": 10
+      },
+      "judge_cost": {
+        "mean": null,
+        "lo": null,
+        "hi": null,
+        "n": 0
+      },
+      "failed_cases": {
+        "mean": 0.0,
+        "lo": 0.0,
+        "hi": 0.0,
+        "n": 0
+      }
+    },
+    "rerank": {
+      "answer_correct": {
+        "mean": 0.9,
+        "lo": 0.7,
+        "hi": 1.0,
+        "n": 10
+      },
+      "selection_correct": {
+        "mean": 1.0,
+        "lo": 1.0,
+        "hi": 1.0,
+        "n": 10
+      },
+      "required_recall": {
+        "mean": 1.0,
+        "lo": 1.0,
+        "hi": 1.0,
+        "n": 10
+      },
+      "forbidden_selected": {
+        "mean": 0.0,
+        "lo": 0.0,
+        "hi": 0.0,
+        "n": 10
+      },
+      "forbidden_in_answer": {
+        "mean": 0.0,
+        "lo": 0.0,
+        "hi": 0.0,
+        "n": 10
+      },
+      "neutral_selected": {
+        "mean": 8.7,
+        "lo": 8.3,
+        "hi": 9.0,
+        "n": 10
+      },
+      "background_selected": {
+        "mean": 0.0,
+        "lo": 0.0,
+        "hi": 0.0,
+        "n": 10
+      },
+      "recall@1": {
+        "mean": 0.7,
+        "lo": 0.4,
+        "hi": 0.9,
+        "n": 10
+      },
+      "recall@5": {
+        "mean": 1.0,
+        "lo": 1.0,
+        "hi": 1.0,
+        "n": 10
+      },
+      "mrr": {
+        "mean": 0.8333333333333333,
+        "lo": 0.6666666666666666,
+        "hi": 0.95,
+        "n": 10
+      },
+      "ndcg10": {
+        "mean": 0.8761859507142915,
+        "lo": 0.7523719014285831,
+        "hi": 0.9630929753571458,
+        "n": 10
+      },
+      "first_stage_recall": {
+        "mean": null,
+        "lo": null,
+        "hi": null,
+        "n": 0
+      },
+      "expanded_recall": {
+        "mean": null,
+        "lo": null,
+        "hi": null,
+        "n": 0
+      },
+      "intent_correct": {
+        "mean": null,
+        "lo": null,
+        "hi": null,
+        "n": 0
+      },
+      "context_tokens": {
+        "mean": 662.2,
+        "lo": 519.69,
+        "hi": 799.4024999999999,
+        "n": 10
+      },
+      "retrieval_ms": {
+        "mean": 956.6605600019102,
+        "lo": 212.28597699966485,
+        "hi": 2355.63520075495,
+        "n": 10
+      },
+      "judge_ms": {
+        "mean": 0.0,
+        "lo": 0.0,
+        "hi": 0.0,
+        "n": 10
+      },
+      "end_to_end_ms": {
+        "mean": 2052.70426000061,
+        "lo": 1274.3502307447852,
+        "hi": 3470.856317753678,
+        "n": 10
+      },
+      "judge_cost": {
+        "mean": null,
+        "lo": null,
+        "hi": null,
+        "n": 0
+      },
+      "failed_cases": {
+        "mean": 0.0,
+        "lo": 0.0,
+        "hi": 0.0,
+        "n": 0
+      }
+    },
+    "rerank-threshold": {
+      "answer_correct": {
+        "mean": 0.9,
+        "lo": 0.7,
+        "hi": 1.0,
+        "n": 10
+      },
+      "selection_correct": {
+        "mean": 1.0,
+        "lo": 1.0,
+        "hi": 1.0,
+        "n": 10
+      },
+      "required_recall": {
+        "mean": 1.0,
+        "lo": 1.0,
+        "hi": 1.0,
+        "n": 10
+      },
+      "forbidden_selected": {
+        "mean": 0.0,
+        "lo": 0.0,
+        "hi": 0.0,
+        "n": 10
+      },
+      "forbidden_in_answer": {
+        "mean": 0.0,
+        "lo": 0.0,
+        "hi": 0.0,
+        "n": 10
+      },
+      "neutral_selected": {
+        "mean": 17.1,
+        "lo": 13.7,
+        "hi": 20.6,
+        "n": 10
+      },
+      "background_selected": {
+        "mean": 0.0,
+        "lo": 0.0,
+        "hi": 0.0,
+        "n": 10
+      },
+      "recall@1": {
+        "mean": 0.7,
+        "lo": 0.4,
+        "hi": 0.9,
+        "n": 10
+      },
+      "recall@5": {
+        "mean": 1.0,
+        "lo": 1.0,
+        "hi": 1.0,
+        "n": 10
+      },
+      "mrr": {
+        "mean": 0.8333333333333333,
+        "lo": 0.6666666666666666,
+        "hi": 0.95,
+        "n": 10
+      },
+      "ndcg10": {
+        "mean": 0.8761859507142915,
+        "lo": 0.7523719014285831,
+        "hi": 0.9630929753571458,
+        "n": 10
+      },
+      "first_stage_recall": {
+        "mean": null,
+        "lo": null,
+        "hi": null,
+        "n": 0
+      },
+      "expanded_recall": {
+        "mean": null,
+        "lo": null,
+        "hi": null,
+        "n": 0
+      },
+      "intent_correct": {
+        "mean": null,
+        "lo": null,
+        "hi": null,
+        "n": 0
+      },
+      "context_tokens": {
+        "mean": 1017.0,
+        "lo": 1014.6,
+        "hi": 1019.0,
+        "n": 10
+      },
+      "retrieval_ms": {
+        "mean": 956.6605600019102,
+        "lo": 212.28597699966485,
+        "hi": 2355.63520075495,
+        "n": 10
+      },
+      "judge_ms": {
+        "mean": 0.0,
+        "lo": 0.0,
+        "hi": 0.0,
+        "n": 10
+      },
+      "end_to_end_ms": {
+        "mean": 2039.756400002807,
+        "lo": 1266.7030410004008,
+        "hi": 3458.379453007292,
+        "n": 10
+      },
+      "judge_cost": {
+        "mean": null,
+        "lo": null,
+        "hi": null,
+        "n": 0
+      },
+      "failed_cases": {
+        "mean": 0.0,
+        "lo": 0.0,
+        "hi": 0.0,
+        "n": 0
+      }
+    }
+  },
+  "by_category": {
+    "single-session-user": {
+      "bm25": {
+        "answer_correct": {
+          "mean": 0.8,
+          "lo": 0.5,
+          "hi": 1.0,
+          "n": 10
+        },
+        "selection_correct": {
+          "mean": 0.9,
+          "lo": 0.7,
+          "hi": 1.0,
+          "n": 10
+        },
+        "forbidden_selected": {
+          "mean": 0.0,
+          "lo": 0.0,
+          "hi": 0.0,
+          "n": 10
+        }
+      },
+      "bm25-jev": {
+        "answer_correct": {
+          "mean": 0.8,
+          "lo": 0.5,
+          "hi": 1.0,
+          "n": 10
+        },
+        "selection_correct": {
+          "mean": 1.0,
+          "lo": 1.0,
+          "hi": 1.0,
+          "n": 10
+        },
+        "forbidden_selected": {
+          "mean": 0.0,
+          "lo": 0.0,
+          "hi": 0.0,
+          "n": 10
+        }
+      },
+      "embedding": {
+        "answer_correct": {
+          "mean": 0.9,
+          "lo": 0.7,
+          "hi": 1.0,
+          "n": 10
+        },
+        "selection_correct": {
+          "mean": 1.0,
+          "lo": 1.0,
+          "hi": 1.0,
+          "n": 10
+        },
+        "forbidden_selected": {
+          "mean": 0.0,
+          "lo": 0.0,
+          "hi": 0.0,
+          "n": 10
+        }
+      },
+      "embedding-decay": {
+        "answer_correct": {
+          "mean": 0.9,
+          "lo": 0.7,
+          "hi": 1.0,
+          "n": 10
+        },
+        "selection_correct": {
+          "mean": 1.0,
+          "lo": 1.0,
+          "hi": 1.0,
+          "n": 10
+        },
+        "forbidden_selected": {
+          "mean": 0.0,
+          "lo": 0.0,
+          "hi": 0.0,
+          "n": 10
+        }
+      },
+      "embedding-jev": {
+        "answer_correct": {
+          "mean": 0.9,
+          "lo": 0.7,
+          "hi": 1.0,
+          "n": 10
+        },
+        "selection_correct": {
+          "mean": 1.0,
+          "lo": 1.0,
+          "hi": 1.0,
+          "n": 10
+        },
+        "forbidden_selected": {
+          "mean": 0.0,
+          "lo": 0.0,
+          "hi": 0.0,
+          "n": 10
+        }
+      },
+      "embedding-lifecycle": {
+        "answer_correct": {
+          "mean": 0.9,
+          "lo": 0.7,
+          "hi": 1.0,
+          "n": 10
+        },
+        "selection_correct": {
+          "mean": 1.0,
+          "lo": 1.0,
+          "hi": 1.0,
+          "n": 10
+        },
+        "forbidden_selected": {
+          "mean": 0.0,
+          "lo": 0.0,
+          "hi": 0.0,
+          "n": 10
+        }
+      },
+      "embedding-threshold": {
+        "answer_correct": {
+          "mean": 0.9,
+          "lo": 0.7,
+          "hi": 1.0,
+          "n": 10
+        },
+        "selection_correct": {
+          "mean": 1.0,
+          "lo": 1.0,
+          "hi": 1.0,
+          "n": 10
+        },
+        "forbidden_selected": {
+          "mean": 0.0,
+          "lo": 0.0,
+          "hi": 0.0,
+          "n": 10
+        }
+      },
+      "hybrid-jev": {
+        "answer_correct": {
+          "mean": 0.9,
+          "lo": 0.7,
+          "hi": 1.0,
+          "n": 10
+        },
+        "selection_correct": {
+          "mean": 1.0,
+          "lo": 1.0,
+          "hi": 1.0,
+          "n": 10
+        },
+        "forbidden_selected": {
+          "mean": 0.0,
+          "lo": 0.0,
+          "hi": 0.0,
+          "n": 10
+        }
+      },
+      "hybrid-qwen": {
+        "answer_correct": {
+          "mean": 0.8,
+          "lo": 0.5,
+          "hi": 1.0,
+          "n": 10
+        },
+        "selection_correct": {
+          "mean": 1.0,
+          "lo": 1.0,
+          "hi": 1.0,
+          "n": 10
+        },
+        "forbidden_selected": {
+          "mean": 0.0,
+          "lo": 0.0,
+          "hi": 0.0,
+          "n": 10
+        }
+      },
+      "recency": {
+        "answer_correct": {
+          "mean": 0.1,
+          "lo": 0.0,
+          "hi": 0.3,
+          "n": 10
+        },
+        "selection_correct": {
+          "mean": 0.2,
+          "lo": 0.0,
+          "hi": 0.4,
+          "n": 10
+        },
+        "forbidden_selected": {
+          "mean": 0.0,
+          "lo": 0.0,
+          "hi": 0.0,
+          "n": 10
+        }
+      },
+      "rerank": {
+        "answer_correct": {
+          "mean": 0.9,
+          "lo": 0.7,
+          "hi": 1.0,
+          "n": 10
+        },
+        "selection_correct": {
+          "mean": 1.0,
+          "lo": 1.0,
+          "hi": 1.0,
+          "n": 10
+        },
+        "forbidden_selected": {
+          "mean": 0.0,
+          "lo": 0.0,
+          "hi": 0.0,
+          "n": 10
+        }
+      },
+      "rerank-threshold": {
+        "answer_correct": {
+          "mean": 0.9,
+          "lo": 0.7,
+          "hi": 1.0,
+          "n": 10
+        },
+        "selection_correct": {
+          "mean": 1.0,
+          "lo": 1.0,
+          "hi": 1.0,
+          "n": 10
+        },
+        "forbidden_selected": {
+          "mean": 0.0,
+          "lo": 0.0,
+          "hi": 0.0,
+          "n": 10
+        }
+      }
+    }
+  }
+}

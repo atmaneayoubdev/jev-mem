@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import asyncio
+import gzip
 import json
 from collections.abc import Callable, Sequence
 from contextlib import AsyncExitStack
@@ -265,6 +266,11 @@ async def grade_all(
 
 
 def _jsonl(path: Path, rows: Sequence[BaseModel]) -> None:
+    if path.suffix == ".gz":
+        with gzip.open(path, "wt", encoding="utf-8", newline="\n") as gz:
+            for row in rows:
+                gz.write(row.model_dump_json() + "\n")
+        return
     with path.open("w", encoding="utf-8", newline="\n") as fh:
         for row in rows:
             fh.write(row.model_dump_json() + "\n")
@@ -344,7 +350,7 @@ def write_run(
 ) -> Path:
     out = config.results_dir / config.run_id
     out.mkdir(parents=True, exist_ok=True)
-    _jsonl(out / "cases.jsonl", results)
+    _jsonl(out / "cases.jsonl.gz", results)  # raw per-case rows are large; gzip (~10x smaller)
     _jsonl(out / "relations.jsonl", relations)
     _jsonl(out / "durability.jsonl", durability)
     metrics: dict[str, Any] = {

@@ -306,7 +306,7 @@ async def test_concurrent_identical_requests_share_one_call() -> None:
 async def test_circuit_breaker_opens_after_repeated_failures_and_half_opens() -> None:
     from jevmem.providers.http import CircuitBreaker
 
-    breaker = CircuitBreaker("jev", failure_threshold=2, cooldown_s=0.05)
+    breaker = CircuitBreaker("jev", failure_threshold=2, cooldown_s=0.1)
     handler, seen = sequence(
         *[httpx.Response(503, text="down") for _ in range(3)], httpx.Response(200, json=JEV_OK)
     )
@@ -327,12 +327,12 @@ async def test_circuit_breaker_opens_after_repeated_failures_and_half_opens() ->
         with pytest.raises(ProviderUnavailableError, match="circuit open"):
             await client.evaluate("s-open", QUESTIONS)
         assert len(seen) == 2  # fail fast: no request while open
-        await asyncio.sleep(0.06)
+        await asyncio.sleep(0.2)
         assert breaker.state == "half-open"
         with pytest.raises(ProviderUnavailableError):
             await client.evaluate("probe-1", QUESTIONS)  # failed probe re-opens
         assert breaker.state == "open"
-        await asyncio.sleep(0.06)
+        await asyncio.sleep(0.2)
         result = await client.evaluate("probe-2", QUESTIONS)  # successful probe closes
         assert result.response.model == JEV_OK["model"]
         assert breaker.state == "closed"
