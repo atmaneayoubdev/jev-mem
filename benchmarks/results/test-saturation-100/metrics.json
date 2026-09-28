@@ -1,0 +1,1396 @@
+{
+  "overall": {
+    "embedding": {
+      "answer_correct": {
+        "mean": 0.8636363636363636,
+        "lo": 0.75,
+        "hi": 0.9545454545454546,
+        "n": 44
+      },
+      "selection_correct": {
+        "mean": 0.6136363636363636,
+        "lo": 0.45454545454545453,
+        "hi": 0.75,
+        "n": 44
+      },
+      "required_recall": {
+        "mean": 0.925,
+        "lo": 0.825,
+        "hi": 1.0,
+        "n": 40
+      },
+      "forbidden_selected": {
+        "mean": 0.3181818181818182,
+        "lo": 0.18181818181818182,
+        "hi": 0.45454545454545453,
+        "n": 44
+      },
+      "forbidden_in_answer": {
+        "mean": 0.06818181818181818,
+        "lo": 0.0,
+        "hi": 0.1590909090909091,
+        "n": 44
+      },
+      "neutral_selected": {
+        "mean": 8.704545454545455,
+        "lo": 8.477272727272727,
+        "hi": 8.931818181818182,
+        "n": 44
+      },
+      "background_selected": {
+        "mean": 7.7272727272727275,
+        "lo": 7.5,
+        "hi": 8.0,
+        "n": 44
+      },
+      "recall@1": {
+        "mean": 0.4125,
+        "lo": 0.2625,
+        "hi": 0.55,
+        "n": 40
+      },
+      "recall@5": {
+        "mean": 0.9,
+        "lo": 0.8,
+        "hi": 0.975,
+        "n": 40
+      },
+      "mrr": {
+        "mean": 0.6662239583333334,
+        "lo": 0.558525390625,
+        "hi": 0.76292578125,
+        "n": 40
+      },
+      "ndcg10": {
+        "mean": 0.73181460971192,
+        "lo": 0.6346984812320376,
+        "hi": 0.817479492763405,
+        "n": 40
+      },
+      "first_stage_recall": {
+        "mean": null,
+        "lo": null,
+        "hi": null,
+        "n": 0
+      },
+      "expanded_recall": {
+        "mean": null,
+        "lo": null,
+        "hi": null,
+        "n": 0
+      },
+      "intent_correct": {
+        "mean": null,
+        "lo": null,
+        "hi": null,
+        "n": 0
+      },
+      "context_tokens": {
+        "mean": 235.0909090909091,
+        "lo": 231.27272727272728,
+        "hi": 239.0,
+        "n": 44
+      },
+      "retrieval_ms": {
+        "mean": 347.85849545402345,
+        "lo": 41.86851034048066,
+        "hi": 956.8207748307196,
+        "n": 44
+      },
+      "judge_ms": {
+        "mean": 0.0,
+        "lo": 0.0,
+        "hi": 0.0,
+        "n": 44
+      },
+      "end_to_end_ms": {
+        "mean": 1667.318670453493,
+        "lo": 1255.713517895211,
+        "hi": 2449.0078914768837,
+        "n": 44
+      },
+      "judge_cost": {
+        "mean": null,
+        "lo": null,
+        "hi": null,
+        "n": 0
+      },
+      "failed_cases": {
+        "mean": 0.0,
+        "lo": 0.0,
+        "hi": 0.0,
+        "n": 0
+      }
+    },
+    "hybrid-jev": {
+      "answer_correct": {
+        "mean": 0.9318181818181818,
+        "lo": 0.8409090909090909,
+        "hi": 1.0,
+        "n": 44
+      },
+      "selection_correct": {
+        "mean": 0.9090909090909091,
+        "lo": 0.8181818181818182,
+        "hi": 0.9772727272727273,
+        "n": 44
+      },
+      "required_recall": {
+        "mean": 0.95,
+        "lo": 0.875,
+        "hi": 1.0,
+        "n": 40
+      },
+      "forbidden_selected": {
+        "mean": 0.045454545454545456,
+        "lo": 0.0,
+        "hi": 0.11363636363636363,
+        "n": 44
+      },
+      "forbidden_in_answer": {
+        "mean": 0.022727272727272728,
+        "lo": 0.0,
+        "hi": 0.06818181818181818,
+        "n": 44
+      },
+      "neutral_selected": {
+        "mean": 0.7045454545454546,
+        "lo": 0.4318181818181818,
+        "hi": 1.0454545454545454,
+        "n": 44
+      },
+      "background_selected": {
+        "mean": 0.13636363636363635,
+        "lo": 0.0,
+        "hi": 0.36363636363636365,
+        "n": 44
+      },
+      "recall@1": {
+        "mean": 0.8,
+        "lo": 0.675,
+        "hi": 0.9125,
+        "n": 40
+      },
+      "recall@5": {
+        "mean": 0.95,
+        "lo": 0.875,
+        "hi": 1.0,
+        "n": 40
+      },
+      "mrr": {
+        "mean": 0.9,
+        "lo": 0.8125,
+        "hi": 0.975,
+        "n": 40
+      },
+      "ndcg10": {
+        "mean": 0.9130929753571457,
+        "lo": 0.8287992124843788,
+        "hi": 0.9815464876785729,
+        "n": 40
+      },
+      "first_stage_recall": {
+        "mean": 0.95,
+        "lo": 0.875,
+        "hi": 1.0,
+        "n": 40
+      },
+      "expanded_recall": {
+        "mean": 0.95,
+        "lo": 0.875,
+        "hi": 1.0,
+        "n": 40
+      },
+      "intent_correct": {
+        "mean": 0.9090909090909091,
+        "lo": 0.8181818181818182,
+        "hi": 0.9772727272727273,
+        "n": 44
+      },
+      "context_tokens": {
+        "mean": 60.65909090909091,
+        "lo": 52.95227272727273,
+        "hi": 69.11420454545454,
+        "n": 44
+      },
+      "retrieval_ms": {
+        "mean": 347.85849545402345,
+        "lo": 41.86851034048066,
+        "hi": 956.8207748307196,
+        "n": 44
+      },
+      "judge_ms": {
+        "mean": 1541.2120250012695,
+        "lo": 1441.0233862508408,
+        "hi": 1649.1506148870112,
+        "n": 44
+      },
+      "end_to_end_ms": {
+        "mean": 3165.744861364973,
+        "lo": 2723.4322518766435,
+        "hi": 3938.330650342562,
+        "n": 44
+      },
+      "judge_cost": {
+        "mean": 0.0005938523181818182,
+        "lo": 0.0005861660795454546,
+        "hi": 0.0006018256840909092,
+        "n": 44
+      },
+      "failed_cases": {
+        "mean": 0.0,
+        "lo": 0.0,
+        "hi": 0.0,
+        "n": 0
+      }
+    },
+    "hybrid-qwen": {
+      "answer_correct": {
+        "mean": 0.9090909090909091,
+        "lo": 0.8181818181818182,
+        "hi": 0.9772727272727273,
+        "n": 44
+      },
+      "selection_correct": {
+        "mean": 0.9090909090909091,
+        "lo": 0.8181818181818182,
+        "hi": 0.9772727272727273,
+        "n": 44
+      },
+      "required_recall": {
+        "mean": 0.9,
+        "lo": 0.8,
+        "hi": 0.975,
+        "n": 40
+      },
+      "forbidden_selected": {
+        "mean": 0.0,
+        "lo": 0.0,
+        "hi": 0.0,
+        "n": 44
+      },
+      "forbidden_in_answer": {
+        "mean": 0.0,
+        "lo": 0.0,
+        "hi": 0.0,
+        "n": 44
+      },
+      "neutral_selected": {
+        "mean": 0.25,
+        "lo": 0.09090909090909091,
+        "hi": 0.45454545454545453,
+        "n": 44
+      },
+      "background_selected": {
+        "mean": 0.09090909090909091,
+        "lo": 0.0,
+        "hi": 0.2727272727272727,
+        "n": 44
+      },
+      "recall@1": {
+        "mean": 0.825,
+        "lo": 0.7125,
+        "hi": 0.925,
+        "n": 40
+      },
+      "recall@5": {
+        "mean": 0.95,
+        "lo": 0.875,
+        "hi": 1.0,
+        "n": 40
+      },
+      "mrr": {
+        "mean": 0.9083333333333334,
+        "lo": 0.8166666666666668,
+        "hi": 0.975,
+        "n": 40
+      },
+      "ndcg10": {
+        "mean": 0.9190464876785729,
+        "lo": 0.8315464876785729,
+        "hi": 0.9815464876785729,
+        "n": 40
+      },
+      "first_stage_recall": {
+        "mean": 0.95,
+        "lo": 0.875,
+        "hi": 1.0,
+        "n": 40
+      },
+      "expanded_recall": {
+        "mean": 0.95,
+        "lo": 0.875,
+        "hi": 1.0,
+        "n": 40
+      },
+      "intent_correct": {
+        "mean": 0.9318181818181818,
+        "lo": 0.8409090909090909,
+        "hi": 1.0,
+        "n": 44
+      },
+      "context_tokens": {
+        "mean": 44.06818181818182,
+        "lo": 36.22727272727273,
+        "hi": 51.86420454545455,
+        "n": 44
+      },
+      "retrieval_ms": {
+        "mean": 347.85849545402345,
+        "lo": 41.86851034048066,
+        "hi": 956.8207748307196,
+        "n": 44
+      },
+      "judge_ms": {
+        "mean": 3450.8147727266823,
+        "lo": 3216.9105310218583,
+        "hi": 3699.547929657067,
+        "n": 44
+      },
+      "end_to_end_ms": {
+        "mean": 5094.720115908951,
+        "lo": 4587.256232558494,
+        "hi": 5912.223132784831,
+        "n": 44
+      },
+      "judge_cost": {
+        "mean": null,
+        "lo": null,
+        "hi": null,
+        "n": 0
+      },
+      "failed_cases": {
+        "mean": 0.0,
+        "lo": 0.0,
+        "hi": 0.0,
+        "n": 0
+      }
+    },
+    "rerank": {
+      "answer_correct": {
+        "mean": 0.7727272727272727,
+        "lo": 0.6363636363636364,
+        "hi": 0.8863636363636364,
+        "n": 44
+      },
+      "selection_correct": {
+        "mean": 0.5681818181818182,
+        "lo": 0.4318181818181818,
+        "hi": 0.7045454545454546,
+        "n": 44
+      },
+      "required_recall": {
+        "mean": 0.875,
+        "lo": 0.775,
+        "hi": 0.975,
+        "n": 40
+      },
+      "forbidden_selected": {
+        "mean": 0.3181818181818182,
+        "lo": 0.18181818181818182,
+        "hi": 0.45454545454545453,
+        "n": 44
+      },
+      "forbidden_in_answer": {
+        "mean": 0.11363636363636363,
+        "lo": 0.022727272727272728,
+        "hi": 0.20454545454545456,
+        "n": 44
+      },
+      "neutral_selected": {
+        "mean": 8.75,
+        "lo": 8.5,
+        "hi": 9.0,
+        "n": 44
+      },
+      "background_selected": {
+        "mean": 7.75,
+        "lo": 7.5,
+        "hi": 8.022727272727273,
+        "n": 44
+      },
+      "recall@1": {
+        "mean": 0.575,
+        "lo": 0.425,
+        "hi": 0.725,
+        "n": 40
+      },
+      "recall@5": {
+        "mean": 0.825,
+        "lo": 0.7,
+        "hi": 0.925,
+        "n": 40
+      },
+      "mrr": {
+        "mean": 0.7350710641501575,
+        "lo": 0.6157728575733549,
+        "hi": 0.8398772282758866,
+        "n": 40
+      },
+      "ndcg10": {
+        "mean": 0.7684244637253255,
+        "lo": 0.655622959804452,
+        "hi": 0.866959194553578,
+        "n": 40
+      },
+      "first_stage_recall": {
+        "mean": null,
+        "lo": null,
+        "hi": null,
+        "n": 0
+      },
+      "expanded_recall": {
+        "mean": null,
+        "lo": null,
+        "hi": null,
+        "n": 0
+      },
+      "intent_correct": {
+        "mean": null,
+        "lo": null,
+        "hi": null,
+        "n": 0
+      },
+      "context_tokens": {
+        "mean": 234.86363636363637,
+        "lo": 231.3630681818182,
+        "hi": 238.52272727272728,
+        "n": 44
+      },
+      "retrieval_ms": {
+        "mean": 348.2538477268959,
+        "lo": 42.246902387151664,
+        "hi": 957.2262173849595,
+        "n": 44
+      },
+      "judge_ms": {
+        "mean": 0.0,
+        "lo": 0.0,
+        "hi": 0.0,
+        "n": 44
+      },
+      "end_to_end_ms": {
+        "mean": 1639.789811364277,
+        "lo": 1245.3501629011043,
+        "hi": 2408.1843284080605,
+        "n": 44
+      },
+      "judge_cost": {
+        "mean": null,
+        "lo": null,
+        "hi": null,
+        "n": 0
+      },
+      "failed_cases": {
+        "mean": 0.0,
+        "lo": 0.0,
+        "hi": 0.0,
+        "n": 0
+      }
+    }
+  },
+  "by_category": {
+    "abstention": {
+      "embedding": {
+        "answer_correct": {
+          "mean": 0.75,
+          "lo": 0.25,
+          "hi": 1.0,
+          "n": 4
+        },
+        "selection_correct": {
+          "mean": 1.0,
+          "lo": 1.0,
+          "hi": 1.0,
+          "n": 4
+        },
+        "forbidden_selected": {
+          "mean": 0.0,
+          "lo": 0.0,
+          "hi": 0.0,
+          "n": 4
+        }
+      },
+      "hybrid-jev": {
+        "answer_correct": {
+          "mean": 0.75,
+          "lo": 0.25,
+          "hi": 1.0,
+          "n": 4
+        },
+        "selection_correct": {
+          "mean": 1.0,
+          "lo": 1.0,
+          "hi": 1.0,
+          "n": 4
+        },
+        "forbidden_selected": {
+          "mean": 0.0,
+          "lo": 0.0,
+          "hi": 0.0,
+          "n": 4
+        }
+      },
+      "hybrid-qwen": {
+        "answer_correct": {
+          "mean": 1.0,
+          "lo": 1.0,
+          "hi": 1.0,
+          "n": 4
+        },
+        "selection_correct": {
+          "mean": 1.0,
+          "lo": 1.0,
+          "hi": 1.0,
+          "n": 4
+        },
+        "forbidden_selected": {
+          "mean": 0.0,
+          "lo": 0.0,
+          "hi": 0.0,
+          "n": 4
+        }
+      },
+      "rerank": {
+        "answer_correct": {
+          "mean": 0.75,
+          "lo": 0.25,
+          "hi": 1.0,
+          "n": 4
+        },
+        "selection_correct": {
+          "mean": 1.0,
+          "lo": 1.0,
+          "hi": 1.0,
+          "n": 4
+        },
+        "forbidden_selected": {
+          "mean": 0.0,
+          "lo": 0.0,
+          "hi": 0.0,
+          "n": 4
+        }
+      }
+    },
+    "adversarial": {
+      "embedding": {
+        "answer_correct": {
+          "mean": 0.5,
+          "lo": 0.0,
+          "hi": 1.0,
+          "n": 4
+        },
+        "selection_correct": {
+          "mean": 0.0,
+          "lo": 0.0,
+          "hi": 0.0,
+          "n": 4
+        },
+        "forbidden_selected": {
+          "mean": 1.0,
+          "lo": 1.0,
+          "hi": 1.0,
+          "n": 4
+        }
+      },
+      "hybrid-jev": {
+        "answer_correct": {
+          "mean": 1.0,
+          "lo": 1.0,
+          "hi": 1.0,
+          "n": 4
+        },
+        "selection_correct": {
+          "mean": 0.75,
+          "lo": 0.25,
+          "hi": 1.0,
+          "n": 4
+        },
+        "forbidden_selected": {
+          "mean": 0.25,
+          "lo": 0.0,
+          "hi": 0.75,
+          "n": 4
+        }
+      },
+      "hybrid-qwen": {
+        "answer_correct": {
+          "mean": 1.0,
+          "lo": 1.0,
+          "hi": 1.0,
+          "n": 4
+        },
+        "selection_correct": {
+          "mean": 1.0,
+          "lo": 1.0,
+          "hi": 1.0,
+          "n": 4
+        },
+        "forbidden_selected": {
+          "mean": 0.0,
+          "lo": 0.0,
+          "hi": 0.0,
+          "n": 4
+        }
+      },
+      "rerank": {
+        "answer_correct": {
+          "mean": 0.5,
+          "lo": 0.0,
+          "hi": 1.0,
+          "n": 4
+        },
+        "selection_correct": {
+          "mean": 0.0,
+          "lo": 0.0,
+          "hi": 0.0,
+          "n": 4
+        },
+        "forbidden_selected": {
+          "mean": 1.0,
+          "lo": 1.0,
+          "hi": 1.0,
+          "n": 4
+        }
+      }
+    },
+    "coexistence": {
+      "embedding": {
+        "answer_correct": {
+          "mean": 1.0,
+          "lo": 1.0,
+          "hi": 1.0,
+          "n": 4
+        },
+        "selection_correct": {
+          "mean": 1.0,
+          "lo": 1.0,
+          "hi": 1.0,
+          "n": 4
+        },
+        "forbidden_selected": {
+          "mean": 0.0,
+          "lo": 0.0,
+          "hi": 0.0,
+          "n": 4
+        }
+      },
+      "hybrid-jev": {
+        "answer_correct": {
+          "mean": 1.0,
+          "lo": 1.0,
+          "hi": 1.0,
+          "n": 4
+        },
+        "selection_correct": {
+          "mean": 1.0,
+          "lo": 1.0,
+          "hi": 1.0,
+          "n": 4
+        },
+        "forbidden_selected": {
+          "mean": 0.0,
+          "lo": 0.0,
+          "hi": 0.0,
+          "n": 4
+        }
+      },
+      "hybrid-qwen": {
+        "answer_correct": {
+          "mean": 0.75,
+          "lo": 0.25,
+          "hi": 1.0,
+          "n": 4
+        },
+        "selection_correct": {
+          "mean": 0.75,
+          "lo": 0.25,
+          "hi": 1.0,
+          "n": 4
+        },
+        "forbidden_selected": {
+          "mean": 0.0,
+          "lo": 0.0,
+          "hi": 0.0,
+          "n": 4
+        }
+      },
+      "rerank": {
+        "answer_correct": {
+          "mean": 1.0,
+          "lo": 1.0,
+          "hi": 1.0,
+          "n": 4
+        },
+        "selection_correct": {
+          "mean": 1.0,
+          "lo": 1.0,
+          "hi": 1.0,
+          "n": 4
+        },
+        "forbidden_selected": {
+          "mean": 0.0,
+          "lo": 0.0,
+          "hi": 0.0,
+          "n": 4
+        }
+      }
+    },
+    "contradiction": {
+      "embedding": {
+        "answer_correct": {
+          "mean": 1.0,
+          "lo": 1.0,
+          "hi": 1.0,
+          "n": 4
+        },
+        "selection_correct": {
+          "mean": 1.0,
+          "lo": 1.0,
+          "hi": 1.0,
+          "n": 4
+        },
+        "forbidden_selected": {
+          "mean": 0.0,
+          "lo": 0.0,
+          "hi": 0.0,
+          "n": 4
+        }
+      },
+      "hybrid-jev": {
+        "answer_correct": {
+          "mean": 1.0,
+          "lo": 1.0,
+          "hi": 1.0,
+          "n": 4
+        },
+        "selection_correct": {
+          "mean": 1.0,
+          "lo": 1.0,
+          "hi": 1.0,
+          "n": 4
+        },
+        "forbidden_selected": {
+          "mean": 0.0,
+          "lo": 0.0,
+          "hi": 0.0,
+          "n": 4
+        }
+      },
+      "hybrid-qwen": {
+        "answer_correct": {
+          "mean": 1.0,
+          "lo": 1.0,
+          "hi": 1.0,
+          "n": 4
+        },
+        "selection_correct": {
+          "mean": 1.0,
+          "lo": 1.0,
+          "hi": 1.0,
+          "n": 4
+        },
+        "forbidden_selected": {
+          "mean": 0.0,
+          "lo": 0.0,
+          "hi": 0.0,
+          "n": 4
+        }
+      },
+      "rerank": {
+        "answer_correct": {
+          "mean": 1.0,
+          "lo": 1.0,
+          "hi": 1.0,
+          "n": 4
+        },
+        "selection_correct": {
+          "mean": 1.0,
+          "lo": 1.0,
+          "hi": 1.0,
+          "n": 4
+        },
+        "forbidden_selected": {
+          "mean": 0.0,
+          "lo": 0.0,
+          "hi": 0.0,
+          "n": 4
+        }
+      }
+    },
+    "historical": {
+      "embedding": {
+        "answer_correct": {
+          "mean": 1.0,
+          "lo": 1.0,
+          "hi": 1.0,
+          "n": 4
+        },
+        "selection_correct": {
+          "mean": 1.0,
+          "lo": 1.0,
+          "hi": 1.0,
+          "n": 4
+        },
+        "forbidden_selected": {
+          "mean": 0.0,
+          "lo": 0.0,
+          "hi": 0.0,
+          "n": 4
+        }
+      },
+      "hybrid-jev": {
+        "answer_correct": {
+          "mean": 1.0,
+          "lo": 1.0,
+          "hi": 1.0,
+          "n": 4
+        },
+        "selection_correct": {
+          "mean": 1.0,
+          "lo": 1.0,
+          "hi": 1.0,
+          "n": 4
+        },
+        "forbidden_selected": {
+          "mean": 0.0,
+          "lo": 0.0,
+          "hi": 0.0,
+          "n": 4
+        }
+      },
+      "hybrid-qwen": {
+        "answer_correct": {
+          "mean": 1.0,
+          "lo": 1.0,
+          "hi": 1.0,
+          "n": 4
+        },
+        "selection_correct": {
+          "mean": 1.0,
+          "lo": 1.0,
+          "hi": 1.0,
+          "n": 4
+        },
+        "forbidden_selected": {
+          "mean": 0.0,
+          "lo": 0.0,
+          "hi": 0.0,
+          "n": 4
+        }
+      },
+      "rerank": {
+        "answer_correct": {
+          "mean": 1.0,
+          "lo": 1.0,
+          "hi": 1.0,
+          "n": 4
+        },
+        "selection_correct": {
+          "mean": 1.0,
+          "lo": 1.0,
+          "hi": 1.0,
+          "n": 4
+        },
+        "forbidden_selected": {
+          "mean": 0.0,
+          "lo": 0.0,
+          "hi": 0.0,
+          "n": 4
+        }
+      }
+    },
+    "implicit_update": {
+      "embedding": {
+        "answer_correct": {
+          "mean": 1.0,
+          "lo": 1.0,
+          "hi": 1.0,
+          "n": 4
+        },
+        "selection_correct": {
+          "mean": 0.0,
+          "lo": 0.0,
+          "hi": 0.0,
+          "n": 4
+        },
+        "forbidden_selected": {
+          "mean": 1.0,
+          "lo": 1.0,
+          "hi": 1.0,
+          "n": 4
+        }
+      },
+      "hybrid-jev": {
+        "answer_correct": {
+          "mean": 1.0,
+          "lo": 1.0,
+          "hi": 1.0,
+          "n": 4
+        },
+        "selection_correct": {
+          "mean": 1.0,
+          "lo": 1.0,
+          "hi": 1.0,
+          "n": 4
+        },
+        "forbidden_selected": {
+          "mean": 0.0,
+          "lo": 0.0,
+          "hi": 0.0,
+          "n": 4
+        }
+      },
+      "hybrid-qwen": {
+        "answer_correct": {
+          "mean": 1.0,
+          "lo": 1.0,
+          "hi": 1.0,
+          "n": 4
+        },
+        "selection_correct": {
+          "mean": 1.0,
+          "lo": 1.0,
+          "hi": 1.0,
+          "n": 4
+        },
+        "forbidden_selected": {
+          "mean": 0.0,
+          "lo": 0.0,
+          "hi": 0.0,
+          "n": 4
+        }
+      },
+      "rerank": {
+        "answer_correct": {
+          "mean": 0.75,
+          "lo": 0.25,
+          "hi": 1.0,
+          "n": 4
+        },
+        "selection_correct": {
+          "mean": 0.0,
+          "lo": 0.0,
+          "hi": 0.0,
+          "n": 4
+        },
+        "forbidden_selected": {
+          "mean": 1.0,
+          "lo": 1.0,
+          "hi": 1.0,
+          "n": 4
+        }
+      }
+    },
+    "lexically_distant": {
+      "embedding": {
+        "answer_correct": {
+          "mean": 0.75,
+          "lo": 0.25,
+          "hi": 1.0,
+          "n": 4
+        },
+        "selection_correct": {
+          "mean": 0.75,
+          "lo": 0.25,
+          "hi": 1.0,
+          "n": 4
+        },
+        "forbidden_selected": {
+          "mean": 0.0,
+          "lo": 0.0,
+          "hi": 0.0,
+          "n": 4
+        }
+      },
+      "hybrid-jev": {
+        "answer_correct": {
+          "mean": 0.75,
+          "lo": 0.25,
+          "hi": 1.0,
+          "n": 4
+        },
+        "selection_correct": {
+          "mean": 0.75,
+          "lo": 0.25,
+          "hi": 1.0,
+          "n": 4
+        },
+        "forbidden_selected": {
+          "mean": 0.0,
+          "lo": 0.0,
+          "hi": 0.0,
+          "n": 4
+        }
+      },
+      "hybrid-qwen": {
+        "answer_correct": {
+          "mean": 0.5,
+          "lo": 0.0,
+          "hi": 1.0,
+          "n": 4
+        },
+        "selection_correct": {
+          "mean": 0.5,
+          "lo": 0.0,
+          "hi": 1.0,
+          "n": 4
+        },
+        "forbidden_selected": {
+          "mean": 0.0,
+          "lo": 0.0,
+          "hi": 0.0,
+          "n": 4
+        }
+      },
+      "rerank": {
+        "answer_correct": {
+          "mean": 0.25,
+          "lo": 0.0,
+          "hi": 0.75,
+          "n": 4
+        },
+        "selection_correct": {
+          "mean": 0.25,
+          "lo": 0.0,
+          "hi": 0.75,
+          "n": 4
+        },
+        "forbidden_selected": {
+          "mean": 0.0,
+          "lo": 0.0,
+          "hi": 0.0,
+          "n": 4
+        }
+      }
+    },
+    "plain_recall": {
+      "embedding": {
+        "answer_correct": {
+          "mean": 1.0,
+          "lo": 1.0,
+          "hi": 1.0,
+          "n": 4
+        },
+        "selection_correct": {
+          "mean": 1.0,
+          "lo": 1.0,
+          "hi": 1.0,
+          "n": 4
+        },
+        "forbidden_selected": {
+          "mean": 0.0,
+          "lo": 0.0,
+          "hi": 0.0,
+          "n": 4
+        }
+      },
+      "hybrid-jev": {
+        "answer_correct": {
+          "mean": 1.0,
+          "lo": 1.0,
+          "hi": 1.0,
+          "n": 4
+        },
+        "selection_correct": {
+          "mean": 1.0,
+          "lo": 1.0,
+          "hi": 1.0,
+          "n": 4
+        },
+        "forbidden_selected": {
+          "mean": 0.0,
+          "lo": 0.0,
+          "hi": 0.0,
+          "n": 4
+        }
+      },
+      "hybrid-qwen": {
+        "answer_correct": {
+          "mean": 1.0,
+          "lo": 1.0,
+          "hi": 1.0,
+          "n": 4
+        },
+        "selection_correct": {
+          "mean": 1.0,
+          "lo": 1.0,
+          "hi": 1.0,
+          "n": 4
+        },
+        "forbidden_selected": {
+          "mean": 0.0,
+          "lo": 0.0,
+          "hi": 0.0,
+          "n": 4
+        }
+      },
+      "rerank": {
+        "answer_correct": {
+          "mean": 1.0,
+          "lo": 1.0,
+          "hi": 1.0,
+          "n": 4
+        },
+        "selection_correct": {
+          "mean": 1.0,
+          "lo": 1.0,
+          "hi": 1.0,
+          "n": 4
+        },
+        "forbidden_selected": {
+          "mean": 0.0,
+          "lo": 0.0,
+          "hi": 0.0,
+          "n": 4
+        }
+      }
+    },
+    "similar_useless": {
+      "embedding": {
+        "answer_correct": {
+          "mean": 0.5,
+          "lo": 0.0,
+          "hi": 1.0,
+          "n": 4
+        },
+        "selection_correct": {
+          "mean": 0.5,
+          "lo": 0.0,
+          "hi": 1.0,
+          "n": 4
+        },
+        "forbidden_selected": {
+          "mean": 0.0,
+          "lo": 0.0,
+          "hi": 0.0,
+          "n": 4
+        }
+      },
+      "hybrid-jev": {
+        "answer_correct": {
+          "mean": 0.75,
+          "lo": 0.25,
+          "hi": 1.0,
+          "n": 4
+        },
+        "selection_correct": {
+          "mean": 0.75,
+          "lo": 0.25,
+          "hi": 1.0,
+          "n": 4
+        },
+        "forbidden_selected": {
+          "mean": 0.0,
+          "lo": 0.0,
+          "hi": 0.0,
+          "n": 4
+        }
+      },
+      "hybrid-qwen": {
+        "answer_correct": {
+          "mean": 0.75,
+          "lo": 0.25,
+          "hi": 1.0,
+          "n": 4
+        },
+        "selection_correct": {
+          "mean": 0.75,
+          "lo": 0.25,
+          "hi": 1.0,
+          "n": 4
+        },
+        "forbidden_selected": {
+          "mean": 0.0,
+          "lo": 0.0,
+          "hi": 0.0,
+          "n": 4
+        }
+      },
+      "rerank": {
+        "answer_correct": {
+          "mean": 0.5,
+          "lo": 0.0,
+          "hi": 1.0,
+          "n": 4
+        },
+        "selection_correct": {
+          "mean": 0.5,
+          "lo": 0.0,
+          "hi": 1.0,
+          "n": 4
+        },
+        "forbidden_selected": {
+          "mean": 0.0,
+          "lo": 0.0,
+          "hi": 0.0,
+          "n": 4
+        }
+      }
+    },
+    "supersession": {
+      "embedding": {
+        "answer_correct": {
+          "mean": 1.0,
+          "lo": 1.0,
+          "hi": 1.0,
+          "n": 4
+        },
+        "selection_correct": {
+          "mean": 0.0,
+          "lo": 0.0,
+          "hi": 0.0,
+          "n": 4
+        },
+        "forbidden_selected": {
+          "mean": 1.0,
+          "lo": 1.0,
+          "hi": 1.0,
+          "n": 4
+        }
+      },
+      "hybrid-jev": {
+        "answer_correct": {
+          "mean": 1.0,
+          "lo": 1.0,
+          "hi": 1.0,
+          "n": 4
+        },
+        "selection_correct": {
+          "mean": 1.0,
+          "lo": 1.0,
+          "hi": 1.0,
+          "n": 4
+        },
+        "forbidden_selected": {
+          "mean": 0.0,
+          "lo": 0.0,
+          "hi": 0.0,
+          "n": 4
+        }
+      },
+      "hybrid-qwen": {
+        "answer_correct": {
+          "mean": 1.0,
+          "lo": 1.0,
+          "hi": 1.0,
+          "n": 4
+        },
+        "selection_correct": {
+          "mean": 1.0,
+          "lo": 1.0,
+          "hi": 1.0,
+          "n": 4
+        },
+        "forbidden_selected": {
+          "mean": 0.0,
+          "lo": 0.0,
+          "hi": 0.0,
+          "n": 4
+        }
+      },
+      "rerank": {
+        "answer_correct": {
+          "mean": 1.0,
+          "lo": 1.0,
+          "hi": 1.0,
+          "n": 4
+        },
+        "selection_correct": {
+          "mean": 0.0,
+          "lo": 0.0,
+          "hi": 0.0,
+          "n": 4
+        },
+        "forbidden_selected": {
+          "mean": 1.0,
+          "lo": 1.0,
+          "hi": 1.0,
+          "n": 4
+        }
+      }
+    },
+    "temporary_state": {
+      "embedding": {
+        "answer_correct": {
+          "mean": 1.0,
+          "lo": 1.0,
+          "hi": 1.0,
+          "n": 4
+        },
+        "selection_correct": {
+          "mean": 0.5,
+          "lo": 0.0,
+          "hi": 1.0,
+          "n": 4
+        },
+        "forbidden_selected": {
+          "mean": 0.5,
+          "lo": 0.0,
+          "hi": 1.0,
+          "n": 4
+        }
+      },
+      "hybrid-jev": {
+        "answer_correct": {
+          "mean": 1.0,
+          "lo": 1.0,
+          "hi": 1.0,
+          "n": 4
+        },
+        "selection_correct": {
+          "mean": 0.75,
+          "lo": 0.25,
+          "hi": 1.0,
+          "n": 4
+        },
+        "forbidden_selected": {
+          "mean": 0.25,
+          "lo": 0.0,
+          "hi": 0.75,
+          "n": 4
+        }
+      },
+      "hybrid-qwen": {
+        "answer_correct": {
+          "mean": 1.0,
+          "lo": 1.0,
+          "hi": 1.0,
+          "n": 4
+        },
+        "selection_correct": {
+          "mean": 1.0,
+          "lo": 1.0,
+          "hi": 1.0,
+          "n": 4
+        },
+        "forbidden_selected": {
+          "mean": 0.0,
+          "lo": 0.0,
+          "hi": 0.0,
+          "n": 4
+        }
+      },
+      "rerank": {
+        "answer_correct": {
+          "mean": 0.75,
+          "lo": 0.25,
+          "hi": 1.0,
+          "n": 4
+        },
+        "selection_correct": {
+          "mean": 0.5,
+          "lo": 0.0,
+          "hi": 1.0,
+          "n": 4
+        },
+        "forbidden_selected": {
+          "mean": 0.5,
+          "lo": 0.0,
+          "hi": 1.0,
+          "n": 4
+        }
+      }
+    }
+  }
+}
