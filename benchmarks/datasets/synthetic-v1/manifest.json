@@ -40,5 +40,26 @@
     },
     "sha256": "c3e2508c4704e8488397c6ecc3754d8c58af4cdfd8043d758a19e28a831449df",
     "seed": 20260928
+  },
+  "test": {
+    "dataset": "synthetic-v1",
+    "split": "test",
+    "cases": 396,
+    "families": 66,
+    "categories": {
+      "abstention": 36,
+      "adversarial": 36,
+      "coexistence": 36,
+      "contradiction": 36,
+      "historical": 36,
+      "implicit_update": 36,
+      "lexically_distant": 36,
+      "plain_recall": 36,
+      "similar_useless": 36,
+      "supersession": 36,
+      "temporary_state": 36
+    },
+    "sha256": "74e0cf168b1ba554226d252bd0d6d139a8f6b403c783f7411a5a57f6ba71b142",
+    "seed": 20260928
   }
 }
