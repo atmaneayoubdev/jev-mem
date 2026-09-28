@@ -44,6 +44,11 @@ Every system goes through the same context builder, token budget (1024) and answ
 - **Supersession mode:** "annotate". A turn holds several facts, so a superseded turn is flagged in context rather than withheld.
 - **Grading:** answers are graded with LongMemEval's official judge prompts, run on Qwen instead of GPT-4o, so the numbers are **not comparable to published results**.
 - **Excluded:** temporal-reasoning, because this pipeline does no date arithmetic.
+- **Deviation: partial run.**
+  - The pre-registered run stopped when the OpenRouter key reached its monthly spend limit.
+  - Reported so far are the first 82 of the 148 instances in file order (`lme-partial-82`). These are the ones fully cached at the cutoff; they were not chosen by looking at results.
+  - They cover single-session-user in full (70/70) and knowledge-update for 12 of 78.
+  - The remaining instances will run with the same frozen configuration. Any change to that plan (for example dropping the Qwen-judge system to save calls) will be listed here as a further deviation.
 
 ## Metrics
 

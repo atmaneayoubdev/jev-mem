@@ -45,4 +45,6 @@ Gate after every step: `uv run pytest`, `uv run ruff check .`, `uv run ruff form
 - [x] Fresh-clone test: installs, 135+ offline tests pass, datasets regenerate byte-identical
 - [x] e2e track implemented; extraction bug found and fixed (x1.1)
 - [x] Raw results gzipped
-- [ ] BLOCKED (Jev key monthly limit $5 reached): finish LongMemEval (70/148 cached), re-run e2e Jev column
+- [x] LongMemEval partial: first 82/148 (all cached) graded -> `lme-partial-82`; +2.4 pp [-2.4, +7.3], 149 vs 344 ctx tokens
+- [x] Fix: JSONL readers split on U+2028 (report crashed on LME) (ba8a42a)
+- [ ] BLOCKED (Jev key monthly limit reached): remaining 66 knowledge-update instances; re-run e2e Jev column

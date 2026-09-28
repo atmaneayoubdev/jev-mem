@@ -161,6 +161,30 @@ The pinned snapshot `typesafe/jev-1.13-20260917` plus the response cache is what
 - **Write-time cost** is separate: one profile call per memory plus one call per compared neighbour, which is at most 5 active and 2 superseded neighbours.
 - **Total Jev spend for all M1 runs so far:** $2.55 over about 101k calls.
 
+### LongMemEval_S (partial: 82 of 148 pre-registered instances)
+
+**Status: partial.**
+- The run stopped when the OpenRouter key reached its monthly spend limit.
+- The 82 instances reported are the **first 82 in file order**: exactly those whose Jev and Qwen-judge calls had been cached by then. The key set the cutoff, not the results.
+- They cover the whole **single-session-user control** (70 of 70, including 6 abstention questions) and **12 of 78 knowledge-update** instances.
+- Answers were graded with LongMemEval's official prompts on Qwen, so these numbers are not comparable to published GPT-4o-judged results.
+
+| System | Answer acc. [95% CI] | single-session-user | abstention | knowledge-update | Context tokens |
+|---|---|---|---|---|---|
+| **hybrid-jev** | **93.9%** [87.8, 98.8] | 60/64 | 6/6 | 11/12 | 149 |
+| hybrid-qwen | 89.0% [81.7, 95.1] | 56/64 | 6/6 | 11/12 | 114 |
+| dense top-10 | 91.5% [84.1, 97.6] | 60/64 | 4/6 | 11/12 | 344 |
+| cross-encoder rerank top-10 | 91.5% [85.4, 97.6] | 61/64 | 3/6 | 11/12 | 420 |
+| dense + heuristic lifecycle | 89.0% [81.7, 95.1] | 59/64 | 4/6 | 10/12 | 343 |
+| BM25 top-3 | 84.1% [76.8, 91.5] | 56/64 | 3/6 | 10/12 | 335 |
+
+- **Primary comparison:** hybrid-jev minus dense top-10 is **+2.4 pp [−2.4, +7.3]**. That is **no detectable difference**; each instance is its own bootstrap cluster.
+- **Same accuracy, less than half the context:** 149 vs 344 tokens. Two instances separate the systems, and both are abstention questions. On the plain single-fact control, real conversations are easy for dense retrieval, and the systems tie at 60/64.
+- **Updates on real data are still untested.** With 12 knowledge-update instances (11/12 vs 11/12), nothing can be concluded. That subset is the pre-registered test of the main idea, and 66 of its instances are still to run.
+- **"Forbidden in ctx" is high by design here.** In annotate mode a superseded turn stays in context with a "possibly updated" note, rather than being withheld. Answer accuracy is the metric that matters.
+
+Full report: [`lme-partial-82/report.md`](lme-partial-82/report.md).
+
 ## Limitations
 
 - **Synthetic data.** The benchmark is template-generated. It is natural-sounding and independently authored, but it is not real conversation logs. The LongMemEval track addresses this partially.
