@@ -41,3 +41,21 @@ def test_makespan_is_monotone_in_workers() -> None:
     assert makespan(lat, 1) == 700
     assert makespan(lat, 4) == 300
     assert makespan(lat, 2) <= makespan(lat, 1)
+
+
+@pytest.mark.parametrize("name", ["rows.jsonl", "rows.jsonl.gz"])
+def test_read_jsonl_keeps_unicode_line_separators(tmp_path, name: str) -> None:
+    import gzip
+    import json
+
+    from jevmem.benchmark.reports import read_jsonl
+
+    rows = [{"id": 1, "text": "before\u2028after\x85end"}, {"id": 2, "text": "plain"}]
+    body = "".join(json.dumps(r, ensure_ascii=False) + "\n" for r in rows)
+    path = tmp_path / name
+    if name.endswith(".gz"):
+        with gzip.open(path, "wt", encoding="utf-8", newline="\n") as fh:
+            fh.write(body)
+    else:
+        path.write_text(body, encoding="utf-8", newline="\n")
+    assert read_jsonl(path) == rows

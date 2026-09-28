@@ -76,14 +76,21 @@ def category_table(
     return "\n".join(lines)
 
 
+def read_jsonl(path: Path) -> list[dict[str, Any]]:
+    """Rows of a JSONL file (gzipped if it ends in `.gz`).
+
+    Iterates the file, which splits on newlines only. `str.splitlines()` would also split on
+    U+2028, U+0085 and friends, which JSON allows unescaped inside strings (LongMemEval has them).
+    """
+    opener = gzip.open if path.suffix == ".gz" else open
+    with opener(path, "rt", encoding="utf-8", newline="\n") as fh:
+        return [json.loads(line) for line in fh if line.strip()]
+
+
 def read_cases(run: Path) -> list[dict[str, Any]]:
     """Per-case rows from `cases.jsonl.gz` (current format) or `cases.jsonl` (older runs)."""
     gz = run / "cases.jsonl.gz"
-    if gz.exists():
-        with gzip.open(gz, "rt", encoding="utf-8") as fh:
-            return [json.loads(line) for line in fh if line.strip()]
-    text = (run / "cases.jsonl").read_text(encoding="utf-8")
-    return [json.loads(line) for line in text.splitlines() if line]
+    return read_jsonl(gz if gz.exists() else run / "cases.jsonl")
 
 
 def _load(
@@ -93,11 +100,7 @@ def _load(
     manifest = json.loads((run / "manifest.json").read_text(encoding="utf-8"))
     rows = read_cases(run)
     rel_path = run / "relations.jsonl"
-    relations = (
-        [json.loads(line) for line in rel_path.read_text(encoding="utf-8").splitlines() if line]
-        if rel_path.exists()
-        else []
-    )
+    relations = read_jsonl(rel_path) if rel_path.exists() else []
     return metrics, manifest, rows, relations
 
 
@@ -240,10 +243,7 @@ def load_cases_index(paths: Sequence[str]) -> dict[str, dict[str, Any]]:
     for p in paths:
         path = Path(p)
         if path.exists():
-            for line in path.read_text(encoding="utf-8").splitlines():
-                if line:
-                    c = json.loads(line)
-                    index[c["case_id"]] = c
+            index.update({c["case_id"]: c for c in read_jsonl(path)})
     return index
 
 
