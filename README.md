@@ -50,10 +50,10 @@ The judge is [TypeSafe Jev](https://docs.typesafe.ai), a "System One" model that
 
 <table>
   <tr>
-    <td align="center" width="25%"><h2>91.7%</h2><sub>answer accuracy, <b>hybrid-jev</b><br>(dense top-10: 80.1%)</sub></td>
-    <td align="center" width="25%"><h2>+11.6 pp</h2><sub>pre-registered primary comparison<br>95% CI [+5.1, +19.2]</sub></td>
-    <td align="center" width="25%"><h2>3.3%</h2><sub>stale or poisoned memory in context<br>(dense top-10: 31.8%)</sub></td>
-    <td align="center" width="25%"><h2>~4× less</h2><sub>context sent to the model<br>60 vs 235 tokens</sub></td>
+    <td align="center" valign="top" width="25%"><h2>91.7%</h2><sub>answer accuracy, <b>hybrid-jev</b><br>(dense top-10: 80.1%)</sub></td>
+    <td align="center" valign="top" width="25%"><h2>+11.6 pp</h2><sub>pre-registered primary comparison<br>95% CI [+5.1, +19.2]</sub></td>
+    <td align="center" valign="top" width="25%"><h2>3.3%</h2><sub>stale or poisoned memory in context<br>(dense top-10: 31.8%)</sub></td>
+    <td align="center" valign="top" width="25%"><h2>~4× less</h2><sub>context sent to the model<br>60 vs 235 tokens</sub></td>
   </tr>
 </table>
 
@@ -147,24 +147,16 @@ Now ask *"Which cloud provider did I prefer before Azure?"*. Jev judges the inte
 ## 🧠 How it works
 
 ```mermaid
-flowchart LR
+flowchart TB
     subgraph W["✍️ Write time: decide the lifecycle"]
-        direction TB
-        M["New memory"] --> N["Nearest earlier memories<br/>(dense ≥ 0.40)"]
-        N --> J1{{"Jev: durability · horizon ·<br/>instruction-like? · relation to each neighbour"}}
-        J1 --> WP["WritePolicy"]
-        WP --> L[("Links: supersedes · conflicts ·<br/>reinforces · refines · temporarily overrides")]
+        direction LR
+        M["New memory"] --> N["Nearest earlier<br/>memories"] --> J1{{"Jev judges durability,<br/>horizon, instruction-like,<br/>relation to each"}} --> WP["WritePolicy"] --> L[("Lineage links<br/>supersedes · conflicts<br/>refines · overrides")]
     end
     subgraph R["🔎 Read time: decide what matters"]
-        direction TB
-        Q["Query"] --> C["Candidates: BM25 + dense + recency"]
-        C --> X["One-hop lineage expansion"]
-        X --> J2{{"Jev: intent · relevance · utility"}}
-        J2 --> RP["ReadPolicy + validity computed in Python"]
-        RP --> D["USE · KEEP · DROP · STALE · CONFLICT · UNCERTAIN"]
-        D --> CTX["Token-budgeted context"] --> LLM["Qwen answers"]
+        direction LR
+        Q["Query"] --> C["Candidates<br/>BM25 + dense + recency<br/>+ lineage expansion"] --> J2{{"Jev judges intent,<br/>relevance, utility"}} --> RP["ReadPolicy<br/>+ validity from Python"] --> D["USE · KEEP · DROP<br/>STALE · CONFLICT"] --> A["Qwen answers from<br/>a token-budgeted context"]
     end
-    L -. "status and links" .-> RP
+    W -. "status and links" .-> R
 ```
 
 - **Write time decides the lifecycle.**
