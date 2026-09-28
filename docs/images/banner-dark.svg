@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="320" viewBox="0 0 1280 320" role="img" aria-labelledby="t d">
+  <title id="t">JevMem</title>
+  <desc id="d">Decision-native long-term memory for AI agents</desc>
+  <rect width="1280" height="320" rx="24" fill="#121816"/>
+  <rect x="0.5" y="0.5" width="1279" height="319" rx="23.5" fill="none" stroke="#28322d"/>
+  <g transform="translate(92 88) scale(5)">
+    <circle cx="9" cy="11" r="7" fill="#e9eeea"/>
+    <circle cx="23" cy="11" r="5.6" fill="none" stroke="#e9eeea" stroke-width="2.2"/>
+  </g>
+  <text x="280" y="170" font-family="Georgia, 'Times New Roman', serif" font-size="92" font-weight="700" fill="#e9eeea">JevMem</text>
+  <text x="283" y="218" font-family="'Segoe UI', Helvetica, Arial, sans-serif" font-size="29" fill="#a9b4ae">Decision-native long-term memory for AI agents</text>
+  <g font-family="'Segoe UI', Helvetica, Arial, sans-serif" font-size="19" font-weight="600">
+    <g transform="translate(283 246)">
+      <rect width="96" height="36" rx="18" fill="#15332a" stroke="#2f6b50"/>
+      <circle cx="22" cy="18" r="6" fill="#43c286"/>
+      <text x="36" y="25" fill="#8ddcb3">USE</text>
+    </g>
+    <g transform="translate(391 246)">
+      <rect width="118" height="36" rx="18" fill="#35270f" stroke="#7a5718"/>
+      <circle cx="22" cy="18" r="7" fill="none" stroke="#e3a84c" stroke-width="2"/>
+      <path d="M22 13 V18 L26 20" fill="none" stroke="#e3a84c" stroke-width="2" stroke-linecap="round"/>
+      <text x="38" y="25" fill="#f2c678">STALE</text>
+    </g>
+    <g transform="translate(521 246)">
+      <rect width="108" height="36" rx="18" fill="#222926" stroke="#434d48"/>
+      <circle cx="22" cy="18" r="7" fill="none" stroke="#a3aca7" stroke-width="2"/>
+      <path d="M17 23 L27 13" stroke="#a3aca7" stroke-width="2" stroke-linecap="round"/>
+      <text x="38" y="25" fill="#cdd4d0">DROP</text>
+    </g>
+    <g transform="translate(641 246)">
+      <rect width="150" height="36" rx="18" fill="#36172a" stroke="#7a3556"/>
+      <path d="M19 10 V26 M25 10 V26" stroke="#ea72a3" stroke-width="2.4" stroke-linecap="round"/>
+      <text x="38" y="25" fill="#f5a6c7">CONFLICT</text>
+    </g>
+  </g>
+  <g font-family="'Segoe UI', Helvetica, Arial, sans-serif" font-size="21" fill="#a9b4ae" text-anchor="end">
+    <text x="1196" y="120">similarity  ≠  relevance</text>
+    <text x="1196" y="160">relevance  ≠  utility</text>
+    <text x="1196" y="200">relevance  ≠  validity</text>
+  </g>
+  <path d="M1196 226 H976" stroke="#8ea2ff" stroke-width="3" stroke-linecap="round"/>
+</svg>
