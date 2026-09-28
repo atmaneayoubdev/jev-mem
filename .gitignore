@@ -34,3 +34,6 @@ frontend/dist/
 Thumbs.db
 .idea/
 .vscode/
+
+# Smoke runs are not published
+benchmarks/results/smoke-*/

@@ -127,6 +127,9 @@ class RelationOutcome(BaseModel):
     gold: str
     predicted: str  # a relation, "uncertain", or "not_paired" (never compared)
     paired: bool
+    # the judge's distribution for this pair (None when never compared)
+    probabilities: dict[str, float] | None = None
+    judged_choice: str | None = None
 
 
 class DurabilityOutcome(BaseModel):
@@ -152,8 +155,15 @@ def lifecycle_outcomes(
             predicted = _LINK_TO_RELATION[links[0].link_type]
         else:
             predicted = "unrelated" if paired else "not_paired"
+        outcome = (
+            next((p for p in reports[rel.later].pairs if p.earlier_id == rel.earlier), None)
+            if rel.later in reports
+            else None
+        )
         relations.append(
             RelationOutcome(
+                probabilities=outcome.probabilities if outcome else None,
+                judged_choice=outcome.relation if outcome else None,
                 case_id=case.case_id,
                 family=case.family,
                 category=case.category,

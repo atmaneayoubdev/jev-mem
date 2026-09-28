@@ -29,6 +29,7 @@ from jevmem.benchmark.metrics import (
 )
 from jevmem.benchmark.scoring import AnswerScore
 from jevmem.benchmark.systems import SYSTEMS, Params, Selection, available, select
+from jevmem.benchmark.variants import ablation_variants, budget_variants, pool_variants
 from jevmem.config import Settings
 from jevmem.judgment.base import DecisionJudge
 from jevmem.judgment.jev_judge import JevJudge
@@ -60,6 +61,9 @@ class RunConfig(BaseModel):
     answer: bool = True
     case_concurrency: int = 8
     limit: int | None = None
+    # Stratified subset (saturation sweep): first N families per category, M instances each.
+    families_per_category: int | None = None
+    instances_per_family: int | None = None
     params_path: Path | None = None
     cache_mode: CacheMode = "readwrite"
     background_path: Path = Path("benchmarks/datasets/background-v1.jsonl")
@@ -67,6 +71,10 @@ class RunConfig(BaseModel):
     # Override supersede_mode for judged systems. LongMemEval uses "annotate": one turn holds
     # several facts, so a superseded turn is flagged in context rather than withheld.
     supersede_mode: Literal["exclude", "annotate"] | None = None
+    # Pre-registered secondary analyses (extra "systems" from the same materials)
+    budgets: list[int] = Field(default_factory=list)
+    pools: list[int] = Field(default_factory=list)
+    ablations: bool = False
 
 
 @dataclass
@@ -104,6 +112,7 @@ async def build_runtime(config: RunConfig, settings: Settings) -> Runtime:
         reranker=reranker,
         background=load_pool(config.background_path),
         write_policy=params.policy.get("jev", PolicyConfig()),
+        readonly_judges=("jev",) if config.ablations and "jev" in judges else (),
     )
     models = {
         "jev_requested": settings.jev_model if "jev" in judges else None,
@@ -126,11 +135,29 @@ def load_params(path: Path | None, supersede_mode: str | None = None) -> Params:
     return params
 
 
-def load_cases(paths: Sequence[Path], limit: int | None) -> list[Case]:
+def load_cases(
+    paths: Sequence[Path],
+    limit: int | None,
+    families_per_category: int | None = None,
+    instances_per_family: int | None = None,
+) -> list[Case]:
     cases: list[Case] = []
     for path in paths:
         with path.open(encoding="utf-8") as fh:
             cases += [Case.model_validate_json(line) for line in fh if line.strip()]
+    if families_per_category is not None or instances_per_family is not None:
+        fams: dict[str, list[str]] = {}
+        for c in cases:
+            if c.family not in fams.setdefault(c.category, []):
+                fams[c.category].append(c.family)
+        keep = {f for fs in fams.values() for f in fs[: families_per_category or len(fs)]}
+        seen: dict[str, int] = {}
+        subset = []
+        for c in cases:
+            if c.family in keep and seen.get(c.family, 0) < (instances_per_family or 10**9):
+                seen[c.family] = seen.get(c.family, 0) + 1
+                subset.append(c)
+        cases = subset
     if limit is not None:
         # stratified: first `limit` cases taken round-robin across families
         by_family: dict[str, list[Case]] = {}
@@ -169,12 +196,22 @@ async def materialize_all(
 
 
 def select_all(
-    materials: Sequence[CaseMaterials], systems: Sequence[str], params: Params, budget: int
+    materials: Sequence[CaseMaterials],
+    systems: Sequence[str],
+    params: Params,
+    budget: int,
+    config: RunConfig | None = None,
 ) -> list[tuple[CaseMaterials, Selection]]:
     out = []
     for mat in materials:
         for spec in available(systems, mat):
             out.append((mat, select(spec, mat, params, budget)))
+        if config is not None:
+            extra = budget_variants(mat, params, config.budgets)
+            extra += pool_variants(mat, params, budget, config.pools)
+            if config.ablations:
+                extra += ablation_variants(mat, params, budget)
+            out += [(mat, sel) for sel in extra]
     return out
 
 
@@ -246,7 +283,9 @@ async def run(
     *,
     progress: Callable[[str, int, int], None] | None = None,
 ) -> Path:
-    cases = load_cases(config.cases_paths, config.limit)
+    cases = load_cases(
+        config.cases_paths, config.limit, config.families_per_category, config.instances_per_family
+    )
     params = load_params(config.params_path, config.supersede_mode)
     runtime = await build_runtime(config, settings)
     async with runtime.stack:
@@ -258,7 +297,7 @@ async def run(
             concurrency=config.case_concurrency,
             progress=(lambda d, t: progress("materialize", d, t)) if progress else None,
         )
-        pairs = select_all(materials, config.systems, params, config.budget)
+        pairs = select_all(materials, config.systems, params, config.budget, config)
         answers = await answer_all(pairs, runtime.generator if config.answer else None)
         grades = await grade_all(pairs, answers, runtime.generator)
     results = [
@@ -269,6 +308,8 @@ async def run(
     durability: list[DurabilityOutcome] = []
     for mat in materials:
         for judged in mat.judged.values():
+            if not judged.reports:  # read-only ablation store: no write-time lifecycle
+                continue
             r, d = lifecycle_outcomes(mat.case, judged)
             relations += r
             durability += d
@@ -325,7 +366,9 @@ def write_run(
 
 async def materialize_only(config: RunConfig, settings: Settings) -> list[CaseMaterials]:
     """Materials without answers (calibration, ablations, probes)."""
-    cases = load_cases(config.cases_paths, config.limit)
+    cases = load_cases(
+        config.cases_paths, config.limit, config.families_per_category, config.instances_per_family
+    )
     runtime = await build_runtime(config, settings)
     async with runtime.stack:
         return await materialize_all(

@@ -61,6 +61,8 @@ select = ["E", "F", "W", "I", "B", "UP", "SIM", "RUF", "ASYNC", "PT", "C4", "PIE
 [tool.ruff.lint.per-file-ignores]
 # Template families are data: long natural-language strings are clearer unwrapped.
 "src/jevmem/benchmark/datasets/synthetic/families_*.py" = ["E501"]
+# Markdown report templating reads better with unwrapped strings.
+"src/jevmem/benchmark/reports.py" = ["E501"]
 # Typer declares options via call defaults.
 "src/jevmem/cli.py" = ["B008"]
 

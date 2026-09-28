@@ -152,6 +152,8 @@ class Selection(BaseModel):
     candidate_ids: list[str] = Field(default_factory=list)  # first-stage pool
     expanded_ids: list[str] = Field(default_factory=list)  # after link expansion
     decisions: dict[str, str] = Field(default_factory=dict)
+    # judged systems: memory_id -> (relevance, utility) as judged
+    scores: dict[str, tuple[float, float]] = Field(default_factory=dict)
     intent: str | None = None
     intent_low_confidence: bool = False
     context_text: str
@@ -339,6 +341,7 @@ def _judged(
         candidate_ids=first,
         expanded_ids=[c.memory.id for c in candidates],
         decisions={d.memory_id: d.decision.value for d in decisions},
+        scores={mid: (j.relevance, j.utility) for mid, j in judgments.items()},
         intent=intent.intent,
         intent_low_confidence=intent.low_confidence,
         context_text=context.text,

@@ -44,6 +44,7 @@ class Resources:
     background: Sequence[BackgroundMemory]
     write_policy: PolicyConfig
     min_embedding_similarity: float = 0.40
+    readonly_judges: Sequence[str] = ()
 
 
 @dataclass
@@ -153,6 +154,20 @@ async def _judge_store(
     judged = JudgedStore(judge=name, store=store, index=index, reports=reports)
     if judged.pending_writes:
         judged.failure = f"{judged.pending_writes} lifecycle writes pending"
+    await _read_judgments(judged, judge, case, rankings, res, pool_max)
+    return judged
+
+
+async def _read_judgments(
+    judged: JudgedStore,
+    judge: DecisionJudge,
+    case: Case,
+    rankings: Mapping[str, Sequence[ScoredId]],
+    res: Resources,
+    pool_max: int,
+) -> None:
+    """Intent + candidate judgments for the union of every pool any system can draw."""
+    store = judged.store
     try:
         judged.intent = await judge.intent(case.query)
         base = [
@@ -174,7 +189,6 @@ async def _judge_store(
         judged.candidates = {c.memory.id: j for c, j in zip(expanded, results, strict=True)}
     except ProviderError as exc:
         judged.failure = f"read-time judgment failed: {exc}"
-    return judged
 
 
 async def materialize(
@@ -185,12 +199,19 @@ async def materialize(
     index = MemoryIndex(store, res.embedder)
     await LifecyclePipeline(store, index, None, res.write_policy).write_many(_fresh(memories))
     rankings, timing = _rankings(case, index, res)
-    judged_list = await asyncio.gather(
-        *(
-            _judge_store(name, judge, case, memories, rankings, res, pool_max)
-            for name, judge in res.judges.items()
+    judged_list = list(
+        await asyncio.gather(
+            *(
+                _judge_store(name, judge, case, memories, rankings, res, pool_max)
+                for name, judge in res.judges.items()
+            )
         )
     )
+    for name in res.readonly_judges:
+        # Ablation: read-time judgments on the plain store (no lifecycle links, all current).
+        readonly = JudgedStore(judge=f"{name}-readonly", store=store, index=index, reports=[])
+        await _read_judgments(readonly, res.judges[name], case, rankings, res, pool_max)
+        judged_list.append(readonly)
     return CaseMaterials(
         case=case,
         memories=memories,

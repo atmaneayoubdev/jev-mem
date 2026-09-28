@@ -198,6 +198,11 @@ def benchmark_run(
     no_embeddings: bool = typer.Option(False),
     replay: bool = typer.Option(False, help="Cache-only: fail on any uncached model call."),
     concurrency: int = typer.Option(8),
+    budgets: str = typer.Option("", help="Budget sweep, e.g. '128,256,512'."),
+    pools: str = typer.Option("", help="Pool-size sweep for hybrid-jev, e.g. '5,10,20,50'."),
+    ablations: bool = typer.Option(False, help="Add hybrid-jev dimension ablations."),
+    families_per_category: int | None = typer.Option(None),
+    instances_per_family: int | None = typer.Option(None),
 ) -> None:
     """Run the benchmark and write results to benchmarks/results/<run-id>/."""
     import json
@@ -220,6 +225,11 @@ def benchmark_run(
         limit=limit,
         params_path=params,
         cache_mode="replay" if replay else "readwrite",
+        budgets=[int(b) for b in budgets.split(",") if b.strip()],
+        pools=[int(p) for p in pools.split(",") if p.strip()],
+        ablations=ablations,
+        families_per_category=families_per_category,
+        instances_per_family=instances_per_family,
     )
 
     def progress(stage: str, done: int, total: int) -> None:
@@ -300,3 +310,55 @@ def benchmark_lme_prepare(
     from jevmem.benchmark.datasets.longmemeval import prepare
 
     console.print(f"wrote {prepare(source, out, limit=limit)} LongMemEval cases to {out}")
+
+
+@benchmark_app.command("nondeterminism")
+def benchmark_nondeterminism(
+    split: str = typer.Option("test"),
+    n: int = typer.Option(50, help="Number of cases (stratified)."),
+    n_background: int = typer.Option(100),
+    budget: int = typer.Option(1024),
+    params: Path = typer.Option(Path("benchmarks/params/calibrated-v1.json")),
+    out: Path = typer.Option(Path("benchmarks/results/nondeterminism.json")),
+) -> None:
+    """Re-issue Jev read-time judgments without the cache and measure decision flips."""
+    from jevmem.benchmark.nondeterminism import check
+    from jevmem.benchmark.runner import RunConfig, load_params, materialize_only
+    from jevmem.judgment.jev_judge import JevJudge
+
+    config = RunConfig(
+        run_id=f"nondeterminism-{split}",
+        cases_paths=[SYNTHETIC_DIR / f"{split}.jsonl"],
+        judges=["jev"],
+        n_background=n_background,
+        answer=False,
+        limit=n,
+        case_concurrency=16,
+        params_path=params,
+    )
+    settings = get_settings()
+
+    async def go() -> str:
+        materials = await materialize_only(config, settings)
+        async with build_jev_client(settings, cache=None) as client:
+            report = await check(materials, JevJudge(client), load_params(params), budget)
+        return report.model_dump_json(indent=2)
+
+    text = asyncio.run(go())
+    out.parent.mkdir(parents=True, exist_ok=True)
+    out.write_text(text, encoding="utf-8")
+    console.print(text)
+
+
+@benchmark_app.command("report")
+def benchmark_report(
+    run_id: str = typer.Option(...),
+    primary: str = typer.Option("hybrid-jev,embedding", help="Pre-registered pair: a,b"),
+    no_charts: bool = typer.Option(False),
+) -> None:
+    """(Re)generate report.md and charts for a run from its raw files."""
+    from jevmem.benchmark.reports import write_report
+
+    a, b = (s.strip() for s in primary.split(","))
+    out = write_report(Path("benchmarks/results") / run_id, primary=(a, b), charts=not no_charts)
+    console.print(f"wrote {out}")
