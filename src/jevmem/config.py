@@ -12,6 +12,8 @@ from typing import Any, Literal
 from pydantic import AliasChoices, Field, SecretStr
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
+_PRIVATE_WORDS = ("key", "secret", "token", "password")
+
 
 class Settings(BaseSettings):
     model_config = SettingsConfigDict(env_file=".env", env_file_encoding="utf-8", extra="ignore")
@@ -76,9 +78,20 @@ class Settings(BaseSettings):
         return self.data_dir / "cache" / "responses.sqlite3"
 
     def public_dict(self) -> dict[str, Any]:
-        """Configuration safe to publish (manifests, `/config/public`): secrets are dropped."""
+        """Configuration safe to show to clients (`/config/public`).
+
+        Secrets are dropped, and so are all URLs: a self-hosted model endpoint's address is
+        private infrastructure, and a database URL can carry a password. Only the database
+        backend name is kept.
+        """
         data = self.model_dump(mode="json")
-        return {k: v for k, v in data.items() if "key" not in k}
+        public = {
+            k: v
+            for k, v in data.items()
+            if not k.endswith("_url") and not any(word in k for word in _PRIVATE_WORDS)
+        }
+        public["database_backend"] = self.database_url.split(":", 1)[0].split("+", 1)[0]
+        return public
 
 
 @lru_cache(maxsize=1)

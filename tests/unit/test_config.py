@@ -30,7 +30,24 @@ def test_public_dict_never_contains_secrets(monkeypatch: pytest.MonkeyPatch) -> 
     dumped = str(s.public_dict())
     assert "super-secret" not in dumped
     assert "also-secret" not in dumped
-    assert "jev_base_url" in s.public_dict()
+
+
+def test_public_dict_hides_endpoints_and_database_credentials(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    s = _settings(
+        monkeypatch,
+        QWEN_BASE_URL="https://private-gpu.example.internal/v1",
+        DATABASE_URL="postgresql+psycopg://jevmem:hunter2@db.example.internal/jevmem",
+    )
+    public = s.public_dict()
+    dumped = str(public)
+    assert "private-gpu" not in dumped
+    assert "hunter2" not in dumped
+    assert "db.example.internal" not in dumped
+    assert not any(k.endswith("_url") for k in public)
+    assert public["database_backend"] == "postgresql"
+    assert public["qwen_model"] == s.qwen_model
 
 
 def test_defaults_route_jev_through_openrouter(monkeypatch: pytest.MonkeyPatch) -> None:
