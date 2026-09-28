@@ -23,6 +23,8 @@ dependencies = [
 bench = ["matplotlib>=3.8", "scikit-learn>=1.4"]
 # Optional embedding / cross-encoder baselines. Not part of the core runtime.
 embeddings = ["sentence-transformers>=3.0", "torch>=2.7"]
+# PostgreSQL driver (DATABASE_URL=postgresql+psycopg://...).
+postgres = ["psycopg[binary]>=3.2"]
 
 [project.scripts]
 jevmem = "jevmem.cli:app"

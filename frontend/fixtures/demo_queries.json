@@ -1,0 +1,26 @@
+[
+  {
+    "query": "Deploy my new service using my preferred cloud.",
+    "demonstrates": "current preference: Azure; the AWS memory is superseded (STALE)"
+  },
+  {
+    "query": "Which cloud provider did I prefer before Azure?",
+    "demonstrates": "historical query: the superseded AWS memory becomes useful again"
+  },
+  {
+    "query": "Where am I based these days?",
+    "demonstrates": "temporary state: the Riyadh stint has expired; Dubai is current"
+  },
+  {
+    "query": "Pick my seat for a 14-hour flight.",
+    "demonstrates": "lexically distant but useful: the knee constraint outweighs the window preference"
+  },
+  {
+    "query": "Find me a hotel for a work trip to Tokyo.",
+    "demonstrates": "similar but useless: hotel browsing is on-topic, the desk requirement is what matters"
+  },
+  {
+    "query": "What's my blood type?",
+    "demonstrates": "unresolved contradiction: both memories are surfaced and flagged"
+  }
+]

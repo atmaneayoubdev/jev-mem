@@ -1,0 +1,73 @@
+{
+  "settings": {
+    "jev_model": "typesafe/jev-1.13-20260917",
+    "jev_max_concurrency": 16,
+    "jev_timeout_s": 30.0,
+    "jev_max_retries": 4,
+    "qwen_model": "qwen3.8-27b",
+    "qwen_max_concurrency": 16,
+    "qwen_timeout_s": 120.0,
+    "qwen_max_retries": 3,
+    "qwen_enable_thinking": false,
+    "embedding_model": "Qwen/Qwen3-Embedding-0.6B",
+    "reranker_model": "BAAI/bge-reranker-v2-m3",
+    "data_dir": "data",
+    "memory_context_token_budget": 1024,
+    "default_retrieval_mode": "hybrid",
+    "candidate_pool_size": 20,
+    "params_path": "benchmarks\\params\\calibrated-v1.json",
+    "embeddings_enabled": true,
+    "log_level": "INFO",
+    "environment": "development",
+    "cors_origins": [
+      "http://localhost:5173"
+    ],
+    "max_request_bytes": 64000,
+    "max_message_chars": 8000,
+    "rate_limit_per_minute": 120,
+    "debug_payloads": null,
+    "circuit_failure_threshold": 5,
+    "circuit_cooldown_s": 30.0,
+    "database_backend": "sqlite"
+  },
+  "modes": [
+    "recency",
+    "bm25",
+    "embedding",
+    "jev",
+    "hybrid"
+  ],
+  "default_mode": "hybrid",
+  "question_schema_version": "q1.2",
+  "policy_version": "p1.2",
+  "policy": {
+    "version": "p1.2",
+    "read": {
+      "relevance": 0.5,
+      "utility": 0.3,
+      "band": 0.15,
+      "intent_confidence": 0.7
+    },
+    "write": {
+      "relation": 0.6,
+      "confidence": 0.5,
+      "instruction": 0.5,
+      "ttl_days": {
+        "days": 7.0,
+        "weeks": 42.0,
+        "months": 180.0,
+        "year": 365.0
+      }
+    },
+    "ablation": {
+      "utility": true,
+      "supersession": true,
+      "contradiction": true,
+      "temporal": true,
+      "intent": true
+    },
+    "inject_uncertain": false,
+    "supersede_mode": "exclude"
+  },
+  "debug_payloads": true
+}

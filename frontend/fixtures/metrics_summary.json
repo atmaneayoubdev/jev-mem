@@ -1,0 +1,63 @@
+{
+  "service": {
+    "counters": {
+      "memories_written": 13.0,
+      "lifecycle_judge_calls": 42.0,
+      "recall_embedding": 6.0,
+      "candidate_count": 164.0,
+      "judged_count": 104.0,
+      "selected_count": 75.0,
+      "recall_hybrid": 8.0,
+      "jev_requests": 112.0,
+      "qwen_requests": 2.0
+    },
+    "latency_ms": {
+      "lifecycle_write_ms": {
+        "count": 13,
+        "mean": 1451.5,
+        "p50": 692.2,
+        "p95": 10403.5
+      },
+      "retrieval_ms": {
+        "count": 14,
+        "mean": 19.9,
+        "p50": 7.9,
+        "p95": 49.1
+      },
+      "judge_ms": {
+        "count": 8,
+        "mean": 1414.0,
+        "p50": 1335.0,
+        "p95": 1736.9
+      },
+      "generation_ms": {
+        "count": 2,
+        "mean": 1730.9,
+        "p50": 2978.6,
+        "p95": 2978.6
+      }
+    }
+  },
+  "clients": {
+    "jev": {
+      "requests": 126,
+      "cache_hits": 28,
+      "retries": 0,
+      "errors": 0,
+      "latency_ms_total": 81256.7,
+      "status_counts": {
+        "200": 126
+      }
+    },
+    "qwen": {
+      "requests": 2,
+      "cache_hits": 0,
+      "retries": 0,
+      "errors": 0,
+      "latency_ms_total": 3461.7,
+      "status_counts": {
+        "200": 2
+      }
+    }
+  }
+}

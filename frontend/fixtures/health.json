@@ -1,0 +1,11 @@
+{
+  "status": "ok",
+  "version": "0.1.0",
+  "jev_configured": true,
+  "qwen_configured": true,
+  "embeddings": true,
+  "circuit": {
+    "jev": "closed",
+    "qwen": "closed"
+  }
+}

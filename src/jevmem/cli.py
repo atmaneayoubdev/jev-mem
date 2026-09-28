@@ -70,6 +70,25 @@ async def _check_qwen(settings: Settings) -> tuple[bool, str]:
     )
 
 
+def _check_database(settings: Settings) -> tuple[bool, str]:
+    from sqlalchemy import func, select
+    from sqlalchemy.exc import SQLAlchemyError
+
+    from jevmem.database.models import MemoryRow
+    from jevmem.database.session import init_db, make_engine
+
+    try:
+        engine = make_engine(settings.database_url)
+        init_db(engine)
+        with engine.connect() as conn:
+            count = conn.execute(select(func.count()).select_from(MemoryRow)).scalar_one()
+        engine.dispose()
+    except SQLAlchemyError as exc:
+        return False, f"{type(exc).__name__}"
+    scheme = settings.database_url.split(":", 1)[0]
+    return True, f"{scheme} ok, {count} memories"
+
+
 def _check_data_dir(settings: Settings) -> tuple[bool, str]:
     try:
         settings.data_dir.mkdir(parents=True, exist_ok=True)
@@ -87,8 +106,10 @@ def doctor() -> None:
     jev_ok, jev_detail = asyncio.run(_check_jev(settings))
     qwen_ok, qwen_detail = asyncio.run(_check_qwen(settings))
     data_ok, data_detail = _check_data_dir(settings)
+    db_ok, db_detail = _check_database(settings)
     rows = [
         ("data dir", data_ok, data_detail),
+        ("database", db_ok, db_detail),
         (
             "jev key",
             settings.jev_api_key is not None,

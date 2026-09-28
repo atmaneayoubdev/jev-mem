@@ -1,0 +1,265 @@
+[
+  {
+    "run_id": "calib-final",
+    "answer_accuracy": {
+      "bm25": 0.6060606060606061,
+      "bm25-jev": 0.6742424242424242,
+      "embedding": 1.0,
+      "embedding-decay": 0.9242424242424242,
+      "embedding-jev": 0.9696969696969697,
+      "embedding-lifecycle": 1.0,
+      "embedding-threshold": 0.9772727272727273,
+      "hybrid-jev": 0.9696969696969697,
+      "hybrid-qwen": 0.8939393939393939,
+      "recency": 0.25,
+      "rerank": 0.9090909090909091,
+      "rerank-threshold": 0.9545454545454546
+    }
+  },
+  {
+    "run_id": "calib-q1.2-calibrated",
+    "answer_accuracy": {
+      "bm25": 0.5303030303030303,
+      "bm25-jev": 0.5984848484848485,
+      "embedding": 0.8863636363636364,
+      "embedding-decay": 0.6666666666666666,
+      "embedding-jev": 0.7575757575757576,
+      "embedding-lifecycle": 0.8409090909090909,
+      "embedding-threshold": 0.8787878787878788,
+      "hybrid-jev": 0.7575757575757576,
+      "hybrid-qwen": 0.6893939393939394,
+      "recency": 0.25,
+      "rerank": 0.8484848484848485,
+      "rerank-threshold": 0.8939393939393939
+    }
+  },
+  {
+    "run_id": "dev-final",
+    "answer_accuracy": {
+      "bm25": 0.6363636363636364,
+      "bm25-jev": 0.7727272727272727,
+      "embedding": 0.9545454545454546,
+      "embedding-decay": 0.8333333333333334,
+      "embedding-jev": 1.0,
+      "embedding-lifecycle": 0.946969696969697,
+      "embedding-threshold": 0.9015151515151515,
+      "hybrid-jev": 1.0,
+      "hybrid-qwen": 0.8484848484848485,
+      "recency": 0.18181818181818182,
+      "rerank": 0.9318181818181818,
+      "rerank-threshold": 0.9015151515151515
+    }
+  },
+  {
+    "run_id": "dev-final-replay",
+    "answer_accuracy": {
+      "bm25": 0.6363636363636364,
+      "bm25-jev": 0.7727272727272727,
+      "embedding": 0.9545454545454546,
+      "embedding-decay": 0.8333333333333334,
+      "embedding-jev": 1.0,
+      "embedding-lifecycle": 0.946969696969697,
+      "embedding-threshold": 0.9015151515151515,
+      "hybrid-jev": 1.0,
+      "hybrid-qwen": 0.8484848484848485,
+      "recency": 0.18181818181818182,
+      "rerank": 0.9318181818181818,
+      "rerank-threshold": 0.9015151515151515
+    }
+  },
+  {
+    "run_id": "dev-q1.1",
+    "answer_accuracy": {
+      "bm25": 0.6666666666666666,
+      "bm25-jev": 0.7121212121212122,
+      "embedding": 0.8560606060606061,
+      "embedding-decay": 0.6060606060606061,
+      "embedding-jev": 0.9015151515151515,
+      "embedding-lifecycle": 0.8106060606060606,
+      "embedding-threshold": 0.5378787878787878,
+      "hybrid-jev": 0.8863636363636364,
+      "hybrid-qwen": 0.8560606060606061,
+      "recency": 0.18181818181818182,
+      "rerank": 0.8484848484848485,
+      "rerank-threshold": 0.25757575757575757
+    }
+  },
+  {
+    "run_id": "dev-q1.2",
+    "answer_accuracy": {
+      "bm25": 0.6666666666666666,
+      "bm25-jev": 0.7575757575757576,
+      "embedding": 0.8560606060606061,
+      "embedding-decay": 0.6060606060606061,
+      "embedding-jev": 0.946969696969697,
+      "embedding-lifecycle": 0.8106060606060606,
+      "embedding-threshold": 0.5378787878787878,
+      "hybrid-jev": 0.946969696969697,
+      "hybrid-qwen": 0.8712121212121212,
+      "recency": 0.18181818181818182,
+      "rerank": 0.8484848484848485,
+      "rerank-threshold": 0.25757575757575757
+    }
+  },
+  {
+    "run_id": "dev-q1.2-calibrated",
+    "answer_accuracy": {
+      "bm25": 0.6363636363636364,
+      "bm25-jev": 0.7727272727272727,
+      "embedding": 0.9545454545454546,
+      "embedding-decay": 0.5757575757575758,
+      "embedding-jev": 1.0,
+      "embedding-lifecycle": 0.8106060606060606,
+      "embedding-threshold": 0.9015151515151515,
+      "hybrid-jev": 1.0,
+      "hybrid-qwen": 0.8484848484848485,
+      "recency": 0.18181818181818182,
+      "rerank": 0.8333333333333334,
+      "rerank-threshold": 0.9015151515151515
+    }
+  },
+  {
+    "run_id": "lme-throughput-10",
+    "answer_accuracy": {
+      "bm25": 0.8,
+      "bm25-jev": 0.8,
+      "embedding": 0.9,
+      "embedding-decay": 0.9,
+      "embedding-jev": 0.9,
+      "embedding-lifecycle": 0.9,
+      "embedding-threshold": 0.9,
+      "hybrid-jev": 0.9,
+      "hybrid-qwen": 0.8,
+      "recency": 0.1,
+      "rerank": 0.9,
+      "rerank-threshold": 0.9
+    }
+  },
+  {
+    "run_id": "smoke-dev-1",
+    "answer_accuracy": {
+      "bm25": 0.5909090909090909,
+      "bm25-jev": 0.5909090909090909,
+      "embedding": 0.8636363636363636,
+      "embedding-decay": 0.6363636363636364,
+      "embedding-jev": 0.8181818181818182,
+      "embedding-lifecycle": 0.8181818181818182,
+      "embedding-threshold": 0.5909090909090909,
+      "hybrid-jev": 0.8181818181818182,
+      "hybrid-qwen": 0.7272727272727273,
+      "recency": 0.22727272727272727,
+      "rerank": 0.8636363636363636,
+      "rerank-threshold": 0.18181818181818182
+    }
+  },
+  {
+    "run_id": "smoke-variants",
+    "answer_accuracy": {
+      "bm25": 0.5909090909090909,
+      "bm25-jev": 0.7272727272727273,
+      "embedding": 1.0,
+      "embedding-decay": 0.8181818181818182,
+      "embedding-jev": 1.0,
+      "embedding-lifecycle": 1.0,
+      "embedding-threshold": 0.9090909090909091,
+      "embedding@128": 0.8181818181818182,
+      "embedding@256": 1.0,
+      "embedding~lifecycle-only": 0.8636363636363636,
+      "hybrid-jev": 1.0,
+      "hybrid-jev#pool10": 1.0,
+      "hybrid-jev#pool5": 0.9090909090909091,
+      "hybrid-jev@128": 1.0,
+      "hybrid-jev@256": 1.0,
+      "hybrid-jev~+contradiction": 1.0,
+      "hybrid-jev~+supersession": 1.0,
+      "hybrid-jev~+temporal (full)": 1.0,
+      "hybrid-jev~+utility": 1.0,
+      "hybrid-jev~read-only": 1.0,
+      "hybrid-jev~relevance-only": 1.0,
+      "hybrid-qwen": 0.8181818181818182,
+      "hybrid-qwen@128": 0.8181818181818182,
+      "hybrid-qwen@256": 0.8181818181818182,
+      "recency": 0.18181818181818182,
+      "rerank": 0.9545454545454546,
+      "rerank-threshold": 0.9090909090909091,
+      "rerank@128": 0.8636363636363636,
+      "rerank@256": 0.9545454545454546
+    }
+  },
+  {
+    "run_id": "test-main",
+    "answer_accuracy": {
+      "bm25": 0.5252525252525253,
+      "bm25-jev": 0.7676767676767676,
+      "embedding": 0.8005050505050505,
+      "embedding-decay": 0.7626262626262627,
+      "embedding-jev": 0.9166666666666666,
+      "embedding-lifecycle": 0.8005050505050505,
+      "embedding-threshold": 0.803030303030303,
+      "embedding@128": 0.7777777777777778,
+      "embedding@256": 0.8005050505050505,
+      "embedding@512": 0.8005050505050505,
+      "embedding~lifecycle-only": 0.8333333333333334,
+      "hybrid-jev": 0.9166666666666666,
+      "hybrid-jev@128": 0.9166666666666666,
+      "hybrid-jev@256": 0.9166666666666666,
+      "hybrid-jev@512": 0.9166666666666666,
+      "hybrid-jev~+contradiction": 0.9090909090909091,
+      "hybrid-jev~+supersession": 0.9090909090909091,
+      "hybrid-jev~+temporal (full)": 0.9166666666666666,
+      "hybrid-jev~+utility": 0.9090909090909091,
+      "hybrid-jev~read-only": 0.8484848484848485,
+      "hybrid-jev~relevance-only": 0.8939393939393939,
+      "hybrid-qwen": 0.9065656565656566,
+      "hybrid-qwen@128": 0.9065656565656566,
+      "hybrid-qwen@256": 0.9065656565656566,
+      "hybrid-qwen@512": 0.9065656565656566,
+      "recency": 0.22727272727272727,
+      "rerank": 0.76010101010101,
+      "rerank-threshold": 0.7853535353535354,
+      "rerank@128": 0.7626262626262627,
+      "rerank@256": 0.76010101010101,
+      "rerank@512": 0.76010101010101
+    }
+  },
+  {
+    "run_id": "test-saturation-0",
+    "answer_accuracy": {
+      "embedding": 0.9090909090909091,
+      "hybrid-jev": 0.9772727272727273,
+      "hybrid-qwen": 0.9545454545454546,
+      "rerank": 0.9090909090909091
+    }
+  },
+  {
+    "run_id": "test-saturation-10",
+    "answer_accuracy": {
+      "embedding": 0.9090909090909091,
+      "hybrid-jev": 0.9772727272727273,
+      "hybrid-qwen": 0.9545454545454546,
+      "rerank": 0.8181818181818182
+    }
+  },
+  {
+    "run_id": "test-saturation-100",
+    "answer_accuracy": {
+      "embedding": 0.8636363636363636,
+      "hybrid-jev": 0.9318181818181818,
+      "hybrid-qwen": 0.9090909090909091,
+      "rerank": 0.7727272727272727
+    }
+  },
+  {
+    "run_id": "test-saturation-1000",
+    "answer_accuracy": {
+      "embedding": 0.75,
+      "hybrid-jev": 0.8636363636363636,
+      "hybrid-jev#pool10": 0.8409090909090909,
+      "hybrid-jev#pool20": 0.8636363636363636,
+      "hybrid-jev#pool5": 0.8409090909090909,
+      "hybrid-jev#pool50": 0.8863636363636364,
+      "hybrid-qwen": 0.8409090909090909,
+      "rerank": 0.7272727272727273
+    }
+  }
+]
