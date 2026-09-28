@@ -229,3 +229,31 @@ def test_guards_size_rate_and_production_debug(tmp_path: Path) -> None:
         ).json()
         assert chat["memory_debug"] is None
         assert c.post("/api/v1/demo/seed", json={}).status_code == 403
+
+
+def test_empty_memories_and_provider_failures(tmp_path: Path) -> None:
+    from jevmem.providers.errors import ProviderUnavailableError
+
+    class DownGenerator(ScriptedGenerator):
+        async def complete(self, *args: Any, **kwargs: Any) -> CompletionResult:
+            raise ProviderUnavailableError("qwen", "down")
+
+    with make_client(tmp_path) as c:
+        empty = c.post(
+            "/api/v1/judge", json={"user_id": "nobody", "query": "anything", "mode": "hybrid"}
+        ).json()
+        assert empty["candidates"] == []
+        assert empty["selected_ids"] == []
+        svc = c.app.state.service  # type: ignore[attr-defined]
+        c.post("/api/v1/memories", json={"user_id": "u3", "content": AWS})
+        svc.judge.fail = True  # Jev outage: recall falls back, never fakes judgments
+        chat = c.post(
+            "/api/v1/chat", json={"user_id": "u3", "message": "Which cloud?", "extract": False}
+        ).json()
+        assert chat["memory_debug"]["judge_used"] is False
+        assert chat["memory_debug"]["fallback_reason"]
+        assert {j["decision"] for j in chat["memory_debug"]["judgments"]} <= {"unjudged", "drop"}
+        svc.generator = DownGenerator()  # Qwen outage: clean 503, no silent model switch
+        down = c.post("/api/v1/chat", json={"user_id": "u3", "message": "hi", "extract": False})
+        assert down.status_code == 503
+        assert down.json()["error"] == "service_unavailable"

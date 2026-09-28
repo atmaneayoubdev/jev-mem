@@ -337,3 +337,19 @@ async def test_circuit_breaker_opens_after_repeated_failures_and_half_opens() ->
         assert result.response.model == JEV_OK["model"]
         assert breaker.state == "closed"
         assert breaker.opens == 1
+
+
+async def test_qwen_timeout_is_a_clean_provider_error() -> None:
+    handler, seen = sequence(*[httpx.ReadTimeout("slow") for _ in range(2)])
+    provider = OpenAICompatibleProvider(
+        base_url="https://qwen.test/v1",
+        api_key="k",
+        model="m",
+        transport=httpx.MockTransport(handler),
+        retry=RetryPolicy(max_retries=1, backoff_base_s=0.001),
+        sleep=Sleeps(),
+    )
+    async with provider:
+        with pytest.raises(ProviderUnavailableError):
+            await provider.complete([{"role": "user", "content": "hi"}])
+    assert len(seen) == 2
