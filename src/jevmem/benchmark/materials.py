@@ -23,6 +23,7 @@ from jevmem.benchmark.datasets.schema import Case
 from jevmem.judgment.base import CandidateJudgment, DecisionJudge, IntentJudgment
 from jevmem.memory.lifecycle import LifecyclePipeline, WriteReport
 from jevmem.memory.models import Durability, Memory
+from jevmem.memory.recall import candidate_facts
 from jevmem.memory.store import InMemoryStore
 from jevmem.policy.thresholds import PolicyConfig
 from jevmem.providers.errors import ProviderError
@@ -160,8 +161,15 @@ async def _judge_store(
         ]
         # superset of every expansion any system can perform (predecessors need "both")
         expanded = expand_candidates(base, store, "both", max_added=len(base) + 50)
+        statuses = [
+            candidate_facts(store, c.memory, case.now, res.write_policy).validity.value
+            for c in expanded
+        ]
         results = await asyncio.gather(
-            *(judge.candidate(case.query, c.memory.content) for c in expanded)
+            *(
+                judge.candidate(case.query, c.memory.content, status)
+                for c, status in zip(expanded, statuses, strict=True)
+            )
         )
         judged.candidates = {c.memory.id: j for c, j in zip(expanded, results, strict=True)}
     except ProviderError as exc:

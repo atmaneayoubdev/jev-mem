@@ -180,3 +180,33 @@ def test_render_prompt_includes_every_option_criterion() -> None:
     assert SCHEMA_V1.utility.criteria["true"] in prompt
     assert SCHEMA_V1.utility.criteria["false"] in prompt
     assert '"memory": "m"' in prompt
+
+
+def test_candidate_state_carries_status_label_but_no_dates() -> None:
+    from jevmem.judgment.questions import candidate_state
+
+    assert candidate_state("q", "m") == {"query": "q", "memory": "m"}
+    state = candidate_state("q", "m", "superseded")
+    assert state["memory_status"] == "no longer current: replaced by a newer memory"
+    assert not any(ch.isdigit() for ch in state["memory_status"])
+
+
+async def test_jev_judge_sends_status_when_schema_enables_it() -> None:
+    seen: list[dict[str, Any]] = []
+
+    def handler(request: httpx.Request) -> httpx.Response:
+        seen.append(json.loads(request.content))
+        return httpx.Response(200, json=JEV_CANDIDATE)
+
+    client = SystemOneClient(
+        api_key="k", base_url="https://x.test", model="m", transport=httpx.MockTransport(handler)
+    )
+    from dataclasses import replace
+
+    async with client:
+        await JevJudge(client).candidate("q", "m", "expired")
+        await JevJudge(client, replace(SCHEMA_V1, candidate_status=False)).candidate(
+            "q", "m", "expired"
+        )
+    assert seen[0]["state"]["memory_status"].startswith("no longer current")
+    assert "memory_status" not in seen[1]["state"]

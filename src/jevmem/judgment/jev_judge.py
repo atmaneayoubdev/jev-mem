@@ -48,9 +48,12 @@ class JevJudge:
         )
         return IntentJudgment(intent=_choice(r, "intent"), meta=self._meta(r))
 
-    async def candidate(self, query: str, memory: str) -> CandidateJudgment:
+    async def candidate(
+        self, query: str, memory: str, status: str | None = None
+    ) -> CandidateJudgment:
+        status = status if self._schema.candidate_status else None
         r = await self._client.evaluate(
-            candidate_state(query, memory), self._schema.jev_candidate()
+            candidate_state(query, memory, status), self._schema.jev_candidate()
         )
         return CandidateJudgment(
             relevance=_noul(r, "relevance"), utility=_noul(r, "utility"), meta=self._meta(r)

@@ -228,3 +228,56 @@ def benchmark_run(
     console.print(summary_table(metrics))
     console.print(category_table(metrics))
     console.print(f"results: {out}")
+
+
+@benchmark_app.command("calibrate")
+def benchmark_calibrate(
+    split: str = typer.Option("calib"),
+    n_background: int = typer.Option(100),
+    budget: int = typer.Option(1024),
+    out: Path = typer.Option(Path("benchmarks/params/calibrated-v1.json")),
+    concurrency: int = typer.Option(8),
+) -> None:
+    """Grid-search every system's parameters on the calib split (offline over cached judgments)."""
+    from jevmem.benchmark.calibrate import calibrate
+    from jevmem.benchmark.runner import RunConfig, materialize_only
+
+    if split == "test":
+        raise typer.BadParameter("never calibrate on the test split")
+    config = RunConfig(
+        run_id=f"calibrate-{split}",
+        cases_paths=[SYNTHETIC_DIR / f"{split}.jsonl"],
+        n_background=n_background,
+        budget=budget,
+        answer=False,
+        case_concurrency=concurrency,
+    )
+    materials = asyncio.run(materialize_only(config, get_settings()))
+    report = calibrate(materials, budget)
+    out.parent.mkdir(parents=True, exist_ok=True)
+    out.write_text(report.params.model_dump_json(indent=2), encoding="utf-8")
+    out.with_suffix(".grid.json").write_text(report.model_dump_json(indent=2), encoding="utf-8")
+    table = Table(title=f"calibration on {split} ({report.cases} cases)")
+    for col in ("system", "best setting", "selection acc", "mean tokens"):
+        table.add_column(col)
+    for name, point in report.best.items():
+        table.add_row(
+            name, str(point.setting), f"{point.selection_accuracy:.3f}", f"{point.mean_tokens:.0f}"
+        )
+    console.print(table)
+    console.print(f"wrote {out}")
+
+
+@benchmark_app.command("probe")
+def benchmark_probe(
+    train: str = typer.Option("dev"), evaluate: str = typer.Option("calib")
+) -> None:
+    """Bag-of-words leakage probe: train on one split, evaluate on another."""
+    from jevmem.benchmark.datasets.synthetic.generate import load_split
+    from jevmem.benchmark.probes import run_probe
+
+    result = run_probe(
+        load_split(SYNTHETIC_DIR / f"{train}.jsonl"),
+        load_split(SYNTHETIC_DIR / f"{evaluate}.jsonl"),
+    )
+    console.print(result.model_dump())

@@ -231,7 +231,7 @@ FAMILIES: list[Family] = [
                 "I'm saving hard for a house deposit this year, so I've cut back on all non-essential spending.",
                 0,
                 "required",
-                "lasting",
+                "temporary",
             ),
             M(
                 "m2",

@@ -91,9 +91,12 @@ class QwenJudge:
         )
         return IntentJudgment(intent=_result(dists["intent"]), meta=meta)
 
-    async def candidate(self, query: str, memory: str) -> CandidateJudgment:
+    async def candidate(
+        self, query: str, memory: str, status: str | None = None
+    ) -> CandidateJudgment:
+        status = status if self._schema.candidate_status else None
         dists, meta = await self._ask(
-            candidate_state(query, memory),
+            candidate_state(query, memory, status),
             {
                 "relevance": (self._schema.relevance, YES_NO),
                 "utility": (self._schema.utility, YES_NO),

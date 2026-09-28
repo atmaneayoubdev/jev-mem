@@ -1,0 +1,151 @@
+{
+  "timestamp": "2026-09-28T17:53:09.315286+00:00",
+  "git_commit": "36fcc6860db1b25043b9d0cb4d2bcb1918bb5f58",
+  "git_dirty": true,
+  "python": "3.12.11",
+  "platform": "Windows-11-10.0.26200-SP0",
+  "packages": {
+    "jevmem": "0.1.0",
+    "httpx": "0.28.1",
+    "pydantic": "2.13.5",
+    "numpy": "2.5.3",
+    "sentence-transformers": "6.1.0",
+    "torch": "2.11.0+cu128",
+    "transformers": "5.17.0"
+  },
+  "run": {
+    "run_id": "smoke-dev-1",
+    "cases_paths": [
+      "benchmarks\\datasets\\synthetic-v1\\dev.jsonl"
+    ],
+    "systems": [
+      "recency",
+      "bm25",
+      "embedding",
+      "embedding-threshold",
+      "embedding-decay",
+      "embedding-lifecycle",
+      "rerank",
+      "rerank-threshold",
+      "bm25-jev",
+      "embedding-jev",
+      "hybrid-jev",
+      "hybrid-qwen"
+    ],
+    "judges": [
+      "jev",
+      "qwen"
+    ],
+    "n_background": 20,
+    "pool_max": 20,
+    "budget": 1024,
+    "embeddings": true,
+    "answer": true,
+    "case_concurrency": 8,
+    "limit": 22,
+    "params_path": null,
+    "cache_mode": "readwrite",
+    "background_path": "benchmarks\\datasets\\background-v1.jsonl",
+    "results_dir": "benchmarks\\results"
+  },
+  "models": {
+    "jev_requested": "typesafe/jev-1.13-20260917",
+    "qwen": "qwen3.8-27b",
+    "embedding": "Qwen/Qwen3-Embedding-0.6B",
+    "reranker": "BAAI/bge-reranker-v2-m3"
+  },
+  "models_observed": {
+    "jev": [
+      "typesafe/jev-1.13-20260917"
+    ],
+    "qwen": [
+      "qwen3.8-27b"
+    ]
+  },
+  "question_schema_version": "q1.0",
+  "policy_version": "p1.0",
+  "answer_prompt_version": "a1.0",
+  "params": {
+    "k": {
+      "recency": 5,
+      "bm25": 5,
+      "embedding": 5,
+      "rerank": 5,
+      "embedding-decay": 5,
+      "embedding-lifecycle": 5
+    },
+    "threshold": {
+      "embedding-threshold": 0.5,
+      "rerank-threshold": 0.5
+    },
+    "half_life_days": 180.0,
+    "duplicate_similarity": 0.8,
+    "pool_size": 20,
+    "judge_workers": 16,
+    "policy": {
+      "jev": {
+        "version": "p1.0",
+        "read": {
+          "relevance": 0.6,
+          "utility": 0.6,
+          "band": 0.15,
+          "intent_confidence": 0.5
+        },
+        "write": {
+          "relation": 0.6,
+          "confidence": 0.5,
+          "ttl_days": {
+            "days": 3.0,
+            "weeks": 14.0,
+            "months": 120.0
+          }
+        },
+        "ablation": {
+          "utility": true,
+          "supersession": true,
+          "contradiction": true,
+          "temporal": true,
+          "intent": true
+        },
+        "inject_uncertain": false,
+        "supersede_mode": "exclude"
+      },
+      "qwen": {
+        "version": "p1.0",
+        "read": {
+          "relevance": 0.6,
+          "utility": 0.6,
+          "band": 0.15,
+          "intent_confidence": 0.5
+        },
+        "write": {
+          "relation": 0.6,
+          "confidence": 0.5,
+          "ttl_days": {
+            "days": 3.0,
+            "weeks": 14.0,
+            "months": 120.0
+          }
+        },
+        "ablation": {
+          "utility": true,
+          "supersession": true,
+          "contradiction": true,
+          "temporal": true,
+          "intent": true
+        },
+        "inject_uncertain": false,
+        "supersede_mode": "exclude"
+      }
+    }
+  },
+  "datasets": {
+    "benchmarks\\datasets\\synthetic-v1\\dev.jsonl": "74cb4bd3e1c91f34dce9a238aa224965d71ac93bccc3a0d0111409676bf579df"
+  },
+  "background_sha256": "e995cdaa2e4fbdf913271cf47acc142444faeb51b72d91a25cbcb509a8202bcf",
+  "cases": 22,
+  "judge_failures": {
+    "jev": 0,
+    "qwen": 0
+  }
+}

@@ -170,9 +170,16 @@ class JudgedRecall:
         intent = self.policy.resolve_intent(intent_judgment)
         if self.expand:
             candidates = expand_candidates(candidates, self.store, intent.intent)
+        statuses = {
+            c.memory.id: candidate_facts(self.store, c.memory, now, self.config).validity.value
+            for c in candidates
+        }
         try:
             judged = await asyncio.gather(
-                *(self.judge.candidate(query, c.memory.content) for c in candidates)
+                *(
+                    self.judge.candidate(query, c.memory.content, statuses[c.memory.id])
+                    for c in candidates
+                )
             )
         except ProviderError as exc:
             return self._fallback(

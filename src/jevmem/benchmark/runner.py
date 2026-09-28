@@ -280,3 +280,17 @@ def write_run(
         json.dumps(manifest, indent=2, default=str), encoding="utf-8"
     )
     return out
+
+
+async def materialize_only(config: RunConfig, settings: Settings) -> list[CaseMaterials]:
+    """Materials without answers (calibration, ablations, probes)."""
+    cases = load_cases(config.cases_paths, config.limit)
+    runtime = await build_runtime(config, settings)
+    async with runtime.stack:
+        return await materialize_all(
+            cases,
+            runtime.resources,
+            n_background=config.n_background,
+            pool_max=config.pool_max,
+            concurrency=config.case_concurrency,
+        )

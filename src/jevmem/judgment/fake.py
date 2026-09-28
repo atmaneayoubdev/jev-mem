@@ -88,7 +88,9 @@ class FakeJudge:
         meta = self._meta()
         return IntentJudgment(intent=_result(self._intent(query)), meta=meta)
 
-    async def candidate(self, query: str, memory: str) -> CandidateJudgment:
+    async def candidate(
+        self, query: str, memory: str, status: str | None = None
+    ) -> CandidateJudgment:
         self.calls.append(("candidate", (query, memory)))
         meta = self._meta()
         relevance, utility = self._candidate(query, memory)

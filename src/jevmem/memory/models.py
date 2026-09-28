@@ -59,6 +59,7 @@ class Horizon(StrEnum):
     DAYS = "days"
     WEEKS = "weeks"
     MONTHS = "months"
+    YEAR = "year"
 
 
 class LinkType(StrEnum):

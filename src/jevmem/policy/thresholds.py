@@ -30,7 +30,12 @@ class WriteThresholds(BaseModel):
     relation: float = Field(default=0.6, ge=0.0, le=1.0)  # τ_w: min p(chosen option)
     confidence: float = Field(default=0.5, ge=0.0, le=1.0)  # c_w: min choice confidence
     ttl_days: dict[Horizon, float] = Field(
-        default_factory=lambda: {Horizon.DAYS: 3.0, Horizon.WEEKS: 14.0, Horizon.MONTHS: 120.0}
+        default_factory=lambda: {
+            Horizon.DAYS: 3.0,
+            Horizon.WEEKS: 14.0,
+            Horizon.MONTHS: 120.0,
+            Horizon.YEAR: 365.0,
+        }
     )
 
     def ttl(self) -> dict[Horizon, timedelta]:
