@@ -2,6 +2,11 @@
 
 from __future__ import annotations
 
+import re
+
+_URL = re.compile(r"https?://[^\s\"'<>]+")
+_LONG_ID = re.compile(r"\b[0-9a-fA-F]{24,}\b")
+
 
 class ProviderError(Exception):
     """Base class. `retryable` errors have already exhausted their retry budget when raised."""
@@ -42,6 +47,14 @@ class ResponseFormatError(ProviderError):
 
 class CacheMissError(ProviderError):
     """Raised in cache-only (replay) mode when a request has no cached response."""
+
+
+def redact(text: str) -> str:
+    """Strip URLs and long hex ids (account / key identifiers) from provider error bodies.
+
+    Keeps the actionable reason (e.g. "Key limit exceeded (monthly limit)") for the operator.
+    """
+    return _LONG_ID.sub("<id>", _URL.sub("<url>", text))
 
 
 def public_message(exc: BaseException) -> str:

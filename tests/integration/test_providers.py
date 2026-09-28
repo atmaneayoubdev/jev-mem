@@ -383,3 +383,23 @@ async def test_breaker_opens_immediately_on_quota_or_auth_errors() -> None:
     public = public_message(info.value)
     assert public == "jev AuthenticationError (HTTP 403)"
     assert "example.test" not in public
+    # the operator-facing message (logs, `jevmem doctor`) keeps the reason, not the account ids
+    assert "Key limit exceeded" in str(info.value)
+    assert "example.test" not in str(info.value)
+
+
+def test_redact_strips_urls_and_long_ids() -> None:
+    from jevmem.providers.errors import redact
+
+    body = (
+        '{"error":{"message":"Key limit exceeded (monthly limit). Manage it using '
+        'https://openrouter.ai/workspaces/default/keys/0f1e2d3c4b5a69788796a5b4c3d2e1f00f1e2d3c",'
+        '"code":403}} id=0123456789abcdef0123456789abcdef'
+    )
+    out = redact(body)
+    assert "openrouter.ai" not in out
+    assert "0f1e2d3c4b5a" not in out
+    assert "0123456789abcdef" not in out
+    assert "Key limit exceeded (monthly limit)" in out
+    assert '"code":403' in out
+    assert redact("plain message") == "plain message"

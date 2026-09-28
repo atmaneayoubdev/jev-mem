@@ -35,10 +35,13 @@ Gate after every step: `uv run pytest`, `uv run ruff check .`, `uv run ruff form
 - [x] Security: CORS, size limits, rate-limit hook, safe errors, request ids
 - [x] CLI: serve, memory add/list, demo seed/reset; Alex demo seed
 - [x] Tests (fakes, sqlite tmp) + live smoke
-# M3 — React/Vite inspector, mode toggle, comparison view, lineage timeline (in progress, frontend agent)
+# M3 — React/Vite inspector, mode toggle, comparison view, lineage timeline
+- [x] Chat & Inspector, Compare, Memories & Timeline, Benchmark views; 22 vitest tests (ec7afc7)
+- [x] Served by FastAPI at `/`; verified live against the API with the Alex demo
 # M4
 - [x] README, docs (architecture, memory model, Jev design, benchmark), SECURITY, CONTRIBUTING, CHANGELOG
-- [x] Dockerfile + compose (build test pending frontend)
+- [x] Dockerfile + compose; image builds (624 MB), container healthy, non-root, UI at `/`, `/api/v1/health` ok
+- [x] Provider error bodies redacted (URLs, key/workspace ids) in logs and `jevmem doctor`
 - [x] Fresh-clone test: installs, 135+ offline tests pass, datasets regenerate byte-identical
 - [x] e2e track implemented; extraction bug found and fixed (x1.1)
 - [x] Raw results gzipped

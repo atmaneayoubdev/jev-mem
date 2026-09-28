@@ -26,6 +26,8 @@
 - `MemoryService`: all five retrieval modes, chat with Qwen, propose-only memory extraction, compare, lineage, archive (never delete).
 - FastAPI v1: chat, memories, retrieve, judge, compare, conversations, demo, benchmark, health, config, metrics.
 - Request ids, CORS, size limits, rate-limit hook, safe errors, production mode.
+- Provider error bodies are redacted (URLs, key and workspace ids) before logging; clients only see
+  `<provider> <ErrorType> (HTTP n)`. Auth and quota failures open the circuit breaker at once.
 - CLI: `doctor`, `serve`, `memory add/list`, `demo seed/reset`, and the `benchmark` commands.
 - The Alex demo scenario.
 
@@ -33,5 +35,5 @@
 - React + Vite memory inspector: chat with per-turn judgments, retrieval-mode toggle, vector-vs-JevMem compare view, lineage timeline, benchmark table.
 
 ### Packaging (M4)
-- Dockerfile (UI build + runtime) and docker-compose, with an optional PostgreSQL profile.
+- Dockerfile (UI build + runtime, non-root, healthcheck) and docker-compose, with an optional PostgreSQL profile.
 - Documentation: architecture, memory model, Jev design, benchmark, methodology, pre-registration, security, contributing.

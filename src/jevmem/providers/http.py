@@ -21,6 +21,7 @@ from jevmem.providers.errors import (
     RateLimitedError,
     RequestValidationError,
     ResponseFormatError,
+    redact,
 )
 
 # Some endpoints sit behind Cloudflare, which rejects the default Python-urllib signature.
@@ -79,7 +80,7 @@ def parse_retry_after(value: str | None) -> float | None:
 
 
 def _error_for(provider: str, status: int, body: str) -> ProviderError:
-    message = body[:300] or "request failed"
+    message = redact(body[:300]) or "request failed"
     if status in (401, 403):
         return AuthenticationError(provider, message, status)
     if status == 402:
