@@ -185,6 +185,8 @@ def benchmark_export_review(
 def benchmark_run(
     run_id: str = typer.Option(..., help="Name of the results directory."),
     split: list[str] = typer.Option(["dev"], help="Synthetic split(s) to run."),
+    cases: list[Path] = typer.Option([], help="Explicit case JSONL files (overrides --split)."),
+    supersede_mode: str | None = typer.Option(None, help="Override: exclude | annotate."),
     systems: str = typer.Option("all", help="Comma-separated system names, or 'all'."),
     judges: str = typer.Option("jev,qwen"),
     n_background: int = typer.Option(100),
@@ -205,7 +207,8 @@ def benchmark_run(
 
     config = RunConfig(
         run_id=run_id,
-        cases_paths=[SYNTHETIC_DIR / f"{s}.jsonl" for s in split],
+        cases_paths=cases or [SYNTHETIC_DIR / f"{s}.jsonl" for s in split],
+        supersede_mode=supersede_mode,
         systems=ALL_SYSTEMS if systems == "all" else [s.strip() for s in systems.split(",")],
         judges=[j.strip() for j in judges.split(",") if j.strip()],
         n_background=n_background,
@@ -281,3 +284,19 @@ def benchmark_probe(
         load_split(SYNTHETIC_DIR / f"{evaluate}.jsonl"),
     )
     console.print(result.model_dump())
+
+
+LME_SOURCE = Path("data/external/longmemeval/longmemeval_s_cleaned.json")
+LME_CASES = Path("data/external/longmemeval/cases-preregistered.jsonl")
+
+
+@benchmark_app.command("lme-prepare")
+def benchmark_lme_prepare(
+    source: Path = typer.Option(LME_SOURCE),
+    out: Path = typer.Option(LME_CASES),
+    limit: int | None = typer.Option(None),
+) -> None:
+    """Convert LongMemEval_S (pre-registered subsets) into JevMem cases."""
+    from jevmem.benchmark.datasets.longmemeval import prepare
+
+    console.print(f"wrote {prepare(source, out, limit=limit)} LongMemEval cases to {out}")

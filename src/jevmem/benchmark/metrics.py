@@ -54,7 +54,12 @@ def _ndcg(ranked: Sequence[str], relevant: set[str], k: int = 10) -> float | Non
     return dcg / ideal
 
 
-def case_result(case: Case, selection: Selection, answer: AnswerResult | None) -> CaseResult:
+def case_result(
+    case: Case,
+    selection: Selection,
+    answer: AnswerResult | None,
+    score: AnswerScore | None = None,
+) -> CaseResult:
     required = case.ids_with("required")
     forbidden = case.ids_with("forbidden")
     neutral = case.ids_with("neutral")
@@ -62,7 +67,8 @@ def case_result(case: Case, selection: Selection, answer: AnswerResult | None) -
     ranked = selection.ranked_ids
     failed = selection.failure is not None
     first_hit = next((i for i, mid in enumerate(ranked) if mid in required), None)
-    score = score_answer(answer.answer, case.expected) if answer is not None else None
+    if score is None and answer is not None and case.expected.mode != "llm_judge":
+        score = score_answer(answer.answer, case.expected)
     judged = selection.judge_used
     return CaseResult(
         case_id=case.case_id,

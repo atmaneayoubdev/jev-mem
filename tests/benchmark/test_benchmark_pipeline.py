@@ -203,3 +203,27 @@ def test_cluster_bootstrap_and_paired() -> None:
     assert paired.lo <= paired.diff <= paired.hi
     assert 0.0 <= paired.p_not_better <= 1.0
     _ = datetime.now(UTC)
+
+
+async def test_calibration_grid_is_offline_and_improves_objective() -> None:
+    from jevmem.benchmark.calibrate import calibrate
+
+    cases = [c for c in build_split("calib") if c.category in ("supersession", "plain_recall")][:6]
+    judge = FakeJudge(pair=supersede_rule, candidate=lambda q, m: (0.8, 0.8))
+    resources = Resources(
+        judges={"jev": judge},
+        embedder=None,
+        reranker=None,
+        background=BACKGROUND,
+        write_policy=PolicyConfig(),
+    )
+    materials = [await materialize(c, resources, n_background=4, pool_max=10) for c in cases]
+    calls_before = len(judge.calls)
+    report = calibrate(materials, budget=512)
+    assert len(judge.calls) == calls_before  # no model calls during calibration
+    assert set(report.best) >= {"recency", "bm25"}
+    default_acc = next(
+        p.selection_accuracy for p in report.grid if p.system == "bm25" and p.setting == {"k": 5}
+    )
+    assert report.best["bm25"].selection_accuracy >= default_acc
+    assert report.params.k["bm25"] == report.best["bm25"].setting["k"]

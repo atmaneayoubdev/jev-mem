@@ -8,13 +8,14 @@ from collections.abc import Callable, Sequence
 from contextlib import AsyncExitStack
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any
+from typing import Any, Literal
 
 from pydantic import BaseModel, Field
 
 from jevmem.benchmark.answer import ANSWER_PROMPT_VERSION, AnswerResult, generate_answer
 from jevmem.benchmark.datasets.background import load_pool
 from jevmem.benchmark.datasets.schema import Case
+from jevmem.benchmark.grading import GRADER_VERSION, grade
 from jevmem.benchmark.manifest import build_manifest, file_sha256
 from jevmem.benchmark.materials import CaseMaterials, Resources, materialize
 from jevmem.benchmark.metrics import (
@@ -26,6 +27,7 @@ from jevmem.benchmark.metrics import (
     case_result,
     lifecycle_outcomes,
 )
+from jevmem.benchmark.scoring import AnswerScore
 from jevmem.benchmark.systems import SYSTEMS, Params, Selection, available, select
 from jevmem.config import Settings
 from jevmem.judgment.base import DecisionJudge
@@ -62,6 +64,9 @@ class RunConfig(BaseModel):
     cache_mode: CacheMode = "readwrite"
     background_path: Path = Path("benchmarks/datasets/background-v1.jsonl")
     results_dir: Path = Path("benchmarks/results")
+    # Override supersede_mode for judged systems. LongMemEval uses "annotate": one turn holds
+    # several facts, so a superseded turn is flagged in context rather than withheld.
+    supersede_mode: Literal["exclude", "annotate"] | None = None
 
 
 @dataclass
@@ -109,10 +114,16 @@ async def build_runtime(config: RunConfig, settings: Settings) -> Runtime:
     return Runtime(resources=resources, generator=generator, stack=stack, models=models)
 
 
-def load_params(path: Path | None) -> Params:
-    if path is None or not path.exists():
-        return Params()
-    return Params.model_validate_json(path.read_text(encoding="utf-8"))
+def load_params(path: Path | None, supersede_mode: str | None = None) -> Params:
+    params = (
+        Params()
+        if path is None or not path.exists()
+        else Params.model_validate_json(path.read_text(encoding="utf-8"))
+    )
+    if supersede_mode is not None:
+        for name, cfg in params.policy.items():
+            params.policy[name] = cfg.model_copy(update={"supersede_mode": supersede_mode})
+    return params
 
 
 def load_cases(paths: Sequence[Path], limit: int | None) -> list[Case]:
@@ -185,6 +196,33 @@ async def answer_all(
     return list(await asyncio.gather(*(one(m, s) for m, s in pairs)))
 
 
+async def grade_all(
+    pairs: Sequence[tuple[CaseMaterials, Selection]],
+    answers: Sequence[AnswerResult | None],
+    grader: OpenAICompatibleProvider | None,
+) -> list[AnswerScore | None]:
+    """LLM-judge grading for cases whose expected answer is `llm_judge` (e.g. LongMemEval)."""
+
+    async def one(mat: CaseMaterials, answer: AnswerResult | None) -> AnswerScore | None:
+        exp = mat.case.expected
+        if grader is None or answer is None or exp.mode != "llm_judge":
+            return None
+        try:
+            return await grade(
+                grader,
+                task=exp.task or "",
+                question=mat.case.query,
+                reference=exp.reference or "",
+                answer=answer.answer,
+                abstention=exp.abstention,
+            )
+        except ProviderError:
+            return None
+
+    pending = (one(m, a) for (m, _), a in zip(pairs, answers, strict=True))
+    return list(await asyncio.gather(*pending))
+
+
 def _jsonl(path: Path, rows: Sequence[BaseModel]) -> None:
     with path.open("w", encoding="utf-8", newline="\n") as fh:
         for row in rows:
@@ -209,7 +247,7 @@ async def run(
     progress: Callable[[str, int, int], None] | None = None,
 ) -> Path:
     cases = load_cases(config.cases_paths, config.limit)
-    params = load_params(config.params_path)
+    params = load_params(config.params_path, config.supersede_mode)
     runtime = await build_runtime(config, settings)
     async with runtime.stack:
         materials = await materialize_all(
@@ -222,8 +260,10 @@ async def run(
         )
         pairs = select_all(materials, config.systems, params, config.budget)
         answers = await answer_all(pairs, runtime.generator if config.answer else None)
+        grades = await grade_all(pairs, answers, runtime.generator)
     results = [
-        case_result(mat.case, sel, ans) for (mat, sel), ans in zip(pairs, answers, strict=True)
+        case_result(mat.case, sel, ans, grade)
+        for (mat, sel), ans, grade in zip(pairs, answers, grades, strict=True)
     ]
     relations: list[RelationOutcome] = []
     durability: list[DurabilityOutcome] = []
@@ -267,6 +307,7 @@ def write_run(
         question_schema_version=SCHEMA_V1.version,
         policy_version=POLICY_VERSION,
         answer_prompt_version=ANSWER_PROMPT_VERSION,
+        grader_version=GRADER_VERSION,
         params=params.model_dump(mode="json"),
         datasets=datasets,
         background_sha256=file_sha256(config.background_path),

@@ -14,7 +14,7 @@ from pydantic import BaseModel, ConfigDict, Field
 
 Label = Literal["required", "forbidden", "neutral"]
 Split = Literal["dev", "calib", "test"]
-AnswerMode = Literal["value", "abstain", "conflict", "all"]
+AnswerMode = Literal["value", "abstain", "conflict", "all", "llm_judge"]
 Relation = Literal["supersedes", "contradicts", "duplicate", "refines", "unrelated"]
 
 
@@ -42,6 +42,10 @@ class ExpectedAnswer(BaseModel):
     # value: any alias counts; all: every value must appear; conflict: flag or name all values
     aliases: list[str] = Field(default_factory=list)
     forbidden: list[str] = Field(default_factory=list)
+    # llm_judge (external benchmarks): graded with the benchmark's official judge prompt
+    reference: str | None = None
+    task: str | None = None
+    abstention: bool = False
 
 
 class Case(BaseModel):
