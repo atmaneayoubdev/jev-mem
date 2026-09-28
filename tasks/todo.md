@@ -11,11 +11,11 @@ Full plan: `C:\Users\atman\.claude\plans\starry-squishing-crescent.md` (approved
 - [x] 6. Retrievers + one-hop expansion + optional embedding/reranker (CUDA check, CPU fallback)
 - [x] 7. Lifecycle pipeline + shared context builder
 - [x] 8. Synthetic generator (dev + calib families only), distractor pool, review export
-- [~] 9. Runner, systems registry, metrics, family bootstrap, leakage probe, ablation replays (runner/systems/metrics/bootstrap done; probe + calibration in progress)
-- [ ] 10. Dev question iteration (equal budget Jev/Qwen); calibrate all systems on calib; freeze + commit schemas; `docs/preregistration.md`
-- [ ] 11. Author test families; run all systems + ablations + saturation + nondeterminism on test, once
-- [ ] 12. LongMemEval loader, throughput measurement, pre-registered subsets
-- [ ] 13. Reports, charts, failure buckets, manifest
+- [x] 9. Runner, systems registry, metrics, family bootstrap, leakage probe, ablation replays
+- [x] 10. Dev question iteration (equal budget Jev/Qwen); calibrate all systems on calib; freeze + commit schemas; `docs/preregistration.md`
+- [~] 11. Author test families (done, f7c79f3); run all systems + ablations + saturation + nondeterminism on test, once (running)
+- [~] 12. LongMemEval loader, throughput measurement (10 inst: 12.7 min, ~1.2k Jev calls/inst), pre-registered subsets (running)
+- [~] 13. Reports, charts, failure buckets, manifest (tooling done)
 - [ ] 14. Check in with user
 
 Gate after every step: `uv run pytest`, `uv run ruff check .`, `uv run ruff format --check .`, `uv run mypy` → commit.

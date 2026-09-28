@@ -92,3 +92,21 @@ Calib was used to calibrate thresholds. Its first run also exposed defects, whic
 ### Choosing the primary comparator
 
 The pre-registration draft named `embedding-lifecycle`. The final rule is "the baseline with the highest calib answer accuracy under calibrated parameters". That was `embedding` (dense top-10), tied at 100.0% with `embedding-lifecycle`, and the simpler system was chosen. On calib, dense top-10 with Qwen as the generator reaches ceiling answer accuracy, because the generator resolves stale and conflicting memories in context using their dates.
+
+## Freeze and test authoring
+
+- **Freeze commit:** `cd70129`, which covers the question schema `q1.2`, prompts `qp1.0` and `a1.1`, policy `p1.2`, the calibrated parameters and the final pre-registration.
+- **Test families:** 66 families (396 cases), committed in `f7c79f3`, after the freeze.
+  - They were written by an independent agent that was not allowed to read the question schema, prompts, policy, judges, calibration or any results. It could read only the DSL, the scoring rules and the category definitions.
+  - I reviewed a sample of one instance per family (`benchmarks/review/test.md`) before running.
+- **Commits between the freeze and the test run** (`fb1ec9c`, `46d5a94`) added analysis tooling only: variants, reliability, reports, charts, and recording of judge scores and pair probabilities.
+  - To show system behaviour was unchanged, dev was replayed **fully offline from the response cache** (`dev-final-replay`). It hit zero cache misses and reproduced every accuracy, selection and token metric exactly (60/60).
+  - Judge latency differed by ≤ 4 ms. The retrieval-time overlap term is measured live, not replayed.
+- **Leakage probe:** a TF-IDF (1–2-gram) logistic regression over query and memory text, predicting whether a memory is required.
+
+  | Train → Evaluate | AUC | Case selection accuracy |
+  |---|---|---|
+  | calib → test | 0.527 | 0.59 |
+  | dev → test | 0.620 | 0.69 |
+
+  AUC near chance means test templates share no exploitable surface cues with calib. The selection accuracy is inflated by trivially correct cases: abstention and recall cases with no forbidden memory, where selecting everything is "correct".
