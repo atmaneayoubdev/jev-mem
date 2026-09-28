@@ -362,7 +362,7 @@ def write_run(
             for c, systems in aggregate_by_category(results).items()
         },
     }
-    (out / "metrics.json").write_text(json.dumps(metrics, indent=2), encoding="utf-8")
+    (out / "metrics.json").write_text(json.dumps(metrics, indent=2), encoding="utf-8", newline="\n")
     datasets = {str(p): file_sha256(p) for p in config.cases_paths}
     manifest = build_manifest(
         run=json.loads(config.model_dump_json()),
@@ -383,7 +383,7 @@ def write_run(
         },
     )
     (out / "manifest.json").write_text(
-        json.dumps(manifest, indent=2, default=str), encoding="utf-8"
+        json.dumps(manifest, indent=2, default=str), encoding="utf-8", newline="\n"
     )
     return out
 

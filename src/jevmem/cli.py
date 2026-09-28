@@ -200,7 +200,7 @@ def benchmark_export_review(
         ]
     out = Path("benchmarks/review") / f"{split}.md"
     out.parent.mkdir(parents=True, exist_ok=True)
-    out.write_text("\n".join(lines), encoding="utf-8")
+    out.write_text("\n".join(lines), encoding="utf-8", newline="\n")
     console.print(f"wrote {out}")
 
 
@@ -293,8 +293,10 @@ def benchmark_calibrate(
     materials = asyncio.run(materialize_only(config, get_settings()))
     report = calibrate(materials, budget)
     out.parent.mkdir(parents=True, exist_ok=True)
-    out.write_text(report.params.model_dump_json(indent=2), encoding="utf-8")
-    out.with_suffix(".grid.json").write_text(report.model_dump_json(indent=2), encoding="utf-8")
+    out.write_text(report.params.model_dump_json(indent=2), encoding="utf-8", newline="\n")
+    out.with_suffix(".grid.json").write_text(
+        report.model_dump_json(indent=2), encoding="utf-8", newline="\n"
+    )
     table = Table(title=f"calibration on {split} ({report.cases} cases)")
     for col in ("system", "best setting", "selection acc", "mean tokens"):
         table.add_column(col)
@@ -371,7 +373,7 @@ def benchmark_nondeterminism(
 
     text = asyncio.run(go())
     out.parent.mkdir(parents=True, exist_ok=True)
-    out.write_text(text, encoding="utf-8")
+    out.write_text(text, encoding="utf-8", newline="\n")
     console.print(text)
 
 

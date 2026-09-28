@@ -85,5 +85,7 @@ def build_all(
                 raise ValueError(f"family {fam} appears in both {all_families[fam]} and {split}")
             all_families[fam] = split
         manifest[split] = write_split(cases, out_dir, split)
-    (out_dir / "manifest.json").write_text(json.dumps(manifest, indent=2) + "\n", encoding="utf-8")
+    (out_dir / "manifest.json").write_text(
+        json.dumps(manifest, indent=2) + "\n", encoding="utf-8", newline="\n"
+    )
     return manifest

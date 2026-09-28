@@ -311,7 +311,7 @@ def write_report(
         names = make_charts(metrics, calib, chart_dir, systems)
         parts += ["", "## Charts", ""] + [f"![{n}](charts/{n})" for n in names]
     out = run / "report.md"
-    out.write_text("\n".join(parts) + "\n", encoding="utf-8")
+    out.write_text("\n".join(parts) + "\n", encoding="utf-8", newline="\n")
     return out
 
 
