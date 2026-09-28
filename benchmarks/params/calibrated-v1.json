@@ -1,0 +1,78 @@
+{
+  "k": {
+    "recency": 6,
+    "bm25": 3,
+    "embedding": 10,
+    "rerank": 4,
+    "embedding-decay": 4,
+    "embedding-lifecycle": 10
+  },
+  "threshold": {
+    "embedding-threshold": 0.2881,
+    "rerank-threshold": 0.0
+  },
+  "half_life_days": 180.0,
+  "duplicate_similarity": 0.65,
+  "pool_size": 20,
+  "judge_workers": 16,
+  "policy": {
+    "jev": {
+      "version": "p1.1",
+      "read": {
+        "relevance": 0.5,
+        "utility": 0.3,
+        "band": 0.15,
+        "intent_confidence": 0.7
+      },
+      "write": {
+        "relation": 0.6,
+        "confidence": 0.5,
+        "instruction": 0.5,
+        "ttl_days": {
+          "days": 3.0,
+          "weeks": 14.0,
+          "months": 120.0,
+          "year": 365.0
+        }
+      },
+      "ablation": {
+        "utility": true,
+        "supersession": true,
+        "contradiction": true,
+        "temporal": true,
+        "intent": true
+      },
+      "inject_uncertain": false,
+      "supersede_mode": "exclude"
+    },
+    "qwen": {
+      "version": "p1.1",
+      "read": {
+        "relevance": 0.8,
+        "utility": 0.6,
+        "band": 0.15,
+        "intent_confidence": 0.3
+      },
+      "write": {
+        "relation": 0.6,
+        "confidence": 0.5,
+        "instruction": 0.5,
+        "ttl_days": {
+          "days": 3.0,
+          "weeks": 14.0,
+          "months": 120.0,
+          "year": 365.0
+        }
+      },
+      "ablation": {
+        "utility": true,
+        "supersession": true,
+        "contradiction": true,
+        "temporal": true,
+        "intent": true
+      },
+      "inject_uncertain": false,
+      "supersede_mode": "exclude"
+    }
+  }
+}

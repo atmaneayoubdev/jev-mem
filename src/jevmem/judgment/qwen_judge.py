@@ -67,15 +67,18 @@ class QwenJudge:
         self.schema_version = f"{schema.version}+{PROMPT_VERSION}"
 
     async def profile(self, memory: str) -> ProfileJudgment:
-        dists, meta = await self._ask(
-            profile_state(memory),
-            {
-                "durability": (self._schema.durability, DURABILITY_OPTIONS),
-                "horizon": (self._schema.horizon, HORIZON_OPTIONS),
-            },
-        )
+        questions: dict[str, tuple[QuestionText, Sequence[str]]] = {
+            "durability": (self._schema.durability, DURABILITY_OPTIONS),
+            "horizon": (self._schema.horizon, HORIZON_OPTIONS),
+        }
+        if self._schema.instruction is not None:
+            questions["instruction"] = (self._schema.instruction, YES_NO)
+        dists, meta = await self._ask(profile_state(memory), questions)
         return ProfileJudgment(
-            durability=_result(dists["durability"]), horizon=_result(dists["horizon"]), meta=meta
+            durability=_result(dists["durability"]),
+            horizon=_result(dists["horizon"]),
+            instruction=dists["instruction"]["yes"] if "instruction" in dists else None,
+            meta=meta,
         )
 
     async def pair(self, earlier: str, later: str) -> PairJudgment:
@@ -126,7 +129,7 @@ class QwenJudge:
         }
         result = await self._provider.complete(
             messages,
-            max_tokens=64 + 16 * len(questions),
+            max_tokens=(2048 if self._thinking else 64) + 16 * len(questions),
             json_schema=schema,
             enable_thinking=self._thinking,
             top_logprobs=self._top_logprobs,

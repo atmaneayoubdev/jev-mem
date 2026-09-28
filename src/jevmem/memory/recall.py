@@ -76,6 +76,7 @@ def candidate_facts(
         validity=validity_at(memory, store, now, ttl),
         conflict_partner_ids=[p.id for p in conflict_partners(store, memory.id)],
         possibly_outdated=uncertain,
+        instruction_like=memory.instruction_like,
         immediate_predecessor_of_current=predecessor_of_current,
     )
 

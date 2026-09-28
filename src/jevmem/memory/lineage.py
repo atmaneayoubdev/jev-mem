@@ -54,7 +54,10 @@ def validity_at(
         return Validity.EXPIRED
     for link in store.links_to(memory.id, [LinkType.TEMPORARILY_OVERRIDES]):
         overrider = store.get(link.source_id)
-        if overrider.observed_at <= now and (link.expires_at is None or link.expires_at > now):
+        # The override lasts as long as the overriding memory is valid, computed with the TTL
+        # table in force now (not the one at write time), so TTLs can be calibrated offline.
+        lapse = expires_at(overrider, ttl)
+        if overrider.observed_at <= now and (lapse is None or lapse > now):
             return Validity.OVERRIDDEN
     return Validity.CURRENT
 

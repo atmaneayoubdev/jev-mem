@@ -35,7 +35,10 @@ class JevJudge:
     async def profile(self, memory: str) -> ProfileJudgment:
         r = await self._client.evaluate(profile_state(memory), self._schema.jev_profile())
         return ProfileJudgment(
-            durability=_choice(r, "durability"), horizon=_choice(r, "horizon"), meta=self._meta(r)
+            durability=_choice(r, "durability"),
+            horizon=_choice(r, "horizon"),
+            instruction=_noul(r, "instruction") if "instruction" in r.response.answers else None,
+            meta=self._meta(r),
         )
 
     async def pair(self, earlier: str, later: str) -> PairJudgment:

@@ -43,7 +43,7 @@ class Resources:
     reranker: CrossEncoderScorer | None
     background: Sequence[BackgroundMemory]
     write_policy: PolicyConfig
-    min_embedding_similarity: float = 0.45
+    min_embedding_similarity: float = 0.40
 
 
 @dataclass

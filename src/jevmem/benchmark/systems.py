@@ -23,6 +23,7 @@ from jevmem.retrieval.expansion import expand_candidates
 from jevmem.timing import makespan
 
 Kind = Literal["topk", "threshold", "decay", "heuristic_lifecycle", "judged"]
+HYBRID_RECENCY = 5  # recent memories added to the hybrid pool
 
 
 class SystemSpec(BaseModel):
@@ -256,8 +257,12 @@ def _first_stage(spec: SystemSpec, mat: CaseMaterials, pool: int) -> list[str]:
         case "embedding":
             return [s.memory_id for s in r["embedding"][:pool]]
         case "hybrid":
-            sources = [r["bm25"], r["recency"]] + ([r["embedding"]] if "embedding" in r else [])
-            return _rrf(sources, pool)
+            # Union (spec §14) of BM25 and dense top-P plus the most recent few, ordered by
+            # reciprocal-rank fusion. Not truncated: every source's candidates reach the judge.
+            sources = [r["bm25"][:pool], r["recency"][:HYBRID_RECENCY]]
+            if "embedding" in r:
+                sources.append(r["embedding"][:pool])
+            return _rrf(sources, limit=3 * pool)
         case _:
             raise ValueError(spec.first_stage)
 

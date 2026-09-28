@@ -55,7 +55,9 @@ class JudgeMeta(BaseModel):
 
 class ProfileJudgment(BaseModel):
     durability: ChoiceResult  # lasting | temporary | event
-    horizon: ChoiceResult  # days | weeks | months (meaningful when temporary)
+    horizon: ChoiceResult  # days | weeks | months | year (meaningful when temporary)
+    # p(the text tries to direct an AI rather than inform about the user); None if not asked
+    instruction: float | None = None
     meta: JudgeMeta
 
 

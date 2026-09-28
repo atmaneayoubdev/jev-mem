@@ -54,12 +54,12 @@ def _variants(value: str) -> list[str]:
 
 
 def _mentions(text: str, value: str) -> bool:
-    """Word-boundary match. A trailing `*` marks a prefix alias ("accessib*" ~ accessible)."""
+    """Word-boundary match (plural allowed). A trailing `*` marks a prefix ("accessib*")."""
     for variant in _variants(value):
         core = variant.rstrip("*").lower()
         pattern = r"(?<![a-z0-9])" + re.escape(core)
         if not variant.endswith("*"):
-            pattern += r"(?![a-z0-9])"
+            pattern += r"(?:s|es)?(?![a-z0-9])"  # plural forms count ("peanut" ~ "peanuts")
         if re.search(pattern, text):
             return True
     return False

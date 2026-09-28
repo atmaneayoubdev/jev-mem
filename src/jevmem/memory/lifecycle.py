@@ -62,8 +62,7 @@ class LifecyclePipeline:
         *,
         active_neighbors: int = 5,
         superseded_neighbors: int = 2,
-        min_embedding_similarity: float = 0.45,
-        rrf_k: int = 60,
+        min_embedding_similarity: float = 0.40,
     ) -> None:
         self.store = store
         self.index = index
@@ -76,7 +75,7 @@ class LifecyclePipeline:
         # paired with unrelated ones (wasted judge calls, and case-specific pairs that defeat
         # caching). The floor's effect on real relations is measured as neighbour recall.
         self.min_embedding_similarity = min_embedding_similarity
-        self.rrf_k = rrf_k
+
         self._last_key: dict[str, tuple[object, ...]] = {}
 
     async def write_many(self, memories: Sequence[Memory]) -> list[WriteReport]:
@@ -103,30 +102,28 @@ class LifecyclePipeline:
         return [await self._judge_and_apply(m, self.neighbors(m)) for m in pending]
 
     def neighbors(self, memory: Memory) -> list[Memory]:
-        """Nearest earlier memories: top active ones, then a few superseded ones."""
+        """Nearest earlier memories: top active ones, then a few superseded ones.
+
+        With an embedder, neighbours are ranked by dense document similarity above a floor:
+        lexical matching pairs memories on incidental shared words and crowds out real
+        predecessors whose wording differs (implicit updates). BM25 is the fallback signal
+        when no embedder is configured.
+        """
         user = self.index.user(memory.user_id)
         position = {mid: i for i, mid in enumerate(user.order)}
         limit_pos = position.get(memory.id, len(user.order))
-        fused: dict[str, float] = {}
-        rankings = [user.bm25.search(memory.content)]
         if user.embedding is not None:
-            rankings.append(
-                [
-                    r
-                    for r in user.embedding.search_similar(memory.content)
-                    if r.score >= self.min_embedding_similarity
-                ]
-            )
-        for ranking in rankings:
-            for rank, item in enumerate(
-                r for r in ranking if position.get(r.memory_id, limit_pos) < limit_pos
-            ):
-                fused[item.memory_id] = fused.get(item.memory_id, 0.0) + 1.0 / (
-                    self.rrf_k + rank + 1
-                )
+            ranking = [
+                r
+                for r in user.embedding.search_similar(memory.content)
+                if r.score >= self.min_embedding_similarity
+            ]
+        else:
+            ranking = user.bm25.search(memory.content)
+        ordered = [r.memory_id for r in ranking if position.get(r.memory_id, limit_pos) < limit_pos]
         active: list[Memory] = []
         superseded: list[Memory] = []
-        for mid in sorted(fused, key=lambda i: (-fused[i], i)):
+        for mid in ordered:
             if (
                 len(active) >= self.active_neighbors
                 and len(superseded) >= self.superseded_neighbors
@@ -178,6 +175,7 @@ class LifecyclePipeline:
         decision = self.policy.profile(profile)
         memory.durability = decision.durability
         memory.horizon = decision.horizon
+        memory.instruction_like = decision.instruction_like
         memory.lifecycle_pending = False
         self.store.update(memory)
         report.durability = decision.durability.value
@@ -194,6 +192,12 @@ class LifecyclePipeline:
                 )
             )
             if action.link_type is None:
+                continue
+            if memory.instruction_like:
+                # Injection-like text never gets to supersede or annotate real memories.
+                report.pairs[-1].action = WriteAction(
+                    link_type=None, reason=f"ignored ({action.reason}): instruction-like memory"
+                )
                 continue
             expiry = (
                 expires_at(memory, self.config.write.ttl())

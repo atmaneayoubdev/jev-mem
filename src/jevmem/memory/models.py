@@ -96,6 +96,9 @@ class Memory(BaseModel):
     horizon: Horizon | None = None
     # Set when lifecycle judgment failed (e.g. judge outage) and must be retried.
     lifecycle_pending: bool = False
+    # Judged at write time: text that tries to direct an AI (possible injection). Such
+    # memories are kept for audit but never injected and never change other memories.
+    instruction_like: bool = False
 
     confidence: float | None = Field(default=None, ge=0.0, le=1.0)
     tags: list[str] = Field(default_factory=list)

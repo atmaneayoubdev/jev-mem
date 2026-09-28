@@ -16,7 +16,7 @@ from pydantic import BaseModel, Field
 
 from jevmem.memory.models import Horizon
 
-POLICY_VERSION = "p1.0"
+POLICY_VERSION = "p1.2"
 
 
 class ReadThresholds(BaseModel):
@@ -29,11 +29,14 @@ class ReadThresholds(BaseModel):
 class WriteThresholds(BaseModel):
     relation: float = Field(default=0.6, ge=0.0, le=1.0)  # τ_w: min p(chosen option)
     confidence: float = Field(default=0.5, ge=0.0, le=1.0)  # c_w: min choice confidence
+    instruction: float = Field(default=0.5, ge=0.0, le=1.0)  # τ_i: injection flag
     ttl_days: dict[Horizon, float] = Field(
         default_factory=lambda: {
-            Horizon.DAYS: 3.0,
-            Horizon.WEEKS: 14.0,
-            Horizon.MONTHS: 120.0,
+            # Set a priori from the horizon definitions (upper end of each bucket), not tuned:
+            # the judge's `memory_status` input depends on it, so it cannot be tuned offline.
+            Horizon.DAYS: 7.0,
+            Horizon.WEEKS: 42.0,
+            Horizon.MONTHS: 180.0,
             Horizon.YEAR: 365.0,
         }
     )

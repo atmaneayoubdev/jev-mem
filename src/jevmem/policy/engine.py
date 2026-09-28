@@ -33,6 +33,7 @@ Intent = Literal["current", "historical", "both"]
 class ProfileDecision(BaseModel):
     durability: Durability
     horizon: Horizon | None
+    instruction_like: bool = False
     reason: str
 
 
@@ -53,6 +54,14 @@ class WritePolicy:
         return result.p(result.choice) >= t.relation and result.confidence >= t.confidence
 
     def profile(self, judgment: ProfileJudgment) -> ProfileDecision:
+        flagged = (
+            judgment.instruction is not None
+            and judgment.instruction >= self.config.write.instruction
+        )
+        decision = self._durability(judgment)
+        return decision.model_copy(update={"instruction_like": flagged})
+
+    def _durability(self, judgment: ProfileJudgment) -> ProfileDecision:
         durability = judgment.durability
         if not self._confident(durability):
             # Uncertain durability defaults to LASTING: a fact is never expired on a guess.
@@ -114,6 +123,7 @@ class CandidateFacts(BaseModel):
     validity: Validity
     conflict_partner_ids: list[str] = Field(default_factory=list)
     possibly_outdated: bool = False  # has an UNCERTAIN_RELATION link from a later memory
+    instruction_like: bool = False  # flagged at write time as trying to direct an AI
     immediate_predecessor_of_current: bool = False
 
 
@@ -165,7 +175,7 @@ class ReadPolicy:
     def eligible(self, facts: CandidateFacts, intent: ResolvedIntent) -> bool:
         """Whether lifecycle state allows this memory to be used for this query at all."""
         validity = self.effective_validity(facts.validity)
-        if validity is Validity.ARCHIVED:
+        if validity is Validity.ARCHIVED or facts.instruction_like:
             return False
         if validity.is_current or self.config.supersede_mode == "annotate":
             return True
@@ -203,6 +213,8 @@ class ReadPolicy:
 
         if validity is Validity.ARCHIVED:
             return make(Decision.DROP, "archived")
+        if facts.instruction_like:
+            return make(Decision.DROP, "instruction-like content (possible injection)")
         if rel < t.relevance - t.band:
             return make(Decision.DROP, "not relevant")
 

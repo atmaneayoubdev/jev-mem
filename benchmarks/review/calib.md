@@ -52,7 +52,7 @@
 | required | 2025-09-15 | Home for me is Riyadh. |
 | forbidden | 2025-12-14 | Staying at my parents' place in Dubai this weekend. |
 
-**Query (2026-04-03, intent=current):** Suggest a park I could walk to from home.
+**Query (2026-04-03, intent=current):** Suggest a park I could walk to from home, and say which city it is in.
 
 **Expected:** mode=value aliases=['Riyadh'] forbidden=['Dubai']
 
@@ -95,7 +95,7 @@
 |---|---|---|
 | required | 2025-05-24 | I work night shifts at the hospital and sleep until early afternoon. |
 
-**Query (2025-09-21, intent=current):** Book my dentist appointment for next week.
+**Query (2025-09-21, intent=current):** What time of day should I book my dentist appointment next week?
 
 **Expected:** mode=value aliases=['afternoon', 'evening', 'pm', 'late'] forbidden=[]
 
@@ -120,16 +120,16 @@
 
 **Expected:** mode=conflict aliases=['March 3', 'April 17'] forbidden=[]
 
-## conflict/remote-vs-office/i0  ·  contradiction
+## conflict/birthplace/i0  ·  contradiction
 
 | label | date | memory |
 |---|---|---|
-| required | 2025-10-08 | I work fully remotely. |
-| required | 2025-12-07 | I'm at the office every weekday. |
+| required | 2025-12-09 | I was born in Dubai. |
+| required | 2026-02-07 | I was born in Berlin. |
 
-**Query (2026-01-16, intent=current):** Should I book a desk at the office for Thursday?
+**Query (2026-03-19, intent=current):** Where was I born?
 
-**Expected:** mode=conflict aliases=[] forbidden=[]
+**Expected:** mode=conflict aliases=['Dubai', 'Berlin'] forbidden=[]
 
 ## historical/previous-employer/i0  ·  historical
 

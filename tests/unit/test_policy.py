@@ -312,4 +312,25 @@ def test_policy_config_roundtrip(tmp_path: Path) -> None:
     cfg = PolicyConfig.model_validate({"read": {"relevance": 0.7}, "ablation": {"utility": False}})
     cfg.save(tmp_path / "p.json")
     assert PolicyConfig.load(tmp_path / "p.json") == cfg
-    assert cfg.write.ttl()[Horizon.WEEKS].days == 14
+    assert cfg.write.ttl()[Horizon.WEEKS].days == 42
+
+
+def test_instruction_like_memory_is_dropped_and_ineligible() -> None:
+    policy = read()
+    f = facts(instruction_like=True)
+    d = policy.decide(cand(0.99, 0.99), f, CURRENT, {})
+    assert d.decision is Decision.DROP
+    assert "injection" in d.reason
+    assert not policy.eligible(f, CURRENT)
+
+
+def test_profile_flags_instruction_like_text() -> None:
+    policy = WritePolicy(PolicyConfig())
+    base = {
+        "durability": choice({"lasting": 0.9, "temporary": 0.05, "event": 0.05}),
+        "horizon": choice({"days": 0.1, "weeks": 0.1, "months": 0.7, "year": 0.1}),
+        "meta": META,
+    }
+    assert policy.profile(ProfileJudgment(**base, instruction=0.9)).instruction_like
+    assert not policy.profile(ProfileJudgment(**base, instruction=0.1)).instruction_like
+    assert not policy.profile(ProfileJudgment(**base)).instruction_like
