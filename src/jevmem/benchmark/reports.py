@@ -386,3 +386,113 @@ def make_charts(
         )
         made.append("reliability_utility.png")
     return made
+
+
+def _overall(run: Path) -> dict[str, Any]:
+    data: dict[str, Any] = json.loads((run / "metrics.json").read_text(encoding="utf-8"))["overall"]
+    return data
+
+
+def budget_sweep_chart(run: Path, out: Path, metric: str = "answer_correct") -> tuple[Path, str]:
+    from jevmem.benchmark.charts import line_chart
+
+    overall = _overall(run)
+    budgets = sorted({int(s.split("@")[1]) for s in overall if "@" in s})
+    series: dict[str, list[tuple[float, float]]] = {}
+    lines = [
+        "| System | " + " | ".join(str(b) for b in [*budgets, 1024]) + " |",
+        "|" + "---|" * (len(budgets) + 2),
+    ]
+    for name in ("hybrid-jev", "hybrid-qwen", "embedding", "rerank"):
+        points = [
+            (b, overall[f"{name}@{b}"][metric]["mean"]) for b in budgets if f"{name}@{b}" in overall
+        ]
+        if name in overall:
+            points.append((1024, overall[name][metric]["mean"]))
+        if points:
+            series[name] = [(float(x), float(y)) for x, y in points if y is not None]
+            lines.append(f"| {name} | " + " | ".join(f"{y * 100:.1f}" for _, y in points) + " |")
+    line_chart(
+        series,
+        title="Accuracy under a context budget",
+        subtitle="Same systems, smaller memory budgets (tokens)",
+        xlabel="Memory context budget (tokens)",
+        ylabel="Answer accuracy (%)",
+        out=out,
+        xscale="log2",
+        xticks=[*budgets, 1024],
+    )
+    return out, "\n".join(lines)
+
+
+def saturation_chart(
+    runs: dict[int, Path], out: Path, metric: str = "selection_correct"
+) -> tuple[Path, str]:
+    from jevmem.benchmark.charts import line_chart
+
+    levels = sorted(runs)
+    data = {n: _overall(runs[n]) for n in levels}
+    series: dict[str, list[tuple[float, float]]] = {}
+    lines = [
+        "| System | " + " | ".join(str(n) for n in levels) + " |",
+        "|" + "---|" * (len(levels) + 1),
+    ]
+    for name in ("hybrid-jev", "hybrid-qwen", "embedding", "rerank"):
+        points = [(n, data[n][name][metric]["mean"]) for n in levels if name in data[n]]
+        points = [(n, y) for n, y in points if y is not None]
+        if points:
+            series[name] = [(float(n), float(y)) for n, y in points]
+            lines.append(f"| {name} | " + " | ".join(f"{y * 100:.1f}" for _, y in points) + " |")
+    label = "Memory-selection accuracy" if metric == "selection_correct" else "Answer accuracy"
+    line_chart(
+        series,
+        title=f"{label} vs stored distractors",
+        subtitle="Stratified test subset; distractors interleaved on each case timeline",
+        xlabel="Background distractor memories per case",
+        ylabel=f"{label} (%)",
+        out=out,
+        xscale="symlog",
+        xticks=levels,
+    )
+    return out, "\n".join(lines)
+
+
+def ablation_chart(run: Path, out: Path) -> tuple[Path, str]:
+    from jevmem.benchmark.charts import bar_chart
+
+    overall = _overall(run)
+    order = [
+        "hybrid-jev~relevance-only",
+        "hybrid-jev~+utility",
+        "hybrid-jev~+supersession",
+        "hybrid-jev~+contradiction",
+        "hybrid-jev~+temporal (full)",
+        "hybrid-jev~read-only",
+        "embedding~lifecycle-only",
+    ]
+    rows = [
+        (
+            n,
+            overall[n]["selection_correct"]["mean"],
+            overall[n]["selection_correct"]["lo"],
+            overall[n]["selection_correct"]["hi"],
+        )
+        for n in order
+        if n in overall
+    ]
+    bar_chart(
+        rows,
+        title="Which judgment dimensions matter",
+        subtitle="Memory-selection accuracy; policy replays over identical cached judgments",
+        out=out,
+        emphasis=("hybrid-jev~+temporal (full)",),
+        xmax=110,
+    )
+    table = ["| Variant | Selection acc. | Answer acc. | Forbidden in ctx |", "|---|---|---|---|"]
+    for n in order:
+        if n in overall:
+            o = overall[n]
+            table.append(
+                f"| {n} | {_est(o['selection_correct']).fmt()} | {_est(o['answer_correct']).fmt()} | {_est(o['forbidden_selected']).fmt()} |"
+            )
+    return out, "\n".join(table)

@@ -227,3 +227,43 @@ async def test_calibration_grid_is_offline_and_improves_objective() -> None:
     )
     assert report.best["bm25"].selection_accuracy >= default_acc
     assert report.params.k["bm25"] == report.best["bm25"].setting["k"]
+
+
+async def test_variants_are_offline_replays() -> None:
+    from jevmem.benchmark.variants import (
+        ABLATION_STEPS,
+        ablation_variants,
+        budget_variants,
+        pool_variants,
+    )
+
+    case = next(c for c in build_split("dev") if c.family == "supersession/cloud-migration")
+    judge = FakeJudge(
+        pair=supersede_rule,
+        candidate=lambda q, m: (0.9, 0.9) if "cloud" in m.lower() else (0.1, 0.1),
+    )
+    resources = Resources(
+        judges={"jev": judge},
+        embedder=None,
+        reranker=None,
+        background=BACKGROUND,
+        write_policy=PolicyConfig(),
+        readonly_judges=("jev",),
+    )
+    mat = await materialize(case, resources, n_background=4, pool_max=10)
+    calls = len(judge.calls)
+    params = Params()
+    abl = ablation_variants(mat, params, 512)
+    names = {s.system for s in abl}
+    assert {f"hybrid-jev~{k}" for k in ABLATION_STEPS} <= names
+    assert "hybrid-jev~read-only" in names
+    assert "embedding~lifecycle-only" in names  # uses the embedding ranking if present
+    full = next(s for s in abl if s.system == "hybrid-jev~+temporal (full)")
+    no_lifecycle = next(s for s in abl if s.system == "hybrid-jev~relevance-only")
+    assert "m1" not in full.selected_ids  # stale excluded by the full policy
+    assert "m1" in no_lifecycle.selected_ids  # relevance-only ignores supersession
+    assert {s.system for s in pool_variants(mat, params, 512, [5])} == {"hybrid-jev#pool5"}
+    assert budget_variants(mat, params, [64]) == [] or all(
+        "@64" in s.system for s in budget_variants(mat, params, [64])
+    )
+    assert len(judge.calls) == calls  # no new judge calls
