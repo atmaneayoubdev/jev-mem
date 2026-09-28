@@ -13,6 +13,9 @@ dependencies = [
     "numpy>=1.26",
     "typer>=0.12",
     "rich>=13.7",
+    "fastapi>=0.115",
+    "uvicorn[standard]>=0.30",
+    "sqlalchemy>=2.0",
 ]
 
 [project.optional-dependencies]
@@ -63,8 +66,10 @@ select = ["E", "F", "W", "I", "B", "UP", "SIM", "RUF", "ASYNC", "PT", "C4", "PIE
 "src/jevmem/benchmark/datasets/synthetic/families_*.py" = ["E501"]
 # Markdown report templating reads better with unwrapped strings.
 "src/jevmem/benchmark/reports.py" = ["E501"]
+"src/jevmem/memory/demo.py" = ["E501"]
 # Typer declares options via call defaults.
 "src/jevmem/cli.py" = ["B008"]
+"src/jevmem/api/routes/*.py" = ["B008"]
 
 [tool.mypy]
 python_version = "3.12"

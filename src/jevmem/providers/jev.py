@@ -25,9 +25,10 @@ import httpx
 from pydantic import BaseModel, ConfigDict, Field, ValidationError
 
 from jevmem.providers.cache import ResponseCache, cache_key
-from jevmem.providers.errors import CacheMissError, ResponseFormatError
+from jevmem.providers.errors import CacheMissError, ProviderError, ResponseFormatError
 from jevmem.providers.http import (
     USER_AGENT,
+    CircuitBreaker,
     ClientStats,
     HttpOutcome,
     RetryPolicy,
@@ -139,6 +140,7 @@ class SystemOneClient:
         cache: ResponseCache | None = None,
         transport: httpx.AsyncBaseTransport | None = None,
         sleep: Sleep = asyncio.sleep,
+        breaker: CircuitBreaker | None = None,
     ) -> None:
         self.model = model
         self._url = base_url.rstrip("/") + "/v1/systemone"
@@ -150,6 +152,7 @@ class SystemOneClient:
         self._client = httpx.AsyncClient(timeout=timeout_s, transport=transport)
         self.stats = ClientStats()
         self._flights = SingleFlight()
+        self.breaker = breaker
 
     async def evaluate(
         self,
@@ -194,7 +197,16 @@ class SystemOneClient:
                     sleep=self._sleep,
                 )
 
-        outcome = await self._flights.run(key, call)
+        if self.breaker is not None:
+            self.breaker.check()
+        try:
+            outcome = await self._flights.run(key, call)
+        except ProviderError as exc:
+            if self.breaker is not None:
+                self.breaker.record_failure(exc)
+            raise
+        if self.breaker is not None:
+            self.breaker.record_success()
         response = self._parse(outcome.body, questions)
         if self._cache is not None:
             self._cache.put(

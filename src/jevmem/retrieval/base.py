@@ -52,6 +52,9 @@ class MemoryIndex:
             self._users[user_id] = UserIndex(embedding=embedding)
         return self._users[user_id]
 
+    def drop_user(self, user_id: str) -> None:
+        self._users.pop(user_id, None)
+
     def add(self, memory: Memory) -> None:
         self.add_many([memory])
 

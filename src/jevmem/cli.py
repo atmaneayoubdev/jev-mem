@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import asyncio
 import tempfile
+from collections.abc import Awaitable, Callable
 from pathlib import Path
 
 import typer
@@ -11,6 +12,7 @@ from rich.console import Console
 from rich.table import Table
 
 from jevmem.config import Settings, get_settings
+from jevmem.memory.service import MemoryService
 from jevmem.providers.errors import ProviderError
 from jevmem.providers.factory import ConfigurationError, build_jev_client, build_qwen_provider
 from jevmem.providers.jev import NoulAnswer, NoulQuestion
@@ -362,3 +364,109 @@ def benchmark_report(
     a, b = (s.strip() for s in primary.split(","))
     out = write_report(Path("benchmarks/results") / run_id, primary=(a, b), charts=not no_charts)
     console.print(f"wrote {out}")
+
+
+# --- server, memories, demo --------------------------------------------------------------
+
+
+@app.command()
+def serve(
+    host: str = typer.Option("127.0.0.1"),
+    port: int = typer.Option(8000),
+    reload: bool = typer.Option(False),
+) -> None:
+    """Run the JevMem API server (and the built frontend, if present)."""
+    import uvicorn
+
+    from jevmem.observability.logging import configure_logging
+
+    configure_logging(get_settings().log_level)
+    uvicorn.run("jevmem.api.app:create_app", factory=True, host=host, port=port, reload=reload)
+
+
+memory_app = typer.Typer(help="Inspect and add memories.", no_args_is_help=True)
+app.add_typer(memory_app, name="memory")
+demo_app = typer.Typer(help="Seed or reset the Alex demo scenario.", no_args_is_help=True)
+app.add_typer(demo_app, name="demo")
+
+
+def _run_with_service[T](fn: Callable[[MemoryService], Awaitable[T]]) -> T:
+    from jevmem.bootstrap import build_app
+
+    async def go() -> T:
+        bundle = await build_app(get_settings())
+        try:
+            return await fn(bundle.service)
+        finally:
+            await bundle.aclose()
+
+    return asyncio.run(go())
+
+
+@memory_app.command("add")
+def memory_add(
+    user_id: str = typer.Option(..., "--user"),
+    content: str = typer.Argument(...),
+    memory_type: str = typer.Option("other", "--type"),
+) -> None:
+    """Add a memory through the write-time lifecycle (judge + policy)."""
+    from jevmem.memory.models import MemoryType
+
+    async def fn(svc: MemoryService) -> None:
+        written = await svc.add_memory(user_id, content, memory_type=MemoryType(memory_type))
+        console.print(f"[green]stored[/] {written.memory.id} durability={written.durability}")
+        for rel in written.relations:
+            console.print(
+                f"  vs {rel['earlier_id']}: {rel['relation']} -> {rel['action']} ({rel['reason']})"
+            )
+
+    _run_with_service(fn)
+
+
+@memory_app.command("list")
+def memory_list(user_id: str = typer.Option(..., "--user")) -> None:
+    """List a user's memories with lifecycle status and current validity."""
+
+    async def fn(svc: MemoryService) -> None:
+        table = Table(title=f"memories for {user_id}")
+        for col in ("observed", "status", "validity", "durability", "content"):
+            table.add_column(col, overflow="fold")
+        for m in svc.list_memories(user_id):
+            table.add_row(
+                m.observed_at.date().isoformat(),
+                m.status.value,
+                svc.validity(m).value,
+                (m.durability.value if m.durability else "-")
+                + (" ⚠ instruction" if m.instruction_like else ""),
+                m.content,
+            )
+        console.print(table)
+
+    _run_with_service(fn)
+
+
+@demo_app.command("seed")
+def demo_seed(user_id: str = typer.Option("alex", "--user")) -> None:
+    """(Re)create the Alex scenario through the real lifecycle."""
+
+    async def fn(svc: MemoryService) -> None:
+        written = await svc.seed_demo(user_id)
+        console.print(f"seeded {len(written)} memories for {user_id}")
+        for w in written:
+            links = [f"{r['action']}→{r['earlier_id'][:6]}" for r in w.relations if r["action"]]
+            console.print(
+                f"  {w.memory.observed_at.date()} {w.durability or '-':9} "
+                f"{'; '.join(links)}  {w.memory.content[:70]}"
+            )
+
+    _run_with_service(fn)
+
+
+@demo_app.command("reset")
+def demo_reset(user_id: str = typer.Option("alex", "--user")) -> None:
+    """Remove the demo user's memories and conversations."""
+
+    async def fn(svc: MemoryService) -> None:
+        console.print(f"removed {svc.reset_user(user_id)} memories for {user_id}")
+
+    _run_with_service(fn)

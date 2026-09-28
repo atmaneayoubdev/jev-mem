@@ -20,9 +20,10 @@ import httpx
 from pydantic import BaseModel, Field
 
 from jevmem.providers.cache import ResponseCache, cache_key
-from jevmem.providers.errors import CacheMissError, ResponseFormatError
+from jevmem.providers.errors import CacheMissError, ProviderError, ResponseFormatError
 from jevmem.providers.http import (
     USER_AGENT,
+    CircuitBreaker,
     ClientStats,
     HttpOutcome,
     RetryPolicy,
@@ -88,6 +89,7 @@ class OpenAICompatibleProvider:
         cache: ResponseCache | None = None,
         transport: httpx.AsyncBaseTransport | None = None,
         sleep: Sleep = asyncio.sleep,
+        breaker: CircuitBreaker | None = None,
     ) -> None:
         self.model = model
         root = base_url.rstrip("/")
@@ -103,6 +105,7 @@ class OpenAICompatibleProvider:
         self._client = httpx.AsyncClient(timeout=timeout_s, transport=transport)
         self.stats = ClientStats()
         self._flights = SingleFlight()
+        self.breaker = breaker
 
     async def complete(
         self,
@@ -154,7 +157,16 @@ class OpenAICompatibleProvider:
                     sleep=self._sleep,
                 )
 
-        outcome = await self._flights.run(key, call)
+        if self.breaker is not None:
+            self.breaker.check()
+        try:
+            outcome = await self._flights.run(key, call)
+        except ProviderError as exc:
+            if self.breaker is not None:
+                self.breaker.record_failure(exc)
+            raise
+        if self.breaker is not None:
+            self.breaker.record_success()
         result = _parse(outcome.body, outcome.latency_ms, attempts=outcome.attempts, cached=False)
         if self._cache is not None:
             self._cache.put(

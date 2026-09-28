@@ -43,9 +43,33 @@ class Settings(BaseSettings):
 
     # --- Application ---------------------------------------------------------
     data_dir: Path = Path("data")
+    database_url: str = "sqlite:///./data/jevmem.db"
     memory_context_token_budget: int = Field(default=1024, ge=32)
+    default_retrieval_mode: Literal["recency", "bm25", "embedding", "jev", "hybrid"] = "hybrid"
+    candidate_pool_size: int = Field(default=20, ge=1, le=200)
+    params_path: Path = Path("benchmarks/params/calibrated-v1.json")
+    embeddings_enabled: bool = True
     log_level: str = "INFO"
     environment: Literal["development", "production", "test"] = "development"
+
+    # --- API ---------------------------------------------------------------
+    cors_origins: list[str] = Field(default_factory=lambda: ["http://localhost:5173"])
+    max_request_bytes: int = Field(default=64_000, ge=1_000)
+    max_message_chars: int = Field(default=8_000, ge=100)
+    rate_limit_per_minute: int = Field(default=120, ge=0)  # per client; 0 disables
+    debug_payloads: bool | None = None  # None -> on in development, off in production
+
+    # --- Resilience ----------------------------------------------------------
+    circuit_failure_threshold: int = Field(default=5, ge=1)
+    circuit_cooldown_s: float = Field(default=30.0, gt=0)
+
+    @property
+    def expose_debug(self) -> bool:
+        return (
+            self.debug_payloads
+            if self.debug_payloads is not None
+            else self.environment != "production"
+        )
 
     @property
     def cache_path(self) -> Path:

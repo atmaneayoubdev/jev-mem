@@ -76,7 +76,18 @@ class LifecyclePipeline:
         # caching). The floor's effect on real relations is measured as neighbour recall.
         self.min_embedding_similarity = min_embedding_similarity
 
-        self._last_key: dict[str, tuple[object, ...]] = {}
+        self._last_key: dict[str, tuple[datetime, int, str]] = {}
+
+    def last_key(self, user_id: str) -> tuple[datetime, int, str] | None:
+        """Order key of the most recent write for this user (None if none yet)."""
+        return self._last_key.get(user_id)
+
+    def resume(self, user_id: str, key: tuple[datetime, int, str]) -> None:
+        """Continue a user's write sequence after a restart (keys come from the store)."""
+        self._last_key[user_id] = key
+
+    def forget(self, user_id: str) -> None:
+        self._last_key.pop(user_id, None)
 
     async def write_many(self, memories: Sequence[Memory]) -> list[WriteReport]:
         """Write in observation order. Each write can depend on earlier lifecycle decisions."""

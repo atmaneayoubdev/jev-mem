@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from jevmem.config import Settings
 from jevmem.providers.cache import ResponseCache
-from jevmem.providers.http import RetryPolicy
+from jevmem.providers.http import CircuitBreaker, RetryPolicy
 from jevmem.providers.jev import SystemOneClient
 from jevmem.providers.qwen import OpenAICompatibleProvider
 
@@ -26,6 +26,9 @@ def build_jev_client(settings: Settings, cache: ResponseCache | None = None) -> 
         timeout_s=settings.jev_timeout_s,
         retry=RetryPolicy(max_retries=settings.jev_max_retries),
         cache=cache,
+        breaker=CircuitBreaker(
+            "jev", settings.circuit_failure_threshold, settings.circuit_cooldown_s
+        ),
     )
 
 
@@ -43,4 +46,7 @@ def build_qwen_provider(
         retry=RetryPolicy(max_retries=settings.qwen_max_retries),
         enable_thinking=settings.qwen_enable_thinking,
         cache=cache,
+        breaker=CircuitBreaker(
+            "qwen", settings.circuit_failure_threshold, settings.circuit_cooldown_s
+        ),
     )

@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from collections.abc import Sequence
+from collections.abc import Mapping, Sequence
 
 from jevmem.memory.models import MemoryStatus
 from jevmem.retrieval.base import CandidateRetriever, MemoryCandidate, MemoryIndex
@@ -89,12 +89,16 @@ class HybridRetriever:
         retrievers: Sequence[CandidateRetriever],
         *,
         per_source_limit: int | None = None,
+        source_limits: Mapping[str, int] | None = None,
         rrf_k: int = 60,
     ) -> None:
+        """`source_limits` caps individual sources by name (e.g. {"recency": 5}); with it and a
+        large `limit`, the result is the untruncated union used by the benchmark's hybrid."""
         if not retrievers:
             raise ValueError("HybridRetriever needs at least one retriever")
         self.retrievers = list(retrievers)
         self.per_source_limit = per_source_limit
+        self.source_limits = dict(source_limits or {})
         self.rrf_k = rrf_k
 
     async def retrieve(self, query: str, user_id: str, limit: int) -> list[MemoryCandidate]:
@@ -103,7 +107,8 @@ class HybridRetriever:
         sources: dict[str, list[str]] = {}
         first: dict[str, MemoryCandidate] = {}
         for retriever in self.retrievers:
-            for cand in await retriever.retrieve(query, user_id, per_source):
+            cap = self.source_limits.get(retriever.name, per_source)
+            for cand in await retriever.retrieve(query, user_id, cap):
                 mid = cand.memory.id
                 fused[mid] = fused.get(mid, 0.0) + 1.0 / (self.rrf_k + cand.rank + 1)
                 sources.setdefault(mid, []).append(retriever.name)

@@ -25,3 +25,15 @@ Gate after every step: `uv run pytest`, `uv run ruff check .`, `uv run ruff form
 - Qwen-as-judge in the same architecture ties Jev (+1.0 pp [-3.5, +5.6]) and is better calibrated; Jev is faster/cheaper per query.
 - Gains concentrate in adversarial, abstention, expired temporary state; ties on supersession (the answer model resolves dated updates in context).
 - Calib was also used for bug fixes (logged), so only test is held-out. LongMemEval running.
+
+# M2 — application (autonomous per user, 2026-09-29)
+- [ ] SQLAlchemy store (SQLite default, PostgreSQL-ready) behind MemoryStore; conversations/turns
+- [ ] MemoryService: add/recall (all 5 modes)/archive/lineage; per-user index rebuilt from DB
+- [ ] Qwen memory extraction (structured, propose-only) + chat pipeline
+- [ ] Circuit breaker + service metrics
+- [ ] FastAPI: chat, memories CRUD (archive not delete), retrieve, judge, compare, lineage, benchmark, health, config, metrics, demo
+- [ ] Security: CORS, size limits, rate-limit hook, safe errors, request ids
+- [ ] CLI: serve, memory add/list, demo seed/reset; Alex demo seed
+- [ ] Tests (fakes, sqlite tmp) + live smoke
+# M3 — React/Vite inspector, mode toggle, comparison view, lineage timeline
+# M4 — README, docs, SECURITY/CONTRIBUTING/CHANGELOG, Docker, fresh-clone test, e2e track, artifact compression

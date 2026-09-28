@@ -116,6 +116,42 @@ class SingleFlight:
             del self._inflight[key]
 
 
+class CircuitBreaker:
+    """Fail fast after repeated transient failures, so a provider outage cannot stall every
+    request behind retries. Half-opens after `cooldown_s`: the next call is a probe."""
+
+    def __init__(self, provider: str, failure_threshold: int = 5, cooldown_s: float = 30.0) -> None:
+        self.provider = provider
+        self.failure_threshold = failure_threshold
+        self.cooldown_s = cooldown_s
+        self.consecutive_failures = 0
+        self.opened_at: float | None = None
+        self.opens = 0
+
+    @property
+    def state(self) -> str:
+        if self.opened_at is None:
+            return "closed"
+        return "half-open" if time.monotonic() - self.opened_at >= self.cooldown_s else "open"
+
+    def check(self) -> None:
+        if self.state == "open":
+            raise ProviderUnavailableError(self.provider, "circuit open (recent repeated failures)")
+
+    def record_success(self) -> None:
+        self.consecutive_failures = 0
+        self.opened_at = None
+
+    def record_failure(self, error: ProviderError) -> None:
+        if not error.retryable:
+            return
+        self.consecutive_failures += 1
+        if self.consecutive_failures >= self.failure_threshold:
+            if self.opened_at is None:
+                self.opens += 1
+            self.opened_at = time.monotonic()
+
+
 @dataclass(frozen=True)
 class HttpOutcome:
     body: dict[str, Any]
