@@ -15,6 +15,7 @@ from pydantic import BaseModel, Field
 from jevmem.benchmark.answer import ANSWER_PROMPT_VERSION, AnswerResult, generate_answer
 from jevmem.benchmark.datasets.background import load_pool
 from jevmem.benchmark.datasets.schema import Case
+from jevmem.benchmark.e2e import extract_cases
 from jevmem.benchmark.grading import GRADER_VERSION, grade
 from jevmem.benchmark.manifest import build_manifest, file_sha256
 from jevmem.benchmark.materials import CaseMaterials, Resources, materialize
@@ -75,6 +76,9 @@ class RunConfig(BaseModel):
     budgets: list[int] = Field(default_factory=list)
     pools: list[int] = Field(default_factory=list)
     ablations: bool = False
+    # End-to-end track: case memories and distractors replayed as user turns through Qwen
+    # extraction before the normal pipeline (see benchmark/e2e.py).
+    e2e: bool = False
 
 
 @dataclass
@@ -288,11 +292,21 @@ async def run(
     )
     params = load_params(config.params_path, config.supersede_mode)
     runtime = await build_runtime(config, settings)
+    extraction_stats = None
     async with runtime.stack:
+        n_background = config.n_background
+        if config.e2e:
+            if runtime.generator is None:
+                raise RuntimeError("the e2e track needs the Qwen generator")
+            cases, stats = await extract_cases(
+                cases, runtime.resources.background, config.n_background, runtime.generator
+            )
+            extraction_stats = stats.model_dump()
+            n_background = 0  # distractors were already replayed as turns
         materials = await materialize_all(
             cases,
             runtime.resources,
-            n_background=config.n_background,
+            n_background=n_background,
             pool_max=config.pool_max,
             concurrency=config.case_concurrency,
             progress=(lambda d, t: progress("materialize", d, t)) if progress else None,
@@ -313,7 +327,9 @@ async def run(
             r, d = lifecycle_outcomes(mat.case, judged)
             relations += r
             durability += d
-    return write_run(config, params, materials, results, relations, durability, runtime.models)
+    return write_run(
+        config, params, materials, results, relations, durability, runtime.models, extraction_stats
+    )
 
 
 def write_run(
@@ -324,6 +340,7 @@ def write_run(
     relations: Sequence[RelationOutcome],
     durability: Sequence[DurabilityOutcome],
     models: dict[str, str | None],
+    extraction_stats: dict[str, Any] | None = None,
 ) -> Path:
     out = config.results_dir / config.run_id
     out.mkdir(parents=True, exist_ok=True)
@@ -353,6 +370,7 @@ def write_run(
         datasets=datasets,
         background_sha256=file_sha256(config.background_path),
         cases=len({r.case_id for r in results}),
+        extraction=extraction_stats,
         judge_failures={
             name: sum(1 for m in materials if m.judged.get(name) and m.judged[name].failure)
             for name in config.judges

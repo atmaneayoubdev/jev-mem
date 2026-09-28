@@ -224,6 +224,7 @@ def benchmark_run(
     budgets: str = typer.Option("", help="Budget sweep, e.g. '128,256,512'."),
     pools: str = typer.Option("", help="Pool-size sweep for hybrid-jev, e.g. '5,10,20,50'."),
     ablations: bool = typer.Option(False, help="Add hybrid-jev dimension ablations."),
+    e2e: bool = typer.Option(False, help="End-to-end track: extract memories from raw turns."),
     families_per_category: int | None = typer.Option(None),
     instances_per_family: int | None = typer.Option(None),
 ) -> None:
@@ -251,6 +252,7 @@ def benchmark_run(
         budgets=[int(b) for b in budgets.split(",") if b.strip()],
         pools=[int(p) for p in pools.split(",") if p.strip()],
         ablations=ablations,
+        e2e=e2e,
         families_per_category=families_per_category,
         instances_per_family=instances_per_family,
     )

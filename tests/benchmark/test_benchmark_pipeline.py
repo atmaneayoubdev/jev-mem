@@ -267,3 +267,51 @@ async def test_variants_are_offline_replays() -> None:
         "@64" in s.system for s in budget_variants(mat, params, [64])
     )
     assert len(judge.calls) == calls  # no new judge calls
+
+
+async def test_e2e_extraction_propagates_labels() -> None:
+    import json as _json
+    from collections.abc import Mapping, Sequence
+    from typing import Any
+
+    from jevmem.benchmark.e2e import extract_cases
+    from jevmem.providers.qwen import ChatMessage, CompletionResult
+
+    class Extractor:
+        model = "fake"
+
+        async def complete(
+            self,
+            messages: Sequence[ChatMessage],
+            *,
+            max_tokens: int = 1024,
+            temperature: float = 0.0,
+            json_schema: Mapping[str, Any] | None = None,
+            enable_thinking: bool | None = None,
+            top_logprobs: int | None = None,
+        ) -> CompletionResult:
+            turn = messages[-1]["content"].split("User turn to extract from:\n", 1)[-1]
+            items = (
+                []
+                if "origami" in turn
+                else [{"content": turn, "type": "fact", "temporary": False, "evidence": turn}]
+            )
+            return CompletionResult(
+                text=_json.dumps({"memories": items}),
+                model="fake",
+                latency_ms=1.0,
+                attempts=1,
+                cached=False,
+            )
+
+    case = next(c for c in build_split("dev") if c.family == "supersession/cloud-migration")
+    [out], stats = await extract_cases([case], BACKGROUND, 3, Extractor())
+    labels = {m.id: m.label for m in out.memories}
+    assert labels["m3-x0"] == "required"
+    assert labels["m1-x0"] == "forbidden"
+    assert not any(i.startswith("bg") for i in labels)  # origami distractors produced nothing
+    assert stats.empty_turns == 3
+    assert stats.required_turns_lost == 0
+    assert out.case_id.startswith("e2e/")
+    assert out.relations == []
+    assert not out.background_eligible
