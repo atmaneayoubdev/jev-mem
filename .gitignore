@@ -1,0 +1,36 @@
+# Secrets — never commit
+.env
+.env.*
+!.env.example
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+build/
+dist/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# Local data, caches, external datasets
+data/
+*.sqlite
+*.sqlite3
+*.db
+
+# Benchmark scratch (published results live in benchmarks/results/<run_id>/ and are committed deliberately)
+benchmarks/scratch/
+
+# Node / frontend
+node_modules/
+frontend/dist/
+
+# OS / editors
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
