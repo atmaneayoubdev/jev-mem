@@ -54,3 +54,16 @@ async def test_qwen_live_json_schema_with_logprobs() -> None:
     assert '"yes"' in result.text
     assert result.logprobs
     assert result.reasoning_tokens in (None, 0)
+
+
+@pytest.mark.skipif(not settings.qwen_base_url, reason="no Qwen endpoint configured")
+async def test_qwen_live_extraction_is_not_empty() -> None:
+    """Guards against prompt shapes the endpoint answers with empty lists (see x1.1)."""
+    from jevmem.memory.extraction import extract_memories
+
+    async with build_qwen_provider(settings) as provider:
+        found = await extract_memories(provider, "I have a severe shellfish allergy.")
+        filler = await extract_memories(provider, "haha ok thanks, sounds good")
+    assert found
+    assert "shellfish" in found[0].content.lower()
+    assert filler == []

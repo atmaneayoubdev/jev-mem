@@ -15,9 +15,11 @@ from jevmem.memory.models import MemoryType
 from jevmem.providers.errors import ResponseFormatError
 from jevmem.providers.qwen import ChatMessage, GenerationProvider
 
-EXTRACTION_PROMPT_VERSION = "x1.0"
+# x1.1: instructions moved from the system message into the user message. With a system
+# message, the Qwen endpoint returned {"memories": []} for every turn (found by the e2e track).
+EXTRACTION_PROMPT_VERSION = "x1.1"
 
-SYSTEM_PROMPT = (
+INSTRUCTIONS = (
     "You extract long-term memories about the user from a conversation turn. Extract only "
     "information that could plausibly be useful in a future interaction: preferences, facts "
     "about the user and their life, goals, constraints, decisions, relationships, work context, "
@@ -73,9 +75,9 @@ async def extract_memories(
     parts.append(f"User turn to extract from:\n{user_message}")
     if assistant_reply:
         parts.append(f"Assistant reply (context only, do not extract from it):\n{assistant_reply}")
+    parts.append("Return JSON.")
     messages: list[ChatMessage] = [
-        {"role": "system", "content": SYSTEM_PROMPT},
-        {"role": "user", "content": "\n\n".join(parts)},
+        {"role": "user", "content": "\n\n".join([INSTRUCTIONS, *parts])},
     ]
     result = await provider.complete(
         messages, max_tokens=600, json_schema=SCHEMA, enable_thinking=False
