@@ -49,3 +49,4 @@ Gate after every step: `uv run pytest`, `uv run ruff check .`, `uv run ruff form
 - [x] Fix: JSONL readers split on U+2028 (report crashed on LME) (8227b95)
 - [x] Decision (user, 2026-09-29: "i need less"): LongMemEval stopped; e2e Jev column not run. Both documented, both resumable from cache
 - [x] 12-min Qwen-only extension (user asked for a 15–20 min Qwen job): `lme-partial-96`. Jev on 88 (18 KU), everything else on 96 (26 KU). KU ties: 16/18 vs 16/18; 22/26 vs 22/26
+- [x] Published: https://github.com/atmaneayoubdev/jev-mem (public, 2026-09-29), after a full-history secret scan (0 hits) and a pre-publication history rewrite (see docs/methodology.md)
