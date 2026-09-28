@@ -14,9 +14,9 @@ Full plan: `C:\Users\atman\.claude\plans\starry-squishing-crescent.md` (approved
 - [x] 9. Runner, systems registry, metrics, family bootstrap, leakage probe, ablation replays
 - [x] 10. Dev question iteration (equal budget Jev/Qwen); calibrate all systems on calib; freeze + commit schemas; `docs/preregistration.md`
 - [x] 11. Author test families (f7c79f3); test run + ablations + budget + saturation/pool + nondeterminism (947906e, 97dfb3a)
-- [~] 12. LongMemEval loader, throughput measurement (10 inst: 12.7 min, ~1.2k Jev calls/inst), pre-registered subsets (running)
+- [x] 12. LongMemEval loader, throughput measurement (10 inst: 12.7 min, ~1.2k Jev calls/inst), pre-registered subsets (partial: 96/148, see M4)
 - [x] 13. Reports, charts, failure buckets, manifest; `benchmarks/results/M1-SUMMARY.md`
-- [ ] 14. Check in with user
+- [x] 14. Check in with user (2026-09-29)
 
 Gate after every step: `uv run pytest`, `uv run ruff check .`, `uv run ruff format --check .`, `uv run mypy` → commit.
 
