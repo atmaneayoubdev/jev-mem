@@ -65,7 +65,7 @@ These come from the pre-registered test run on the held-out split. The split has
   - "similar but useless" memories: +11 pp
   - JevMem **loses** on coexistence (−6 pp).
 - **Distractors widen the gap.** At 1,000 distractors per case, hybrid-jev scores 86.4% vs 75.0% for dense top-10. There, first-stage recall becomes the limit.
-- **On real conversations (LongMemEval_S, partial: 82 of 148 instances), no detectable difference yet.** hybrid-jev scores 93.9% vs 91.5% for dense top-10 (+2.4 pp [−2.4, +7.3]) while using less than half the context (149 vs 344 tokens). These instances are mostly the single-fact control. Only 12 of the 78 knowledge-update instances ran before the Jev key hit its spend limit, so the update test on real data is still outstanding.
+- **On real conversations (LongMemEval_S, partial: 82 of 148 instances), no detectable difference yet.** hybrid-jev scores 93.9% vs 91.5% for dense top-10 (+2.4 pp [−2.4, +7.3]) while using less than half the context (149 vs 344 tokens). These instances are mostly the single-fact control. Only 12 of the 78 knowledge-update instances ran before the Jev key hit its spend limit, so the update test on real data was not completed.
 
 Full numbers, ablations, calibration, nondeterminism and failure cases: **[benchmarks/results/M1-SUMMARY.md](benchmarks/results/M1-SUMMARY.md)**.
 How the benchmark was protected against tuning to the test set: **[docs/methodology.md](docs/methodology.md)** and **[docs/preregistration.md](docs/preregistration.md)**.

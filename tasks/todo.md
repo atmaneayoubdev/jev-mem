@@ -47,4 +47,4 @@ Gate after every step: `uv run pytest`, `uv run ruff check .`, `uv run ruff form
 - [x] Raw results gzipped
 - [x] LongMemEval partial: first 82/148 (all cached) graded -> `lme-partial-82`; +2.4 pp [-2.4, +7.3], 149 vs 344 ctx tokens
 - [x] Fix: JSONL readers split on U+2028 (report crashed on LME) (ba8a42a)
-- [ ] BLOCKED (Jev key monthly limit reached): remaining 66 knowledge-update instances; re-run e2e Jev column
+- [x] Decision (user, 2026-09-29: "i need less"): LongMemEval stopped at 82/148; e2e Jev column not run. Both documented, both resumable from cache

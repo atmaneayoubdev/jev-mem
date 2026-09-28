@@ -48,7 +48,8 @@ Every system goes through the same context builder, token budget (1024) and answ
   - The pre-registered run stopped when the OpenRouter key reached its monthly spend limit.
   - Reported so far are the first 82 of the 148 instances in file order (`lme-partial-82`). These are the ones fully cached at the cutoff; they were not chosen by looking at results.
   - They cover single-session-user in full (70/70) and knowledge-update for 12 of 78.
-  - The remaining instances will run with the same frozen configuration. Any change to that plan (for example dropping the Qwen-judge system to save calls) will be listed here as a further deviation.
+  - To limit spend, the run was **stopped there**. The other 66 knowledge-update instances were not run.
+  - They can be added later with the same frozen configuration: re-running on the full case file replays everything already cached at no cost.
 
 ## Metrics
 

@@ -163,8 +163,8 @@ The pinned snapshot `typesafe/jev-1.13-20260917` plus the response cache is what
 
 ### LongMemEval_S (partial: 82 of 148 pre-registered instances)
 
-**Status: partial.**
-- The run stopped when the OpenRouter key reached its monthly spend limit.
+**Status: partial, stopped to limit spend.**
+- The run stopped when the OpenRouter key reached its monthly spend limit, and it was not resumed.
 - The 82 instances reported are the **first 82 in file order**: exactly those whose Jev and Qwen-judge calls had been cached by then. The key set the cutoff, not the results.
 - They cover the whole **single-session-user control** (70 of 70, including 6 abstention questions) and **12 of 78 knowledge-update** instances.
 - Answers were graded with LongMemEval's official prompts on Qwen, so these numbers are not comparable to published GPT-4o-judged results.
@@ -180,7 +180,7 @@ The pinned snapshot `typesafe/jev-1.13-20260917` plus the response cache is what
 
 - **Primary comparison:** hybrid-jev minus dense top-10 is **+2.4 pp [−2.4, +7.3]**. That is **no detectable difference**; each instance is its own bootstrap cluster.
 - **Same accuracy, less than half the context:** 149 vs 344 tokens. Two instances separate the systems, and both are abstention questions. On the plain single-fact control, real conversations are easy for dense retrieval, and the systems tie at 60/64.
-- **Updates on real data are still untested.** With 12 knowledge-update instances (11/12 vs 11/12), nothing can be concluded. That subset is the pre-registered test of the main idea, and 66 of its instances are still to run.
+- **Updates on real data are still untested.** With 12 knowledge-update instances (11/12 vs 11/12), nothing can be concluded. That subset was the pre-registered test of the main idea on real data, and 66 of its instances were not run.
 - **"Forbidden in ctx" is high by design here.** In annotate mode a superseded turn stays in context with a "possibly updated" note, rather than being withheld. Answer accuracy is the metric that matters.
 
 Full report: [`lme-partial-82/report.md`](lme-partial-82/report.md).
